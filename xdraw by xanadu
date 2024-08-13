@@ -1,0 +1,133 @@
+
+// image drawing function using maps with example: images displayed on a 11 x 40 grid
+// by xanadu
+
+// color map.  you can add new colors to map here
+color = {};
+	color.white = "<color=#FFFFFF>";
+	color.grey = "<color=#A5A5A5>";
+	color.blue = "<color=#003AFF>";
+	color.cyan = "<color=#00FFE7>";
+	color.purple = "<color=#D700FF>";
+	color.red = "<color=#AA0000>";
+	color.yellow = "<color=#FBFF00>";
+	color.orange = "<color=#FF8701>";
+	color.brown = "<color=#964B00>";
+	color.green = "<color=#00ED03>";
+	color.skin = "<color=#ffcd94>";
+	color.cap = "</color>";
+
+// you have to add a new data set for each image you create.  here there are 2 example image data sets.  one is a large x accross the grid and the other is a blue rectangle with on orange center.
+// example image 2: a blue rectangle with an orange center.
+image2 = {};
+	image2[1] = [[4, 5], color.blue, "0"]
+	image2[2] = [[4, 6], color.blue, "0"]
+	image2[3] = [[4, 7], color.blue, "0"]
+	image2[4] = [[5, 5], color.blue, "0"]
+	image2[5] = [[5, 6], color.orange, ""]
+	image2[6] = [[5, 7], color.blue, "0"]
+	image2[7] = [[6, 5], color.blue, "0"]
+	image2[8] = [[6, 6], color.blue, "0"]
+	image2[9] = [[6, 7], color.blue, "0"]
+
+// example image 1: a big x.
+image1 = {};
+	image1[1] = [[0, 0], color.red, "%"]
+	image1[2] = [[0, 39], color.blue, "$"]
+	image1[3] = [[1, 4], color.yellow, "*"]
+	image1[4] = [[1, 36], color.cyan, "("]
+	image1[5] = [[2, 8], color.orange, "="]
+	image1[6] = [[2, 32], color.grey, "&"]
+	image1[7] = [[3, 12], color.purple, ""]
+	image1[8] = [[3, 28], color.skin, "^"]
+	image1[9] = [[4, 16], color.grey, "<"]
+	image1[10] = [[4, 24], color.blue, "#"]
+	image1[11] = [[5, 20], color.orange, "*"]
+	image1[12] = [[6, 16], color.cyan, "*"]
+	image1[13] = [[6, 24], color.green, ""]
+	image1[14] = [[7, 12], color.red, "!"]
+	image1[15] = [[7, 28], color.purple, "p"]
+	image1[16] = [[8, 8], color.orange, "$"]
+	image1[17] = [[8, 32], color.skin, "&"]
+	image1[18] = [[9, 4], color.purple, "*"]
+	image1[19] = [[9, 36], color.brown, "*"]
+	image1[20] = [[10, 0], color.cyan, "G"]
+	image1[21] = [[10, 39], color.yellow, "%"]
+
+
+
+	
+// you have to add each image data set as arguments to the Draw function.  here data1 is for image1, and data2 is for image2.
+Draw = function(data1,data2)
+	
+	// function to process image data.  needs image data set, color, and character arguments
+	Process_Image = function(data, color, character)
+		a = 0
+		for item in data
+			if x == a then data[a] = data[a] + color + character 
+			a = a + 1
+		end for
+	end function
+	
+	// you have to have a str map key:pair for each unit of vertical height.  here there are 11 key:pairs for 11 units of height
+	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:"", 8:"", 9:"", 10:""};
+	
+	// you have to have counter for each image.  here there is 2 images hence there are 2 counters
+	i = 1
+	j = 1
+	
+	// you can change the vertical height by adjusting the range in this for statement. you have to have a str map key:pair for each unit of vertical height.  here verical height is 11.
+	for x in range (0,10)
+		
+		// you can change the horizontal width by adjusting the range in this for statement.  here horizontal width is 40.
+		for y in range(0,39)
+			
+			// you have to have a case and counter variable for each image.
+			// case for image 1 using a selected character using i counter
+			if data1[i][2] != "" and data1[i][0][0] == x and data1[i][0][1] == y then
+				Process_Image(str, data1[i][1], data1[i][2])
+				i = i + 1
+				if i > data1.len then i = 1
+				continue
+			end if
+			
+			// case for image 2 using a selected character using j counter
+			if data2[j][2] != "" and data2[j][0][0] == x and data2[j][0][1] == y then
+				Process_Image(str, data2[j][1], data2[j][2])
+				j = j + 1
+				if j > data2.len then j = 1
+				continue
+			end if
+			
+			// case for image 1 not using a selected character.  uses default "*" instead.  using i counter
+			if data1[i][2] == "" and data1[i][0][0] == x and data1[i][0][1] == y then
+				Process_Image(str, data1[i][1], "*")
+				i = i + 1				
+				if i > data1.len then i = 1
+				continue
+			end if
+			
+			// case for image 2 not using a selected character.  uses default character instead.  here "*" is used.  using j counter
+			if data2[j][2] == "" and data2[j][0][0] == x and data2[j][0][1] == y then
+				Process_Image(str, data2[j][1], "*")
+				j = j + 1
+				if j > data2.len then j = 1
+				continue
+			end if
+			
+			// adds  chosen symbol to unused coordinates.  Here color.cap is used for no color and whitespace is added.
+			Process_Image(str, color.cap, " ")
+		end for
+	
+	end for
+	
+	// displays images
+	a = 0
+	for item in str
+		print str[a]
+		a = a + 1
+	end for
+end function
+
+// make sure to include all image data sets as function arguments
+Draw(image1, image2)
