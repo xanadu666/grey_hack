@@ -1,0 +1,264 @@
+// blackjack by xanadu
+// copyright 2024
+
+color = {};
+	color.white = "<color=#FFFFFF>";
+	color.grey = "<color=#A5A5A5>";
+	color.blue = "<color=#003AFF>";
+	color.cyan = "<color=#00FFE7>";
+	color.purple = "<color=#D700FF>";
+	color.red = "<color=#AA0000>";
+	color.yellow = "<color=#FBFF00>";
+	color.orange = "<color=#FF8701>";
+	color.green = "<color=#00ED03>";
+	color.cap = "</color>"
+
+GetHandTotal = function(hand,gamePhase,dealer,hitting)
+	total = 0
+	unsortedHand = hand[0:]
+	sortedHand = []
+	aces = []
+	newList = []
+	if hitting then
+		while unsortedHand.len > 0
+			thisCard = unsortedHand.pull
+			if thisCard[0] == "A" then aces.push(thisCard)
+			if thisCard[0] != "A" then newList.push(thisCard)
+		end while
+		sortedHand = newList + aces
+	else
+		sortedHand = hand[0:]
+	end if
+	for card in sortedHand
+		cardNumber = card[0].to_int
+		if typeof(cardNumber) == "number" then
+			total = total + cardNumber
+			if gamePhase == "player" and dealer == true then break
+			continue
+		end if
+		if cardNumber == "A" then
+			total = total + 11
+			if total > 21 then total = total - 10
+			if gamePhase == "player" and dealer == true then break
+			continue
+		else
+			total = total + 10
+			if gamePhase == "player" and dealer == true then break
+		end if
+	end for
+	return total
+end function
+
+Display = function(dHand,pHand,gamePhase,dtotal,ptotal)
+	dDataTop = ""
+	dDataMiddle = ""
+	dDataBottom = ""
+	pDataTop = ""
+	pDataMiddle = ""
+	pDataBottom = ""
+	for item in dHand
+		if gamePhase == "player" and item == dHand[1] then
+			dDataTop = dDataTop + color.blue + "   ____" + color.cap + ""
+			dDataMiddle = dDataMiddle + color.blue + "  /   /" + color.cap + ""
+			dDataBottom = dDataBottom + color.blue + " /___/" + color.cap + " "
+			continue
+		end if
+		dDataTop = dDataTop + color.white + "   ____" + color.cap + ""
+		dDataMiddle = dDataMiddle + color.white + "  / " + color.cap + color.orange + item + color.cap + color.white + "/" + color.cap + ""
+		dDataBottom = dDataBottom + color.white + " /___/" + color.cap + " "
+	end for
+	for item in pHand
+		pDataTop = pDataTop + color.white + " ____" + color.cap + "  "
+		pDataMiddle = pDataMiddle + color.white + " \ " + color.cap + color.orange + item + color.cap + color.white + "\" + color.cap + " "
+		pDataBottom = pDataBottom + color.white + "  \___\" + color.cap + ""
+	end for
+	print dDataTop
+	print dDataMiddle + " Dealer total: " + color.yellow + dtotal
+	print dDataBottom
+	print pDataTop
+	print pDataMiddle + " Player total: " + color.yellow + ptotal
+	print pDataBottom
+	print "wager: " + wager
+	print "stack: " + stack
+end function
+
+Deal = function()
+	hand = []
+	for i in range(0,1)
+		card = globals.deck.pull
+		hand.push(card)
+	end for
+	return hand
+end function
+
+GameOver = function()
+	gameOver = null
+	while gameOver != "y" and gameOver != "n"
+		gameOver = user_input("You've been felted! Buy back in?(y/n): ")
+	end while
+	if gameOver == "y" then
+		globals.stack = 1000
+		print "stack: " + stack
+	end if
+	if gameOver == "n" then exit("Better luck next time...")
+end function
+
+ResetGameDeck = function()
+	newPack = ["As", "2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "Ts", "Js", "Qs", "Ks", "Ad", "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d", "Td", "Jd", "Qd", "Kd", "Ah", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "Th", "Jh", "Qh", "Kh", "Ac", "2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c", "Tc", "Jc", "Qc", "Kc"]
+	gameDeck = newPack[0:]
+	gameDeck.shuffle
+	print "shuffling new deck"
+	return gameDeck
+end function
+
+GetWager = function(total)
+	bet = 0
+	while typeof(bet) != "number" or bet < 1 or bet > total
+		bet = user_input("enter wager: ")
+		bet = bet.to_int
+	end while
+	globals.stack = globals.stack - bet
+	return bet
+end function
+
+clear_screen
+print "Welcome to ""BlackJack"" by xanadu"
+user_input("press any key to begin",false,true)
+clear_screen
+deck = ResetGameDeck()
+wait(1.5)
+stack = 1000
+while true
+	clear_screen
+	houseHandCheck = 0
+	houseHandTotal = 0
+	playerHandTotal = 0
+	phase = "player"
+	wager = null
+	playerHand = []
+	houseHand = []
+	print "stack: " + stack
+	if stack < 1 then GameOver()
+	wager = GetWager(stack)
+	clear_screen
+	houseHand = Deal()
+	playerHand = Deal()
+	houseHandCheck = GetHandTotal(houseHand,phase,false,false)
+	houseHandTotal = GetHandTotal(houseHand,phase,true,false)
+	playerHandTotal = GetHandTotal(playerHand,phase,false,false)
+	Display(houseHand,playerHand,phase,houseHandTotal,playerHandTotal)
+	if houseHandCheck == 21 and playerHandTotal == 21 then
+		wait(1.5)
+		phase = "dealer"
+		clear_screen
+		Display(houseHand,playerHand,phase,houseHandCheck,playerHandTotal)
+		print "Dealer and Player have BlackJack!!!  its a push"
+		stack = stack + wager
+		user_input("press any key to continue",false,true)
+		if deck.len <= 10 then deck = ResetGameDeck()
+		continue
+	end if
+	if playerHandTotal == 21 then
+		wait(1.5)
+		phase = "dealer"
+		clear_screen
+		Display(houseHand,playerHand,phase,houseHandCheck,playerHandTotal)
+		print color.cyan + "<b>Player has BlackJack!!!"
+		prize = wager * 1.5
+		stack = stack + wager + prize
+		print color.cyan + "Player paid: " + color.yellow + prize
+		user_input
+		if deck.len <= 10 then deck = ResetGameDeck()
+		continue
+	end if
+	if houseHandCheck == 21 then
+		wait(1.5)
+		phase = "dealer"
+		clear_screen
+		Display(houseHand,playerHand,phase,houseHandCheck,playerHandTotal)
+		print color.red + "Dealer has BlackJack!!!" + color.cap
+		user_input
+		if deck.len <= 10 then deck = ResetGameDeck()
+		continue
+	end if
+	command = ""
+	i = 0
+	while command != "s" and command != "bust"
+		if i == 0 then command = user_input("h = hit\ns = stay\nd = doubledown\n")
+		if i > 0 then command = user_input("h = hit\ns stay\n")
+		if i == 0 and command == "d" then
+			stack = stack - wager
+			wager = wager * 2
+			hitCard = deck.pull
+			playerHand.push(hitCard)
+			playerHandTotal = GetHandTotal(playerHand,phase,false,true)
+			clear_screen
+			Display(houseHand,playerHand,phase,houseHandTotal,playerHandTotal)
+			if playerHandTotal > 21 then
+				command = "bust"
+				continue
+			else
+				command = "s"
+				continue
+			end if
+			i = i + 1
+		end if
+		if command == "h" then
+			hitCard = deck.pull
+			playerHand.push(hitCard)
+			playerHandTotal = GetHandTotal(playerHand,phase,false,true)
+			clear_screen
+			Display(houseHand,playerHand,phase,houseHandTotal,playerHandTotal)
+			if playerHandTotal > 21 then command = "bust"
+		end if
+		i = i + 1
+	end while
+	if command == "s" then
+		phase = "dealer"
+		houseHandTotal = GetHandTotal(houseHand,phase,true,false)
+		clear_screen
+		Display(houseHand,playerHand,phase,houseHandTotal,playerHandTotal)
+		wait(1.5)
+		while houseHandTotal < 17
+			hitCard = deck.pull
+			houseHand.push(hitCard)
+			houseHandTotal = GetHandTotal(houseHand,phase,true,true)
+			clear_screen
+			Display(houseHand,playerHand,phase,houseHandTotal,playerHandTotal)
+			wait(1.5)
+		end while
+	end if
+	if command == "bust" then
+		phase = "dealer"
+		houseHandTotal = GetHandTotal(houseHand,phase,true,false)
+		clear_screen
+		Display(houseHand,playerHand,phase,houseHandTotal,playerHandTotal)
+		print color.red + "<b>Player busted!!!"
+		user_input("press any key to continue",false,true)
+		continue
+	end if
+	if houseHandTotal > 21 then
+		print "Dealer busted!!! Player wins!!!"
+		prize = wager
+		stack = stack + wager + prize
+		print "Player paid: " + color.yellow + prize
+		user_input("press any key to continue",false,true)
+	end if
+	if houseHandTotal <= 21 and houseHandTotal > playerHandTotal then
+		print "Dealer wins."
+		user_input("press any key to continue",false,true)
+	end if
+	if houseHandTotal <= 21 and houseHandTotal < playerHandTotal then
+		print "Player wins!!!"
+		prize = wager
+		stack = stack + wager + prize
+		print "player paid: " + color.yellow + prize
+		user_input("press any key to continue",false,true)
+	end if
+	if houseHandTotal <= 21 and houseHandTotal == playerHandTotal then
+		print "It's a push!!!"
+		stack = stack + wager
+		user_input("press any key to continue",false,true)
+	end if
+	if deck.len <= 10 then deck = ResetGameDeck()
+end while
