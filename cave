@@ -1,0 +1,434 @@
+// cave by xanadu
+// experimental video game demo
+
+
+enemy = {};
+	enemy.bat = ["bat", 5, 5, 2]
+
+equipment = {};
+	equipment.pKnife = ["pKnife", 3, 0, "cheap NRA pocket knife"];
+	equipment.flashlight = ["flashlight", 2, 0, "handy dandy flashlight"];
+	equipment.fist = ["fist", 1, 0, "No man thinks clearly when his fists are clenched"]
+	equipment.mushroom = ["mushroom", 0, 15, "wish i knew more about mushrooms"]
+	equipment.water = ["water", 0, 5, "heals small amount of hp"]
+	equipment.lighter = ["lighter", 0, 0, "bic lighter"]
+
+color = {};
+	color.white = "<color=#FFFFFF>";
+	color.grey = "<color=#A5A5A5>";
+	color.blue = "<color=#003AFF>";
+	color.cyan = "<color=#00FFE7>";
+	color.purple = "<color=#D700FF>";
+	color.red = "<color=#AA0000>";
+	color.yellow = "<color=#FBFF00>";
+	color.orange = "<color=#FF8701>";
+	color.brown = "<color=#964B00>";
+	color.green = "<color=#00ED03>";
+	color.skin = "<color=#ffcd94>";
+	color.cap = "</color>"
+
+
+
+Change_Equipment = function()
+	i = 0
+	selected_item = 0
+	selected_hand = ""
+	for item in inventory
+		i = i + 1
+	end for
+	while selected_item < 1 or selected_item > i
+		selected_item = user_input("which item do you want to equip?("+color.yellow+"index"+color.cap+")\n")
+		selected_item = selected_item.to_int
+	end while
+	while selected_hand != "left" and selected_hand != "right"
+		selected_hand = user_input("which hand?("+color.white+"right/left"+color.cap+")\n")
+	end while
+	if selected_hand == "left" then globals.left_hand = inventory[selected_item-1]
+	if selected_hand == "right" then globals.right_hand = inventory[selected_item-1]
+	if globals.left_hand[0] == "flashlight" or globals.right_hand[0] == "flashlight" then
+		globals.light = true
+	else
+		globals.light = false
+	end if
+end function
+
+Stats = function()
+	print color.white+"hp = "+hp+"/"+hp_max
+	print color.white+"left hand: "+left_hand[0]+"		right hand: "+right_hand[0]
+	print color.white+"left atk = "+left_hand[1]+"		right atk = "+right_hand[1]
+end function
+
+
+
+
+Update = function(this_loc,this_state,this_input,this_image)
+
+	//if this_loc == "cave_entrance" and this_state == "cave_entrance_cutscene" then
+		//globals.prev_loc = []
+		//globals.prev_loc.push("cave_entrace")
+		//time = current_date[-2:].to_int
+		//if time % 2 == 0 then
+			//globals.state = "combat"
+			//globals.image = "bat"
+		//user_input
+	//end if
+	
+	if this_loc == "cave_entrance" and this_state == "mushroom_cutscene" then
+		globals.image = "cave_entrance"
+		globals.state = "normal"
+		return
+	end if
+	
+	if this_loc == "cave_entrance" and this_state == "normal" and (this_input.is_match("mushroom") == 1 or this_input.is_match("morel") == 1 or this_input.is_match("pick") == 1 or this_input.is_match("take") == 1) then
+		for item in inventory
+			if item[0] == "mushroom" then
+				print color.cyan+"There are no more left...\n"+color.orange+"""hmm... Maybe if I come back later."
+				user_input("",false,true)
+				return
+			end if
+		end for
+		inventory.push(equipment.mushroom)
+		globals.image = "mushroom_cutscene"
+		globals.state = "mushroom_cutscene"
+		return
+	end if
+	
+	if this_loc == "cave1Light" and this_state == "normal" and (this_input.is_match("forward") == 1 or this_input.is_match("continue") == 1 or this_input.is_match("around") == 1 or this_input.is_match("jump") == 1) then Game_Over("win")
+	
+	if this_loc == "cave1Dark" and this_state == "normal" and (this_input.is_match("forward") == 1 or this_input.is_match("ahead") == 1 or this_input.is_match("continue") == 1) then Game_Over("pitfall")
+	
+	if this_state == "normal" and (this_loc == "cave1Dark" or this_loc == "cave1Light") and (this_input.is_match("back") == 1 or this_input.is_match("away") == 1) then
+		globals.image = "cave_entrance"
+		globals.loc = "cave_entrance"
+		return
+	end if
+
+
+	
+	if this_state == "inventory" then
+		if this_input == "y" then 
+			Change_Equipment()
+			return
+		end if
+		if this_input == "n" then
+			globals.state = globals.prev_state.pull
+			globals.image = globals.prev_image.pull
+			if this_loc == "cave1Dark" and globals.light == true then
+				globals.loc = "cave1Light"
+				globals.image = "cave1Light"
+				return
+			end if
+			if this_loc == "cave1Light" and globals.light == false then
+				globals.loc = "cave1Dark"
+				globals.image = "cave1Dark"
+				return
+			end if
+			return
+		end if
+		return
+	end if
+	
+	if this_input == "inventory" then
+		globals.prev_image.push(image)
+		globals.prev_state.push(state)
+		globals.image = "inventory"
+		globals.state = "inventory"
+	end if
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	if this_state == "start" then
+		globals.state = "normal"
+		globals.image = "cave_entrance"
+		return
+	end if
+	
+	if this_loc == "cave_entrance" and this_state == "normal" and (this_input.is_match("forward") == 1 or this_input.is_match("continue") == 1 or this_input.is_match("into") == 1 or this_input.is_match("enter") == 1) then
+		globals.state = "cave_entrance_cutscene"
+		globals.image = "cave_entrance_cutscene"
+		return 
+	end if
+
+	if this_state == "cave_entrance_cutscene" then
+		globals.state = "normal"
+		if globals.light == true then
+			globals.image = "cave1Light"
+			globals.loc = "cave1Light"
+			return
+		end if
+		globals.image = "cave1Dark"
+		globals.loc = "cave1Dark"
+	end if
+	
+end function
+
+
+
+
+
+Input = function(this_loc,this_state,this_input)
+	input = ""
+	
+	if this_input == null then this_input = "ao0alkj"
+	
+	if this_state == "mushroom_cutscene" then
+		input = user_input(color.cyan+"Mushroom added to inventory\n",false,true)
+		return input
+	end if
+	
+	if this_loc == "cave_entrance" and this_state == "normal" and this_input.is_match("search") == 1 then
+		input = user_input(color.cyan+"Green grass leads up to an ominous black\n"+color.cyan+"void in the rocks.  You see a spotted mushroom on the ground\n"+color.cyan+"before the entrance...")
+		return input
+	end if
+	
+	if this_state == "inventory" then
+		input = user_input("change equiped items?(y/n)")
+		return input
+	end if
+	
+	if this_state == "start" then
+		input = user_input("",false,true)
+		return input
+	end if
+
+	if this_state == "normal" and this_loc == "cave_entrance" then
+		input = user_input(color.cyan+"You stand before the entrance of a dark cave.\n")
+		return input
+	end if
+
+	if this_state == "normal" and this_loc == "cave1Light" then
+		input = user_input(color.cyan+"You see a giant gaping pit in the floor \n"+color.cyan+"ahead of you.  Good thing you had a flashlight...\n"+color.cyan+"Looks like there's enough room to get past it.\n")
+		return input
+	end if
+	
+	if this_state == "normal" and this_loc == "cave1Dark" then
+		input = user_input(color.cyan+"It's too dark to see but if you keep your\n"+color.cyan+"hand on the wall you can slowly move forward...: \n")
+		return input
+	end if
+
+end function
+
+
+
+
+
+
+Game_Over = function(condition)
+	
+	if condition == "win" then
+		clear_screen
+		print color.cyan+"Thanks for playing trial version of ""cave""\n"
+		exit
+	end if
+	if condition == "pitfall" then
+		clear_screen
+		print color.cyan+"As the feeling of weightlessness overtakes\n"+color.cyan+"you, you have just enough time to regret going \n"+color.cyan+"into a dark cave without a light."
+		print color.cyan+"You were splattered on rocks at the bottom \n"+color.cyan+"of a deep hole."
+		print color.cyan+"Please try again\n\n"
+		exit
+	end if
+end function
+
+
+
+
+
+
+Display = function(this)
+	
+	if this == "mushroom_cutscene" then 
+		clear_screen
+		print "                                                         "
+		print "                  "+color.red+"ooo                                    "
+		print "                 "+color.red+"oooooo          "+color.green+"\\//\\//                "
+		print "                "+color.red+"OOOO"+color.white+"%%"+color.red+"OOO                                "
+		print "  "+color.green+"\\//        "+color.white+"%"+color.red+"OOOO"+color.white+"%%%%"+color.red+"OOOOO                             "
+		print "             "+color.white+"%%"+color.red+"OOOOO"+color.white+"%%"+color.red+"OOOOOOOOO                          "
+		print "           "+color.red+"OOOOOOOOOOOOOOOOOOOOOOO                       "
+		print "                 "+color.white+"|#####|                  "+color.green+"\\//\\         "
+		print "                 "+color.white+"|#####|                                 "
+		print "         "+color.green+"//\\//                                          "
+		print color.cyan+"As you kneel down to pick the mushroom\n"+color.cyan+"you anxiously reflect...\n"+color.orange+"'I sure wish I knew more about mushrooms'"
+		return
+	end if
+	
+	if this == "inventory" then
+		clear_screen
+		i = 0
+		print
+		print
+		print
+		print
+		print
+		Stats()
+		print
+		print "                   inventory"
+		print "------------------------------------------------"
+		print
+		for item in inventory
+			i = i + 1
+			print color.yellow+i+color.cap+": "+color.orange+item[0]+color.green+" atk = "+item[1]+" "+color.cyan+item[3]+"\n"
+		end for
+	end if
+	
+	if this == "title" then
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX           "+color.red+"<b>cave</b>"+color.brown+"            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX              "+color.grey+"by"+color.brown+"              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX             "+color.grey+"xanadu"+color.brown+"             XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" 
+		print color.cyan+"type inventory to open inventory"
+		return
+	end if
+
+	if this == "cave_entrance" then
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.skin+"         O"+color.brown+"                      XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX        /|\                     XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.blue+"        / \"+color.brown+"                     XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		Stats()
+		return
+	end if
+
+	if this == "cave_entrance_cutscene" then
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.skin+"          O"+color.brown+"                     XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX          |                     XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.blue+"          L"+color.brown+"                     XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		Stats()
+		wait(.2)
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.skin+"           O"+color.brown+"                    XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX          /|\                   XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.blue+"          / \"+color.brown+"                   XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		Stats()
+		wait(.2)
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.skin+"            O"+color.brown+"                   XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX            |                   XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.blue+"            L"+color.brown+"                   XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		Stats()
+		wait(.2)
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.skin+"             O"+color.brown+"                  XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX            /|\                 XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.blue+"            / \"+color.brown+"                 XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 	
+		Stats()
+		wait(.2)
+		clear_screen
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXXXX         XXXXXXXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
+		Stats()
+		wait(2)
+		return
+	end if
+	
+	if this == "cave1Light" then
+		clear_screen
+		print color.brown+"                    "+color.yellow+"|"+color.brown+"X"+color.grey+"XXXXXXXXXXXXX"+color.brown+"X"+color.yellow+"|                    "
+		print color.brown+"                    "+color.yellow+"|"+color.brown+"X"+color.grey+"XX     XXXXXX"+color.brown+"X"+color.yellow+"|                     "
+		print color.brown+"                    "+color.yellow+"|"+color.brown+"X"+color.grey+"X        XXXX"+color.yellow+"/                      "
+		print color.brown+"                    "+color.yellow+"|"+color.brown+"X"+color.grey+"X         XX"+color.yellow+"/                       "
+		print color.brown+"                     "+color.yellow+"\"+color.grey+"XX       XX"+color.yellow+"/                        "
+		print color.brown+"                      "+color.yellow+"\"+color.grey+"XX     XX"+color.yellow+"/                         "
+		print color.brown+"                       "+color.yellow+"\"+color.grey+"XXXXXXX"+color.yellow+"/                          "
+		print color.brown+"                        "+color.yellow+"\"+color.grey+"XXXXX"+color.yellow+"/                           "
+		print color.brown+"                         "+color.yellow+"\"+color.grey+"XXX"+color.yellow+"/                            " 
+		print color.brown+"                          "+color.yellow+"\"+color.grey+"X"+color.yellow+"/                             " 
+		print color.brown+"                          -"+color.skin+"o"+color.brown+"-"
+		Stats()
+		return
+	end if
+
+	if this == "cave1Dark" then
+		clear_screen
+		print
+		print
+		print
+		print
+		print
+		print
+		print
+		print
+		print
+		print
+		print
+		Stats()
+		return
+	end if
+
+end function
+
+
+
+light = false
+prev_state = []
+prev_image = []
+state = "start"
+image = "title"
+loc = "cave_entrance"
+hp = 15
+hp_max = 15
+right_hand = equipment.fist
+left_hand = equipment.fist
+inventory = [equipment.fist, equipment.flashlight, equipment.pKnife]
+input = null
+while true
+	Display(image)
+	input = Input(loc,state,input)
+	Update(loc,state,input,image)
+end while
