@@ -914,14 +914,13 @@ cCheck = 0
 title
 
 // main program loop ====================================================================================
-if params.len == 1 and params[0] == "xanadu" then
-	pcode = "asg8a044"
-else
-	pcode = user_input("<color=blue><b>enter access code: </b></color>",true)
-end if
+
+
+pcode = user_input("<color=blue><b>enter access code: </b></color>",true)
+
 print("<b>type help for commands")
 print("<b><color=yellow>launch binary files with ./")
-while pcode == "Rhs56654SRHrdsh" or pcode == "asg8a044"
+while pcode == "xtools"
 	if lObject and typeof(lObject) == "shell" then
 		myShell = lObject
 		myComp = lObject.host_computer
