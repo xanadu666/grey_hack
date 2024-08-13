@@ -1,0 +1,146 @@
+// bank account and bank password scraper (for video game not real life) using ipscan
+
+GetPassword = function(userPass)
+	if userPass.len != 2 then exit("<b>xscrape: wrong syntax")
+	password = cryptools.decipher(userPass[1])
+	return password
+end function
+success = function(userFolders)
+	for userFolder in userFolders
+		bankFile = comp.File("/home/" + userFolder.name + "/Config/Bank.txt")
+		if not bankFile then continue
+		userPass = bankFile.get_content.split(":")
+		print("Deciphering bank password for user: " + userFolder.name)
+		bankPass = GetPassword(userPass)
+		data = file.get_content
+		file.set_content(data + userPass[0] + "," + bankPass + ",")
+	end for
+end function
+usage = "<b>Usage:</b> xscrape [ipBottomRange] [ipTopRange] [filename]"
+if params.len != 3 then exit(usage)
+clear_screen
+print("<b>XSCRAPE</b> by <b>xanadu</b>")
+wait(2)
+clear_screen
+metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then	metaxploit = include_lib(current_path + "/metaxploit.so")
+cryptools = include_lib("/lib/crypto.so")
+if not cryptools then cryptools = include_lib(current_path + "/crypto.so")
+if not cryptools then exit("Error: Missing crypto library")
+if not metaxploit then exit("Error: Missing metaxploit library")
+ipStart = params[0]
+ipEnd = params[1]
+fileName = params[2]
+if is_valid_ip(ipStart) != true or is_valid_ip(ipEnd) != true then exit("<b>xscrape: invalid ip address")
+ipStartList = ipStart.split("\.")
+ipEndList = ipEnd.split("\.")
+firstStart = ipStartList[0].to_int
+secondStart = ipStartList[1].to_int
+thirdStart = ipStartList[2].to_int
+fourthStart = ipStartList[3].to_int
+firstEnd = ipEndList[0].to_int
+secondEnd = ipEndList[1].to_int
+thirdEnd = ipEndList[2].to_int
+fourthEnd = ipEndList[3].to_int
+errMsg = "please input ip's in ascending order"
+if firstStart > firstEnd then exit(errMsg)
+if firstStart == firstEnd and secondStart > secondEnd then exit(errMsg)
+if firstStart == firstEnd and secondStart == secondEnd and thirdStart > thirdEnd then exit(errMsg)
+if firstStart == firstEnd and secondStart == secondEnd and thirdStart == thirdEnd and fourthStart > fourthEnd then exit(errMsg)
+w = firstStart
+x = secondStart
+y = thirdStart
+z = fourthStart
+a = 256 - z
+b = 256 - y
+c = 256 - x
+
+
+file = get_shell.host_computer.File(current_path + "/" + fileName)
+if file == null then 
+	comp = get_shell.host_computer
+	comp.touch(current_path, fileName)
+	file = comp.File(current_path + "/" + fileName)
+end if
+for i in range(1,256)
+	for j in range(1,c)
+		for k in range(1,b)
+			for l in range(1,a)
+				ip = w + "." + x +"." + y + "." + z
+				//index = index + 1
+				//if index == 1000 then
+					//print("<b>" + input0 + ": scraper finished")
+					//return
+				//end if
+				router = get_router(ip)
+				if typeof(router) != "router" then
+					if ip == ipEnd then exit
+					z = z + 1
+					if z == 256 then z = 0
+					continue
+				end if
+				ports = router.used_ports
+				if ports.len == 0 then
+					if ip == ipEnd then exit
+					z = z + 1
+					if z == 256 then z = 0
+					continue
+				end if
+				print(ip)
+				lastLanIP = null
+				for port in ports
+					portNumber = port.port_number
+					lanIP = port.get_lan_ip
+					if lanIP == lastLanIP and breakSwitch == "on" then continue
+					print(portNumber + " : " + lanIP)
+					netsession = metaxploit.net_use(ip, portNumber)
+					if typeof(netsession) != "NetSession" then continue
+					metaLib = netsession.dump_lib
+					print("Scanning " + metaLib.lib_name + " " + metaLib.version )
+					listMem = metaxploit.scan(metaLib)
+					if listMem.len == 0 then continue
+					print("Scan completed: detected vulnerabilities in " + listMem.len + " memory zones.  Beginning attack.")
+					for itemMem in listMem
+						print(itemMem)
+					end for
+					userFolders = null
+					breakSwitch = "off"
+					for itemMem in listMem
+						vulnMem = metaxploit.scan_address( metaLib, itemMem ).split("Unsafe check: ")
+						if breakSwitch == "on" then break
+						for wordMem in vulnMem
+							if wordMem == vulnMem[0] then continue
+							if userFolders then 
+								success(userFolders)
+								breakSwitch = "on"
+								lastLanIP = lanIP[0:]
+								break
+							end if
+							value = wordMem[wordMem.indexOf("<b>")+3:wordMem.indexOf("</b>")]
+							result = metaLib.overflow(itemMem, value)
+							if typeof(result) == "computer" or typeof(result) == "shell" then
+								if typeof(result) == "shell" then comp = result.host_computer
+								if typeof(result) == "computer" then comp = result
+								if not userFolders then homeFolders = comp.File("/home")
+								userFolders = homeFolders.get_folders
+							else
+								continue
+							end if
+						end for
+					end for	
+				end for
+				if ip == ipEnd then exit
+				z = z + 1
+				if z == 256 then z = 0
+			end for
+			a = 256
+			y = y + 1
+			if y == 256 then y = 0	
+		end for	
+		b = 256
+		x = x + 1
+		if x == 256 then x = 0
+	end for
+	c = 256
+	w = w + 1
+end for
