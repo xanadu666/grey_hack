@@ -1,6 +1,5 @@
 // cave by xanadu
-// experimental video game demo
-
+// experimental game demo
 
 enemy = {};
 	enemy.bat = ["bat", 5, 5, 2]
@@ -134,7 +133,7 @@ Update = function(this_loc,this_state,this_input,this_image)
 		globals.image = "inventory"
 		globals.state = "inventory"
 	end if
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
 	if this_state == "start" then
 		globals.state = "normal"
 		globals.image = "cave_entrance"
@@ -161,9 +160,6 @@ Update = function(this_loc,this_state,this_input,this_image)
 end function
 
 
-
-
-
 Input = function(this_loc,this_state,this_input)
 	input = ""
 	
@@ -174,7 +170,7 @@ Input = function(this_loc,this_state,this_input)
 		return input
 	end if
 	
-	if this_loc == "cave_entrance" and this_state == "normal" and this_input.is_match("search") == 1 then
+	if this_loc == "cave_entrance" and this_state == "normal" and this_input == "search" then
 		input = user_input(color.cyan+"Green grass leads up to an ominous black\n"+color.cyan+"void in the rocks.  You see a spotted mushroom on the ground\n"+color.cyan+"before the entrance...")
 		return input
 	end if
@@ -207,10 +203,6 @@ Input = function(this_loc,this_state,this_input)
 end function
 
 
-
-
-
-
 Game_Over = function(condition)
 	
 	if condition == "win" then
@@ -226,10 +218,6 @@ Game_Over = function(condition)
 		exit
 	end if
 end function
-
-
-
-
 
 
 Display = function(this)
@@ -281,8 +269,9 @@ Display = function(this)
 		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX                                XXXXXXXXXXXXX"
 		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
-		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM\n" 
+		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
 		print color.cyan+"type inventory to open inventory"
+		print color.cyan+"type search to look around"
 		return
 	end if
 
@@ -412,6 +401,8 @@ Display = function(this)
 	end if
 
 end function
+
+
 
 
 
