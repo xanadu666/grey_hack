@@ -3,19 +3,19 @@
 // by xanadu
 
 // color map.  you can add new colors to map here
-color = {};
-	color.white = "<color=#FFFFFF>";
-	color.grey = "<color=#A5A5A5>";
-	color.blue = "<color=#003AFF>";
-	color.cyan = "<color=#00FFE7>";
-	color.purple = "<color=#D700FF>";
-	color.red = "<color=#AA0000>";
-	color.yellow = "<color=#FBFF00>";
-	color.orange = "<color=#FF8701>";
-	color.brown = "<color=#964B00>";
-	color.green = "<color=#00ED03>";
-	color.skin = "<color=#ffcd94>";
-	color.cap = "</color>";
+color = {}
+	color.white = "<color=#FFFFFF>"
+	color.grey = "<color=#A5A5A5>"
+	color.blue = "<color=#003AFF>"
+	color.cyan = "<color=#00FFE7>"
+	color.purple = "<color=#D700FF>"
+	color.red = "<color=#AA0000>"
+	color.yellow = "<color=#FBFF00>"
+	color.orange = "<color=#FF8701>"
+	color.brown = "<color=#964B00>"
+	color.green = "<color=#00ED03>"
+	color.skin = "<color=#ffcd94>"
+	color.cap = "</color>"
 
 // you have to add a new data set for each image you create.  here there are 2 example image data sets.  one is a large x accross the grid and the other is a blue rectangle with on orange center.
 // example image 2: a blue rectangle with an orange center.
