@@ -1,0 +1,169 @@
+// image drawing function using maps with example images
+
+color = {};
+	color.white = "<color=#FFFFFF>";
+	color.grey = "<color=#A5A5A5>";
+	color.blue = "<color=#003AFF>";
+	color.cyan = "<color=#00FFE7>";
+	color.purple = "<color=#D700FF>";
+	color.red = "<color=#AA0000>";
+	color.yellow = "<color=#FBFF00>";
+	color.orange = "<color=#FF8701>";
+	color.brown = "<color=#964B00>";
+	color.green = "<color=#00ED03>";
+	color.skin = "<color=#ffcd94>";
+	color.cap = "</color>"
+
+image2 = {};
+	image2[1] = [[4, 5], color.blue, "0"]
+	image2[2] = [[4, 6], color.blue, "0"]
+	image2[3] = [[4, 7], color.blue, "0"]
+	image2[4] = [[5, 5], color.blue, "0"]
+	image2[5] = [[5, 6], color.orange, "%"]
+	image2[6] = [[5, 7], color.blue, "0"]
+	image2[7] = [[6, 5], color.blue, "0"]
+	image2[8] = [[6, 6], color.blue, "0"]
+	image2[9] = [[6, 7], color.blue, "0"]
+
+image1 = {};
+	image1[1] = [[0, 0], color.red, "%"]
+	image1[2] = [[0, 39], color.blue, "$"]
+	image1[3] = [[1, 4], color.yellow, ""]
+	image1[4] = [[1, 36], color.cyan, "("]
+	image1[5] = [[2, 8], color.orange, "="]
+	image1[6] = [[2, 32], color.grey, "&"]
+	image1[7] = [[3, 12], color.purple, "@"]
+	image1[8] = [[3, 28], color.skin, "^"]
+	image1[9] = [[4, 16], color.grey, "<"]
+	image1[10] = [[4, 24], color.blue, "#"]
+	image1[11] = [[5, 20], color.orange, "*"]
+	image1[12] = [[6, 16], color.cyan, ""]
+	image1[13] = [[6, 24], color.green, "%"]
+	image1[14] = [[7, 12], color.red, "!"]
+	image1[15] = [[7, 28], color.purple, "p"]
+	image1[16] = [[8, 8], color.orange, "$"]
+	image1[17] = [[8, 32], color.skin, "&"]
+	image1[18] = [[9, 4], color.purple, ""]
+	image1[19] = [[9, 36], color.brown, ""]
+	image1[20] = [[10, 0], color.cyan, "G"]
+	image1[21] = [[10, 39], color.yellow, "%"]
+
+Draw = function(data1,data2)
+	str0 = ""
+	str1 = ""
+	str2 = ""
+	str3 = ""
+	str4 = ""
+	str5 = ""
+	str6 = ""
+	str7 = ""
+	str8 = ""
+	str9 = ""
+	str10 = ""
+	
+	i = 1
+	j = 1
+	
+	for x in range (0,10)
+		
+		for y in range(0,39)
+			
+			if data1[i][2] != "" and data1[i][0][0] == x and data1[i][0][1] == y then
+				if x == 0 then str0 = str0 + data1[i][1] + data1[i][2]
+				if x == 1 then str1 = str1 + data1[i][1] + data1[i][2]
+				if x == 2 then str2 = str2 + data1[i][1] + data1[i][2]
+				if x == 3 then str3 = str3 + data1[i][1] + data1[i][2]
+				if x == 4 then str4 = str4 + data1[i][1] + data1[i][2]
+				if x == 5 then str5 = str5 + data1[i][1] + data1[i][2]
+				if x == 6 then str6 = str6 + data1[i][1] + data1[i][2]
+				if x == 7 then str7 = str7 + data1[i][1] + data1[i][2]
+				if x == 8 then str8 = str8 + data1[i][1] + data1[i][2]
+				if x == 9 then str9 = str9 + data1[i][1] + data1[i][2]
+				if x == 10 then str10 = str10 + data1[i][1] + data1[i][2]
+				i = i + 1
+				if i > data1.len then i = 1
+				continue
+			end if
+			
+			if data2[j][2] != "" and data2[j][0][0] == x and data2[j][0][1] == y then
+				if x == 0 then str0 = str0 + data2[j][1] + data2[j][2]
+				if x == 1 then str1 = str1 + data2[j][1] + data2[j][2]
+				if x == 2 then str2 = str2 + data2[j][1] + data2[j][2]
+				if x == 3 then str3 = str3 + data2[j][1] + data2[j][2]
+				if x == 4 then str4 = str4 + data2[j][1] + data2[j][2]
+				if x == 5 then str5 = str5 + data2[j][1] + data2[j][2]
+				if x == 6 then str6 = str6 + data2[j][1] + data2[j][2]
+				if x == 7 then str7 = str7 + data2[j][1] + data2[j][2]
+				if x == 8 then str8 = str8 + data2[j][1] + data2[j][2]
+				if x == 9 then str9 = str9 + data2[j][1] + data2[j][2]
+				if x == 10 then str10 = str10 + data2[i][1] + data2[j][2]
+				j = j + 1
+				if j > data2.len then j = 1
+				continue
+			end if
+			
+			if data1[i][2] == "" and data1[i][0][0] == x and data1[i][0][1] == y then
+				if x == 0 then str0 = str0 + data1[i][1] + "*"	
+				if x == 1 then str1 = str1 + data1[i][1] + "*"
+				if x == 2 then str2 = str2 + data1[i][1] + "*"
+				if x == 3 then str3 = str3 + data1[i][1] + "*"
+				if x == 4 then str4 = str4 + data1[i][1] + "*"
+				if x == 5 then str5 = str5 + data1[i][1] + "*"
+				if x == 6 then str6 = str6 + data1[i][1] + "*"
+				if x == 7 then str7 = str7 + data1[i][1] + "*"
+				if x == 8 then str8 = str8 + data1[i][1] + "*"
+				if x == 9 then str9 = str9 + data1[i][1] + "*"
+				if x == 10 then str10 = str10 + data1[i][1] +  "*"
+				i = i + 1				
+				if i > data1.len then i = 1
+				continue
+			end if
+			
+			if data2[j][2] == "" and data2[j][0][0] == x and data2[j][0][1] == y then
+				if x == 0 then str0 = str0 + data2[j][1] + "*"	
+				if x == 1 then str1 = str1 + data2[j][1] + "*"
+				if x == 2 then str2 = str2 + data2[j][1] + "*"
+				if x == 3 then str3 = str3 + data2[j][1] + "*"
+				if x == 4 then str4 = str4 + data2[j][1] + "*"
+				if x == 5 then str5 = str5 + data2[j][1] + "*"
+				if x == 6 then str6 = str6 + data2[j][1] + "*"
+				if x == 7 then str7 = str7 + data2[j][1] + "*"
+				if x == 8 then str8 = str8 + data2[j][1] + "*"
+				if x == 9 then str9 = str9 + data2[j][1] + "*"
+				if x == 10 then str10 = str10 + data2[j][1] +  "*"
+				j = j + 1
+				if j > data2.len then j = 1
+				continue
+			end if
+			
+			if x == 0 then str0 = str0 + " "	
+			if x == 1 then str1 = str1 + " "
+			if x == 2 then str2 = str2 + " "
+			if x == 3 then str3 = str3 + " "
+			if x == 4 then str4 = str4 + " "
+			if x == 5 then str5 = str5 + " "
+			if x == 6 then str6 = str6 + " "
+			if x == 7 then str7 = str7 + " "
+			if x == 8 then str8 = str8 + " "
+			if x == 9 then str9 = str9 + " "
+			if x == 10 then str10 = str10 + " "
+		
+		end for
+	
+	end for
+	
+	print str0
+	print str1
+	print str2
+	print str3
+	print str4
+	print str5
+	print str6
+	print str7
+	print str8
+	print str9
+	print str10
+
+end function
+
+Draw(image1, image2)
