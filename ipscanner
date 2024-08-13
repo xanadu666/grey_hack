@@ -1,4 +1,6 @@
 // basic ip scanner with no payload
+// by xanadu
+
 // usage message if parameters not entered correctly on command line launch
 usage = "<b>Usage:</b> ipscan [ipBottomRange] [ipTopRange]"
 if params.len < 2 or params.len > 2 then exit(usage)
