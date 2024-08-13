@@ -1,0 +1,278 @@
+// xmon by xanadu
+
+color = {};
+	color.white = "<color=#FFFFFF>";
+	color.grey = "<color=#A5A5A5>";
+	color.blue = "<color=#003AFF>";
+	color.cyan = "<color=#00FFE7>";
+	color.purple = "<color=#D700FF>";
+	color.red = "<color=#AA0000>";
+	color.yellow = "<color=#FBFF00>";
+	color.orange = "<color=#FF8701>";
+	color.green = "<color=#00ED03>";
+	color.cap = "</color>"
+
+GetQuickShots = function()
+	qShots = []
+	i = 0
+	while i < 200
+		qShots.push(MEMDUMP(mainDir))
+		i = i + 1
+	end while
+	return qShots
+end function
+
+GetAllFiles = function(list)
+	newList = []
+	joinedList = ""
+	for item in list
+		newList.push(item.path)
+	end for
+	joinedList = newList.join
+	return joinedList
+end function
+
+GetChangedFile = function(listA, listB)
+	i = 0
+	changedFile = ""
+	while listA.len > 0
+		if listA[0].path == listB[i].path then
+			listA.pull
+			i = 0
+			continue
+		end if
+		i = i + 1
+		if i == listB.len then 
+			i = 0
+			changedFile = listA.pull
+			break
+		end if
+	end while
+	if changedFile then return changedFile.path
+end function
+
+GetFiles = function(firstList, secondList)
+	newList = []
+	firstList.reverse
+	secondList.reverse
+	while secondList.len > 0
+		firstItem = firstList.pop
+		secondItem = secondList.pop
+		if firstItem.path != secondItem.path then
+			newList.push(firstItem)
+			secondList.push(secondItem)
+		end if
+	end while
+	return newList
+end function
+
+MEMDUMP = function(fileObject)
+	newList = []
+	fileList = fileObject.get_folders + fileObject.get_files
+	while fileList.len > 0
+		file = fileList.pull
+		if file.is_folder then fileList = fileList + file.get_folders + file.get_files
+		newList.push(file)
+	end while
+	return newList
+end function
+
+GetProcList = function()
+	procs = get_shell.host_computer.show_procs
+	procList = procs.split("\n")
+	return procList
+end function
+
+GetNumProcs = function(list)
+	number = list.len - 1
+	return number
+end function
+
+GetProcessorTotal = function(list)
+	total = 0
+	for proc in list
+		if proc[:4] == "USER" then continue
+		newList = proc.split(" ")
+		procNum = newList[2][:-1]
+		dec = procNum.split("\.")
+		proc = dec.join("")
+		proc = proc.to_int
+		total = total + proc
+	end for
+	return total
+end function
+
+GetMemTotal = function(list)
+	total = 0
+	for proc in list
+		if proc[:4] == "USER" then continue
+		newList = proc.split(" ")
+		memNum = newList[3][:-1]
+		dec = memNum.split("\.")
+		mem = dec.join("")
+		mem = mem.to_int
+		total = total + mem
+	end for
+	return total
+end function
+
+GetKilledProcName = function(list1, list2)
+	killedProc = ""
+	killedProcName = ""
+	list1.reverse
+	list2.reverse
+	while list2.len > 0
+		firstItem = list1.pop
+		secondItem = list2.pop
+		if firstItem != secondItem then
+			killedProc = secondItem
+			break
+		end if
+	end while
+	killedProcName = killedProc.split(" ")[1] + " " + killedProc.split(" ")[4]
+	return killedProcName
+end function
+
+Display = function(list, number, dir, info, mem, proc, fsys, fchange, fList)
+	if dir == "start" then
+		clear_screen
+		print color.white + "XMON by xanadu"
+		print color.white + current_date
+	end if
+	print "####################################"
+	print "####################################"
+	print "####################################\n"
+	print format_columns(list.join("\n"))
+	print "\n" + color.cyan + "Number of processes: " + number + "\n"
+	print color.yellow + "Memory usage: " + mem + "%"
+	print color.yellow + "Processor usage: " + proc + "%\n"
+	if fsys == true then print color.red + "<b>FILE SYSTEM HAS BEEN ALTERED"
+	if fchange == "delete" then print color.red + "<b>FILE HAS BEEN DELETED"
+	if fchange == "add" then print color.red + "<b>FILE HAS BEEN ADDED"
+	if fList then
+		for item in fList
+			print color.cyan + "<b>" + item.path
+		end for
+	end if
+	if dir == "up" then print color.orange + "NEW PROCESS " + color.cyan + "<b>" + info + "</b>" + color.orange + " DETECTED" 
+	if dir == "down" then print color.orange + "PROCESS " + color.cyan + "<b>" + info + "</b>" + color.orange + " ENDED" 
+	if typeof(info) == "list" then
+		for item in info
+			print item
+		end for		
+	end if
+	print color.white + "<b>" + current_date
+end function
+
+firstLoop = true
+prevSnapShot = []
+prevNumProcs = 0
+prevProcTotal = 0
+prevMemTotal = 0
+prevProcList = null
+while true
+	fileList = []
+	mainDir = get_shell.host_computer.File("/")
+	snapShot = MEMDUMP(mainDir)
+	procList = GetProcList
+	numProcs = GetNumProcs(procList)
+	processorTotal = GetProcessorTotal(procList)
+	processorTotal = processorTotal / 10
+	memTotal = GetMemTotal(procList)
+	memTotal = memTotal / 10
+
+	if snapShot and prevSnapShot then
+		allFiles = GetAllFiles(snapShot[0:])
+		prevAllFiles = GetAllFiles(prevSnapShot[0:])
+	end if
+	
+	if firstLoop == true then 
+		Display(procList, numProcs, "start", null , memTotal, processorTotal, null, null, null)
+		firstLoop = false
+		prevSnapShot = snapShot
+		prevNumProcs = numProcs
+		prevProcTotal = processorTotal
+		prevMemTotal = memTotal
+		prevProcList = procList
+		continue
+	end if
+	
+	if snapShot.len == prevSnapShot.len and allFiles != prevAllFiles then
+		
+		quickShots = GetQuickShots()
+		fInfo = []
+		
+		origFile = GetChangedFile(prevSnapShot[0:], snapShot[0:])
+		newFile = GetChangedFile(snapShot[0:], prevSnapShot[0:])
+		fileNamesInfo = color.orange + "original file: <b>" + origFile + "\n" + color.orange +  "New file: <b>" + newFile + "\n/////////////////////////////\n"
+		fInfo.push(fileNamesInfo)
+		while quickShots.len > 0
+			prevQShot = quickShots.pull
+			if quickShots.len == 0 then
+				currentQShot = MEMDUMP(mainDir)
+			else
+				currentQShot = quickShots[0]
+			end if
+			qFiles = GetAllFiles(prevQShot)
+			prevQFiles = GetAllFiles(currentQShot)
+			if qFiles != prevQFiles then
+				origFile = GetChangedFile(prevQShot[0:], currentQShot[0:])
+				newFile = GetChangedFile(currentQShot[0:], prevQShot[0:])
+				fileNamesInfo = color.orange + "original file: <b>" + origFile + "\n" + color.orange +  "New file: <b>" + newFile + "\n/////////////////////////////\n"
+				fInfo.push(fileNamesInfo)
+			end if
+			
+			
+		end while
+		Display(procList, numProcs, null, fInfo, memTotal, processorTotal, true, null, null)
+		prevSnapShot = MEMDUMP(mainDir)
+		prevNumProcs = numProcs
+		prevProcTotal = processorTotal
+		prevMemTotal = memTotal
+		prevProcList = procList
+		continue
+	end if
+	
+	if snapShot.len != prevSnapShot.len then
+		if snapShot.len > prevSnapShot.len then 
+			fileList = GetFiles(snapShot[0:], prevSnapShot[0:])
+			Display(procList, numProcs, null, null, memTotal, processorTotal, true, "add", fileList[0:])
+		end if
+		if snapShot.len < prevSnapShot.len then
+			fileList = GetFiles(prevSnapShot[0:], snapShot[0:])
+			Display(procList, numProcs, null, null, memTotal, processorTotal, true, "delete", fileList[0:])
+		end if
+		prevSnapShot = snapShot
+		prevNumProcs = numProcs
+		prevProcTotal = processorTotal
+		prevMemTotal = memTotal
+		prevProcList = procList
+		continue
+	end if
+	if numProcs != prevNumProcs then
+		if numProcs > prevNumProcs then 
+			newProc = procList[-1].split(" ")
+			pid = newProc[1] + " " + newProc[4]
+			Display(procList, numProcs, "up", pid, memTotal, processorTotal, null, null, null)
+		end if
+		if numProcs < prevNumProcs then
+			killedProcName = GetKilledProcName(procList[0:], prevProcList[0:])
+			Display(procList, numProcs, "down", killedProcName, memTotal, processorTotal, null, null, null)
+		end if
+		prevSnapShot = snapShot
+		prevNumProcs = numProcs
+		prevProcTotal = processorTotal
+		prevMemTotal = memTotal
+		prevProcList = procList
+		continue
+	end if
+	if processorTotal != prevProcTotal or memTotal != prevMemTotal then
+		Display(procList, numProcs, null, null, memTotal, processorTotal, null, null, null)
+		prevSnapShot = snapShot
+		prevNumProcs = numProcs
+		prevProcTotal = processorTotal
+		prevMemTotal = memTotal
+		prevProcList = procList
+		continue
+	end if
+end while
