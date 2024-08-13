@@ -1,0 +1,91 @@
+// basic ip scanner with no payload
+// usage message if parameters not entered correctly on command line launch
+usage = "<b>Usage:</b> ipscan [ipBottomRange] [ipTopRange]"
+if params.len < 2 or params.len > 2 then exit(usage)
+
+// find and load library files
+// this part is commented out.  will need to be uncommented when payload is added to ipscanner
+//=========================================================================
+//metaxploit = include_lib("/lib/metaxploit.so")
+//if not metaxploit then
+	//currentPath = current_path
+	//metaxploit = include_lib(currentPath + "/metaxploit.so")
+//end if
+//if not metaxploit then exit("Error: Missing metaxploit library")
+//=========================================================================
+
+// show title
+clear_screen
+print("<b>IPSCAN</b> by <b>xanadu</b>")
+
+// initialize variables with parameters entered on command line
+ipStart = params[0]
+ipEnd = params[1]
+
+// check if valid ip are entered.  exits with message if not valid ips
+if is_valid_ip(ipStart) != true or is_valid_ip(ipEnd) != true then exit("invalid ip address")
+
+// split up entered ip addresses into 4 sections each 
+ipStartList = ipStart.split("\.")
+ipEndList = ipEnd.split("\.")
+firstStart = ipStartList[0].to_int
+secondStart = ipStartList[1].to_int
+thirdStart = ipStartList[2].to_int
+fourthStart = ipStartList[3].to_int
+firstEnd = ipEndList[0].to_int
+secondEnd = ipEndList[1].to_int
+thirdEnd = ipEndList[2].to_int
+fourthEnd = ipEndList[3].to_int
+
+// error handling in case of entering ip addresses in wrong order
+errMsg = "please input ip's in ascending order"
+if firstStart > firstEnd then exit(errMsg)
+if firstStart == firstEnd and secondStart > secondEnd then exit(errMsg)
+if firstStart == firstEnd and secondStart == secondEnd and thirdStart > thirdEnd then exit(errMsg)
+if firstStart == firstEnd and secondStart == secondEnd and thirdStart == thirdEnd and fourthStart > fourthEnd then exit(errMsg)
+
+// initializing variables for scanner
+w = firstStart
+x = secondStart
+y = thirdStart
+z = fourthStart
+
+//initializing variables for range limits
+r1 = 256 - z
+r2 = 256 - y
+r3 = 256 - x
+
+// ip iterator
+//================================================================
+for a in range(1,256)
+	for b in range(1,r3)
+		for c in range(1,r2)
+			for d in range(1,r1)
+//===================================================================				
+				ip = w + "." + x +"." + y + "." + z
+				print ip
+				// add payload here
+				
+				
+				
+				
+				// exit case for program
+				if ip == params[1] then exit
+				
+				
+				// ip iterator
+//=====================================================				
+				z = z + 1
+				if z == 256 then z = 0
+			end for
+			r1 = 256
+			y = y + 1
+			if y == 256 then y = 0	
+		end for	
+		r2 = 256
+		x = x + 1
+		if x == 256 then x = 0
+	end for
+	r3 = 256
+	w = w + 1
+end for
