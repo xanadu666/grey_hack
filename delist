@@ -1,0 +1,36 @@
+// delist script for use with bankscrape output file.
+// by xanadu
+
+clear_screen
+if params.len != 1 then exit("<b>Usage: delist [output_from_xscrape]</b>")
+dfileName = params[0]
+data = get_shell.host_computer.File(current_path + "/" + dfileName)
+if not data then exit("Please input the ouput file from xscrape")
+file = data.get_content
+fileList = file.split(",")
+i = 0
+while fileList.len > 2
+	
+	if not fileList then break
+	if i == 3 then
+		user_input("",false,true)
+		clear_screen
+		i = 0
+		
+	end if
+	if i == 0 then print(((fileList.len -1)  / 2) + " items left\n\n")
+	info = fileList.pull
+	print info
+	info = fileList.pull
+	print info + "\n\n\n"
+	file = fileList.join(",")
+	data.set_content(file)
+	
+	
+	
+	i = i + 1
+	data = get_shell.host_computer.File(current_path + "/" + dfileName)
+	file = data.get_content
+	fileList = file.split(",")
+end while
+exit("end of list")
