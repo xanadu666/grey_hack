@@ -1,4 +1,6 @@
 // xtools by xanadu
+// default passcode is "xtools"
+// to change passcode replace while statement comparison argument on line 925
 
 color = {}
 	color.white = "<color=#FFFFFF>"
