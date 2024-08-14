@@ -20,6 +20,8 @@ color = {}
 // you have to add a new data set for each image you create.  here there are 2 example image data sets.  one is a large x accross the grid and the other is a blue rectangle with on orange center.
 // example image 2: a blue rectangle with an orange center.
 image2 = {};
+
+	// notice that the x,y coordinates are in numerical order from the top down.  if any key/value pairs share x coordinate then the y coordinates must be in order
 	image2[1] = [[4, 5], color.blue, "0"]
 	image2[2] = [[4, 6], color.blue, "0"]
 	image2[3] = [[4, 7], color.blue, "0"]
