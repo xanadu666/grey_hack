@@ -21,40 +21,41 @@ color = {}
 // example image 2: a blue rectangle with an orange center.
 image2 = {};
 
-	// notice that the x,y coordinates are in numerical order from the top down.  if any key/value pairs share x coordinate then the y coordinates must be in order
-	image2[1] = [[4, 5], color.blue, "0"]
-	image2[2] = [[4, 6], color.blue, "0"]
-	image2[3] = [[4, 7], color.blue, "0"]
+// notice that the y coordinates are in numerical order first counting up.  if any key/value pairs share y coordinate then sort x numericly counting up.
+// example image 2: blue rectangle with orange center.
+	image2[1] = [[5, 4], color.blue, "0"]
+	image2[2] = [[6, 4], color.blue, "0"]
+	image2[3] = [[7, 4], color.blue, "0"]
 	image2[4] = [[5, 5], color.blue, "0"]
-	image2[5] = [[5, 6], color.orange, ""]
-	image2[6] = [[5, 7], color.blue, "0"]
-	image2[7] = [[6, 5], color.blue, "0"]
+	image2[5] = [[6, 5], color.orange, ""]
+	image2[6] = [[7, 5], color.blue, "0"]
+	image2[7] = [[5, 6], color.blue, "0"]
 	image2[8] = [[6, 6], color.blue, "0"]
-	image2[9] = [[6, 7], color.blue, "0"]
+	image2[9] = [[7, 6], color.blue, "0"]
 
-// example image 1: a big x.
+// example image1: a large x.
 image1 = {};
 	image1[1] = [[0, 0], color.red, "%"]
-	image1[2] = [[0, 39], color.blue, "$"]
-	image1[3] = [[1, 4], color.yellow, "*"]
-	image1[4] = [[1, 36], color.cyan, "("]
-	image1[5] = [[2, 8], color.orange, "="]
-	image1[6] = [[2, 32], color.grey, "&"]
-	image1[7] = [[3, 12], color.purple, ""]
-	image1[8] = [[3, 28], color.skin, "^"]
-	image1[9] = [[4, 16], color.grey, "<"]
-	image1[10] = [[4, 24], color.blue, "#"]
-	image1[11] = [[5, 20], color.orange, "*"]
-	image1[12] = [[6, 16], color.cyan, "*"]
-	image1[13] = [[6, 24], color.green, ""]
-	image1[14] = [[7, 12], color.red, "!"]
-	image1[15] = [[7, 28], color.purple, "p"]
+	image1[2] = [[39, 0], color.blue, "$"]
+	image1[3] = [[4, 1], color.yellow, "*"]
+	image1[4] = [[36, 1], color.cyan, "("]
+	image1[5] = [[8, 2], color.orange, "="]
+	image1[6] = [[32, 2], color.grey, "&"]
+	image1[7] = [[12, 3], color.purple, ""]
+	image1[8] = [[28, 3], color.skin, "^"]
+	image1[9] = [[16, 4], color.grey, "<"]
+	image1[10] = [[24, 4], color.blue, "#"]
+	image1[11] = [[20, 5], color.orange, "*"]
+	image1[12] = [[16, 6], color.cyan, "*"]
+	image1[13] = [[24, 6], color.green, ""]
+	image1[14] = [[12, 7], color.red, "!"]
+	image1[15] = [[28, 7], color.purple, "p"]
 	image1[16] = [[8, 8], color.orange, "$"]
-	image1[17] = [[8, 32], color.skin, "&"]
-	image1[18] = [[9, 4], color.purple, "*"]
-	image1[19] = [[9, 36], color.brown, "*"]
-	image1[20] = [[10, 0], color.cyan, "G"]
-	image1[21] = [[10, 39], color.yellow, "%"]
+	image1[17] = [[32, 8], color.skin, "&"]
+	image1[18] = [[4, 9], color.purple, "*"]
+	image1[19] = [[36, 9], color.brown, "*"]
+	image1[20] = [[0, 10], color.cyan, "G"]
+	image1[21] = [[39, 10], color.yellow, "%"]
 
 
 
@@ -66,7 +67,7 @@ Draw = function(data1,data2)
 	Process_Image = function(data, color, character)
 		a = 0
 		for item in data
-			if x == a then data[a] = data[a] + color + character 
+			if y == a then data[a] = data[a] + color + character 
 			a = a + 1
 		end for
 	end function
@@ -79,10 +80,10 @@ Draw = function(data1,data2)
 	j = 1
 	
 	// you can change the vertical height by adjusting the range in this for statement. you have to have a str map key:pair for each unit of vertical height.  here verical height is 11.
-	for x in range (0,10)
+	for y in range (0,10)
 		
 		// you can change the horizontal width by adjusting the range in this for statement.  here horizontal width is 40.
-		for y in range(0,39)
+		for x in range(0,39)
 			
 			// you have to have a case and counter variable for each image.
 			// case for image 1 using a selected character using i counter
