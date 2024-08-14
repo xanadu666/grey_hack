@@ -1,0 +1,49 @@
+// original xmon by xanadu
+// was first functional script i made couple years ago
+
+print "<b>XMON</b> by <b>xanadu</b>"
+wait(3)
+clear_screen
+x = 1
+procVal = 100
+output = null
+msg = "<color=red><b>!!!WARNING!!! NEW ROOT PROCESS DETECTED\n"
+while x == true
+	procs = get_shell.host_computer.show_procs
+	procList = procs.split("\n")
+	for proc in procList
+		if proc[:5] == "USER " then
+			output = "<color=green>" + proc + "\n"
+			continue
+		end if
+		if proc[:5] == "root " then 
+			output = output + "<color=purple>" + proc + "\n"
+			continue
+		end if
+		if proc[:5] == "guest" then
+			output = output + "<color=white>" + proc + "\n"
+			continue
+		end if
+		if proc[:5] != "USER " or "root " or "guest" then
+			output = output + "<color=yellow>" + proc + "\n"
+			continue
+		end if
+		
+	end for
+	print(format_columns(output))
+	procNum = procList.len - 1
+	warnText = procList[-1]
+	warn = warnText[:4]
+	print procNum + " Processes Running"
+	if procNum >= procVal and warn == "root" then
+		print msg * 3
+		wait(1.5)
+	else if procNum >= procVal then 
+		print("New Process Detected")
+	end if
+	
+	procVal = procList.len
+	wait(2.5)
+	clear_screen
+	output = null
+end while
