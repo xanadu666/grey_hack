@@ -1,3 +1,5 @@
+// bankscrape by xanadu
+
 // bank account and bank password scraper (for video game not real life) using ipscan
 
 GetPassword = function(userPass)
