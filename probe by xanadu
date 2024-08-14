@@ -1,0 +1,285 @@
+// probe by xanadu
+// for use with launchprobe
+
+// gathers data on all machines on target network
+
+// to use probe: make folder /root/packet
+// copy probe and metaxploit.so into /root/packet
+// chmod -R o+x /root/packet
+// run launchprobe
+
+Search = function(input1, obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	file = obj.File("/")
+	sList = Memdump(file)
+	info = "filepath permissions owner group size\n"
+	for item in sList
+		if input1 != null then
+			index = indexOf(item.name, input1)
+			index2 = indexOf(item.path, input1)
+			if typeof(index) == "number" or typeof(index2) == "number" or item.name == input1 then info = info + item.path + " " + item.permissions + " " + item.owner + " " + item.group + " " + item.size + "\n"
+		else if input1 == null then
+			info = info + item.path + " " + item.permissions + " " + item.owner + " " + item.group + " " + item.size + "\n"
+		end if
+	end for
+	return info
+end function
+
+Memdump = function(fileObject)
+	if typeof(fileObject) != "file" then return null
+	newList = []
+	fileList = fileObject.get_folders + fileObject.get_files
+	while fileList.len > 0
+		file = fileList.pull
+		if file.is_folder then fileList = fileList + file.get_folders + file.get_files
+		newList.push(file)
+	end while
+	return newList
+	return true
+end function
+
+GetXploit = function(gtw)
+	net_session = metaxploit.net_use(gtw)
+	metalib = net_session.dump_lib
+	memAddress = metaxploit.scan(metalib)
+	values = []
+	mems = []
+	pTotals = []
+	for mem in memAddress
+		scanResults = metaxploit.scan_address(metalib, mem).split("Unsafe check: ")
+		for result in scanResults
+			if result == scanResults[0] then continue
+			value = result[result.indexOf("<b>")+3:result.indexOf("</b>")]
+			obj = metalib.overflow(mem, value)
+			if obj then
+				continue
+			else
+				obj = metalib.overflow(mem, value, gtw)
+				if obj then
+					//if typeof(obj) == "shell" then obj = obj.host_computer
+					//if typeof(obj) == "file" then exit("file retuned")
+					//file1 = obj.File("/etc/passwd")
+					//file2 = obj.File("/etc/apt/sources.txt")
+					//file3 = obj.File("/var/system.log")
+					//file4 = obj.File("/bin/sudo")	
+					//if file1 then 
+						//p1 = file1.has_permission("r")
+						//p2 = file1.has_permission("w")
+						//p3 = file1.has_permission("x")
+					//end if
+					//if file2 then
+						//p4 = file2.has_permission("r")
+						//p5 = file2.has_permission("w")
+						//p6 = file2.has_permission("x")
+					//end if
+					//if file3 then
+						//p7 = file3.has_permission("r")
+						//p8 = file3.has_permission("w")
+						//p9 = file3.has_permission("x")
+					//end if
+					//if file4 then 
+						//p10 = file4.has_permission("r")
+						//p11 = file4.has_permission("w")
+						//p12 = file4.has_permission("x")
+					//end if
+					//if file1 and file2 and file3 and file4 then
+						//pTotal = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12
+						//pTotals.push(pTotal)
+					//end if
+					//mems.push(mem)
+					//values.push(value)
+					//if pTotals.len > 1 then
+						//if pTotals[0] > pTotals[:-1] and typeof(obj) == "computer" then
+							//globals.mem = mems.pop
+							//globals.value = values.pop
+							//globals.xrouter = gtw
+							//globals.metalib = metalib
+							//return true
+						//end if
+						//if pTotals[0] < pTotals[:-1] and typeof(obj) == "computer" then
+							//globals.mem = mems.pull
+							//globals.value = values.pull
+							//globals.xrouter = gtw
+							//globals.metalib = metalib
+							//return true
+						//end if
+					//else if typeof(obj) == "computer" then
+						globals.mem = mem
+						globals.value = value
+						globals.xrouter = gtw
+						globals.metalib = metalib
+						return true
+					end if
+				end if
+			
+		end for
+	end for
+end function
+
+GetSubnets = function(rtr)
+	subnets = rtr.devices_lan_ip
+	for subnet in subnets
+		if subnet != "192.168.1.1" and subnet != "192.168.0.1" then
+			index = indexOf(subnet,"192.168.1")
+			index2 = indexOf(subnet,"192.168.0")
+			if (index == 0  or index2 == 0) and subnet.split("\.")[2].len < 2 then continue
+		end if
+		globals.subnets.push(subnet)
+	end for
+end function
+
+GetSystems = function(gtw)
+	w = gtw.split("\.")[0]
+	x = gtw.split("\.")[1]
+	y = gtw.split("\.")[2]
+	z = 1
+	for d in range(1,256)
+		ip = w + "." + x +"." + y + "." + z
+		globals.systems.push(ip)
+		z = z + 1
+	end for
+end function
+
+metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then metaxploit = include_lib(current_path + "/metaxploit.so")
+if not metaxploit then exit("<b>probe: metaxploit.so not found")
+clear_screen
+print("<b><color=orange>probe</b> by xanadu")
+wait(1.5)
+myComp = get_shell.host_computer
+info = "<b><color=orange>probe</b> by xanadu\n"
+metalib = null
+xrouter = ""
+value = ""
+mem = ""
+xploit = null
+systems = []
+subnets = []
+outputs = []
+index = 0
+names = []
+while true
+	router = get_router("192.168.0.1")
+	if router then
+		GetSubnets(router)
+	else
+		router = get_router("192.168.1.1")
+		if router then GetSubnets(router)
+	end if
+	for subnet in subnets
+		GetSystems(subnet)
+	end for
+	while subnets.len >= 1
+		xploit = GetXploit(subnets.pull)
+		if xploit == true then break
+	end while
+	if mem and value and metalib then xploit = true
+	if not xploit then exit("<b>probe: no exploit found")
+	if systems and mem and value then
+		for system in systems
+			obj = metalib.overflow(mem, value, system)
+			if typeof(obj) == "computer" then
+				if params.len == 1 then
+					index = index + 1
+					data = Search(params[0], obj)
+					info = info + "====================================================================\nsystem public ip: <color=white>" + obj.public_ip + "\nsystem lan ip: <color=white>" + obj.local_ip + "\nsystem name: <color=yellow>" + obj.get_name + "\nsystem processes\n" + format_columns(obj.show_procs) + "\n\n" + format_columns(data) + "\n"
+					outputs.push(info)	
+					info = "\n\n\n<b><color=orange>probe</b> by xanadu\n"
+					if obj.get_name == "router" then
+						names.push(obj.local_ip)
+					else
+						names.push(obj.get_name)
+					end if
+				else if params.len == 0 then
+					index = index + 1
+					data = Search(null, obj)
+					info = info + "====================================================================\nsystem public ip: <color=white>" + obj.public_ip + "\nsystem lan ip: <color=white>" + obj.local_ip + "\nsystem name: <color=yellow>" + obj.get_name + "\nsystem processes\n" + format_columns(obj.show_procs) + "\n\n" + format_columns(data) + "\n"
+					outputs.push(info)
+					info = "\n\n\n<b><color=orange>probe</b> by xanadu\n"
+					if obj.get_name == "router" then
+						names.push(obj.local_ip)
+					else
+						names.push(obj.get_name)
+					end if
+				end if
+			end if
+		end for
+		clear_screen
+		print("public ip: <color=white>" + myComp.public_ip)
+		print("<b><color=yellow>" + index + "</color></b> systems found on Lan\n\n")
+		//folderInput = ""
+		//while folderInput != "n" and folderInput != "no" and folderInput != "y" and folderInput != "yes"
+			//folderInput = user_input("<color=orange>create new folder for outputs?(y/n): ")
+		//end while
+		//if folderInput == "y" or folderInput == "yes" then
+			folderName = "package"
+			//while folderName == ""
+				//folderName = user_input("<color=orange>save folder as?(folder name): ")
+			//end while
+			mkFolder = null
+			newFile = null
+			saveFile = null
+			mkFolder = myComp.create_folder(current_path, folderName)
+			if mkFolder then newFolder = myComp.File(folderName)
+			if newFolder then 
+				print("<b>probe: created folder: " + folderName)
+			else
+				print("<b>probe: error: unable to create " + folderName)
+			end if
+		end if
+		showOutput = ""
+		while showOutput != "y" and showOutput != "yes" and showOutput != "n" and showOutput != "no"
+			showOutput = user_input("show outputs?(y/n): ")
+		end while
+		for output in outputs
+			if showOutput == "y" or showOutput == "yes" then clear_screen
+			
+			if showOutput == "y" or showOutput == "yes" then print output
+			
+				
+			
+			
+			
+			if output.len > 80000 then
+				print("file character count: <color=white>"+output.len)
+				print("<b>probe: machine: <color=white><b>"+names.pull)
+				print("<b>probe: output too big to save to file")
+				user_input("press any key to continue",false,true)
+			else
+
+				save = null
+				//while save != "n" and save != "no" and save != "y" and save != "yes"
+					//save = user_input("<color=orange>save to file?(y/n): ")
+				//end while
+				//if save == "y" or save == "yes" then
+					fileName = names.pull
+					//while fileName == ""
+						//fileName = user_input("<color=orange>save as?(filename): ")
+					//end while
+					touchFile = null
+					newFile = null
+					saveFile = null
+					//if folderInput == "y" or folderInput == "yes" then
+						touchFile = myComp.touch(current_path + "/" + folderName + "/", fileName)
+						if touchFile then newFile = myComp.File(current_path + "/" + folderName + "/" + fileName)
+					//else
+						//touchFile = myComp.touch(current_path, fileName)
+						//if touchFile then newFile = myComp.File(current_path + "/" + fileName)
+					//end if
+					if newFile then saveFile = newFile.set_content(output)
+					if saveFile then
+						print("<b>probe: info saved to file: <b><color=white>" + fileName)
+						print("file character count: <color=white>"+output.len)
+
+					else
+						print("<b>probe: error: file not saved")
+						print("file character count: "+output.len)
+					end if
+					if showOutput =="y" or showOutput == "yes" then user_input("press any key to continue",false,true)
+				end if
+			//end if
+		end for
+		break
+	//end if
+	break
+end while
