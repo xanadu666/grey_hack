@@ -1,0 +1,157 @@
+// launchprobe by xanadu
+// use with probe by xanadu
+
+// launches probe binary towards target public ip address
+// gathers data on all machines on target network
+// use optional command line parameter to search for specific files or file extensions
+
+// to use make folder /root/packet
+// copy probe into /root/packet
+// copy metaxploit.so into /root/packet
+// chmod -R o+x /root/packet
+
+color = {};
+	color.white = "<color=#FFFFFF>";
+	color.grey = "<color=#A5A5A5>";
+	color.blue = "<color=#003AFF>";
+	color.cyan = "<color=#00FFE7>";
+	color.purple = "<color=#D700FF>";
+	color.red = "<color=#AA0000>";
+	color.yellow = "<color=#FBFF00>";
+	color.orange = "<color=#FF8701>";
+	color.green = "<color=#00ED03>";
+	color.cap = "</color>"
+clear_screen
+print("\n\n\n\n"+color.grey+"<b>launchprobe"+color.white+" ---"+color.yellow+"---"+color.orange+"---"+color.red+"-->"+color.yellow+"/\")
+print(color.cyan+"  by xanadu<b> <---"+color.blue+"----"+color.purple+"---"+color.red+"--"+color.yellow+"\/\n\n\n\n")
+if params.len > 3 or params.len < 1 then exit(color.yellow+"<b>Usage: launchprobe [ipaddress] [opt: -r] [opt: search term]\n"+color.yellow+"if you run into any data dumps that are too \n"+color.yellow+"big to save use optional search term argument\n"+color.yellow+"use option -r to scan port 0")//////////////////////////////////////////
+if params.len == 2 then searchTerm = params[1]
+if params.len == 2 and params[1] == "-r" then searchTerm = "" 
+if params.len == 3 and params[1] == "-r" then searchTerm = params[2]
+
+metaxploit = include_lib(current_path + "/metaxploit.so")
+if not metaxploit then metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then exit(color.orange+"libdump: Missing metaxploit library")
+myShell = get_shell
+myComp = myShell.host_computer
+if params.len == 1 then searchTerm = ""
+ip = params[0]
+if not is_valid_ip(ip) then exit(color.orange+"<b>launchprobe: error: ip is invalid")
+router = get_router(ip)
+if not router then exit(color.orange+"<b>launchprobe: error: unable to connect to router")
+ports = router.used_ports
+if not ports then exit(color.orange+"<b>launchprobe: error: no open ports detected")
+for port in ports
+	if port.is_closed then continue
+	portnumber = port.port_number
+	if typeof(portnumber) != "number" then continue
+	if params.len == 2 and params[1] == "-r" then portnumber = 0 /////////////////////////////////
+	net_session = metaxploit.net_use(ip,portnumber)
+	if not net_session then continue
+	if not net_session and params[1] == "-r" then break
+	metalib = net_session.dump_lib	
+	if not metalib then continue
+	if not metalib and params[1] == "-r" then break
+	mems = metaxploit.scan(metalib)
+	if not mems then continue
+	if not mems and params[1] == "-r" then break
+	for mem in mems
+		unsecVals = metaxploit.scan_address(metalib,mem).split("Unsafe check: ")
+		if not unsecVals then continue
+		for unsecVal in unsecVals
+			value = unsecVal[unsecVal.indexOf("<b>")+3:unsecVal.indexOf("</b>")]
+			if not value then continue
+			obj = metalib.overflow(mem,value)
+			if not obj then continue
+			if typeof(obj) == "shell" then
+				print(color.yellow+typeof(obj))
+				logFile = obj.host_computer.File("/var/system.log")
+				guestFolder = obj.host_computer.File("/home/guest")
+				print(color.orange+"<b>system.log perms: "+logFile.permissions)
+				print(color.orange+"<b>/user/guest perms: "+guestFolder.permissions)
+				if not logFile and not guestFolder then continue
+				if not logFile.has_permission("w") and guestFolder.has_permission("w") and guestFolder.has_permission("x") then continue
+				print(color.cyan+"<b>launching probe towards target network: "+color.orange+ip)
+				wait(3)
+				clear_screen
+				myShell.scp("/root/packet","/home/guest",obj)
+				
+				uploadCheck = obj.host_computer.File("/home/guest/packet")
+				if not uploadCheck then
+					userFolders = obj.host_computer.File("/home").get_folders
+					for userFolder in userFolders
+						user = userFolder.name
+						uploadCheck = obj.host_computer.File("/home/"+user+"/packet")
+						if uploadCheck then break
+					end for
+				end if
+				if uploadCheck then print(color.cyan+"probe has landed in target network: "+color.orange+ip)
+				print(color.cyan+"<b>probe deployed")
+				wait(3)
+				if uploadCheck then obj.launch("/home/guest/packet/probe",searchTerm)
+				obj.scp("/home/guest/packet/package","/root/Downloads",myShell)
+				downloadCheck = myComp.File("/root/Downloads/package")
+				if downloadCheck then
+					print(color.cyan+"<b>package downloaded to /root/Downloads")
+				else
+					print(color.orange+"<b>launchprobe: error: unable to download package")		
+				end if
+				//dowloadCheck = null
+				//obj.scp("/home/guest/packet/probe","/root/Downloads")
+				//if downloadCheck then
+					//print(color.cyan+"<b>probe downloaded to /root/Downloads")
+				//else
+					//print(color.orange+"<b>launchprobe: error: unable to download probe")
+				//end if
+				input1 = ""
+				//while input1 != "y" and input1 != "yes" and input1 != "n" and input1 != "no"
+					//input1 = user_input(color.cyan+"remove injected toolbox?(y/n): ")
+				//end while
+				//if input1 == "y" or input1 == "yes" then
+					uploadCheck.delete
+					deleteCheck = obj.host_computer.File("/guest/packet")
+					if not deleteCheck then print(color.cyan+"<b>packet removed from remote target")
+					if deleteCheck then print(color.orange+"<b>launchprobe: error: failed to remove toolbox from remote target")
+				//end if
+				input2 = ""
+				while input2 != "y" and input2 != "yes" and input2 != "n" and input2 != "no"
+					input2 = user_input(color.cyan+"corrupt log file?(y/n): ")
+				end while
+				if input2 == "y" or input2 == "yes" then
+					touchFile = obj.host_computer.touch("/guest","system.log")
+					if touchFile then
+						corruptFile = obj.host_computer.File("/guest/system.log")
+						if corruptFile then
+							moveFile = corruptFile.move("/var","system.log")
+							if moveFile then
+								newFile = obj.host_computer.File("/var/system.log")
+								if newFile then
+									input3 = ""
+									while input3 != "y" and input3 != "yes" and input3 != "n" and input3 != "no"
+										input3 = user_input(color.cyan+"leave message in corrupted log file?(y/n): ")
+									end while
+									if input3 == "y" or input3 == "yes" then
+										message = user_input(color.cyan+"enter message: ")
+										if message then
+											writeFile = newFile.set_content(message)
+											if writeFile then print(color.cyan+"message set")
+											newFile.set_owner("root")
+											newFile.set_group("root")
+											newFile.chmod("u-w")
+											newFile.chmod("g-w")
+											newFile.chmod("o-w")
+										end if
+									end if
+								end if
+							end if
+						end if
+					end if
+				end if
+			else
+				continue
+			end if
+			exit(color.yellow+"<b>launchprobe: check /root/Downloads for package")
+		end for
+	end for
+	if (params.len == 2 or params.len == 3) and params[1] == "-r" then break
+end for
