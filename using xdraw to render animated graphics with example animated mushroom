@@ -320,9 +320,9 @@ xDraw = function(data1, data2, data3)   //, data4, data5, data6, data7)
 
 
 			// in this case if the character symbol saved in image map key:value is not an empty string and,
-				// the current x,y values of for loops are equal to the x,y coordinate in same element
-				// then send elements of that key:value pair to be processed into a character array
-				// and be saved in the str map for later printing. 
+			// the current x,y values of for loops are equal to the x,y coordinate in same element
+			// then send elements of that key:value pair to be processed into a character array
+			// and be saved in the str map for later printing. 
 			
 			if data3[k][2] != "" and data3[k][0][0] == x and data3[k][0][1] == y then
 				Process_Image(str, data3[k][1], data3[k][2])
@@ -334,8 +334,8 @@ xDraw = function(data1, data2, data3)   //, data4, data5, data6, data7)
 				if k > data3.len then k = 1
 				
 				// if the x,y values of the other image maps are also using these coordinates
-					// then their counter will be incremented by 1 to skip that character
-					// since that space is being used by image1 on the top layer.
+				// then their counter will be incremented by 1 to skip that character
+				// since that space is being used by image1 on the top layer.
 				if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
 				if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
 				// dont touch
@@ -459,9 +459,9 @@ xDraw = function(data1, data2, data3)   //, data4, data5, data6, data7)
 				continue
 			end if
 
-		// Process_Image is for any unused coordinates in the display grid.  here a whitespace is being used
-		// to give a black backround.  you can replace it with whatever you like if
-		// if you want to fill the backround with characters.
+		// this last Process_Image is for any unused coordinates in the display grid.  here a whitespace is being used
+		// to give a black backround.  you can replace it and the color with whatever you like if
+		// if you want to fill the backround with colored characters.
 		
 		Process_Image(str, color.cap, " ")
 		
@@ -493,7 +493,7 @@ end function
 
 
 // a simple method for animating non moving images.
-	// in this example it is grass blowing in the wind
+// in this example it is grass blowing in the wind
 Animate_Grass = function(data, counter)
 	wait(.01)
 	if not counter % 20 then
@@ -555,8 +555,8 @@ end function
 
 
 // this function compares the x,y coordinates of the new position 
-	// with the coordinates of the boundarys set in boundary list.
-	// in this example the boundary is the spaces traced around the mushroom.	
+// with the coordinates of the boundarys set in boundary list.
+// in this example the boundary is the spaces traced around the mushroom cap.	
 Check_Collisions = function(dir, data, boundary, spot_available_directions)
 
 	i = 1
@@ -565,8 +565,8 @@ Check_Collisions = function(dir, data, boundary, spot_available_directions)
 		for item in boundary 
 				
 			// checks new position of image data if it is equivalent to any of boundary list.
-				// if it is then removes that direction from the available direction list
-				// and returns true that the space is unavailable
+			// if it is then removes that direction from the available direction list
+			// and returns true that there is a collision.
 			if dir == "up_right" then
 				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] - 1 then
 					spot_available_directions.pull
@@ -629,6 +629,7 @@ Check_Collisions = function(dir, data, boundary, spot_available_directions)
 		
 	end for
 	
+	// returns false if no collisions are detected
 	return false
 end function
 	
@@ -681,7 +682,7 @@ end function
 
 
 // function that controls the direction of movement of the spots,
-	// and makes sure there are no collisions.
+// and makes sure there are no collisions.
 Animate_Spots = function(spot1, spot2, frame_count, boundary)
 	
 	directions = ["up", "up_right", "up_left", "down", "down_right", "down_left", "left", "right"]
@@ -707,7 +708,7 @@ Animate_Spots = function(spot1, spot2, frame_count, boundary)
 end function
 
 
-// function to update the information for the next frame.
+// function to update the information for the next frame. called in main
 Update = function(state)
 
 	if state == "normal" then
@@ -717,7 +718,7 @@ Update = function(state)
 
 end function
 
-// make sure to include all image data sets as function arguments
+
 
 
 
@@ -739,6 +740,10 @@ while true
 		// I've had the best results with value 4000 
 	if not loop_count % 4000 then
 		frame_count = frame_count + 1
+		
+		// make sure to include all image data sets as function arguments.  
+		// remember that the images are layered in descending order with the
+		// highest number being the top layer.
 		xDraw(mushroom, spot2, spot1)
 		Update(state)
 	end if
