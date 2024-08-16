@@ -159,11 +159,7 @@ mushroom = {}
 	mushroom[105] = [[24, 7], color.white, "|"]
 	
 
-// gets new direction of travel using .shuffle for randomness
-Get_Direction = function(dirs)
-	dirs.shuffle
-	return dirs[0]
-end function
+
 
 
 
@@ -676,6 +672,12 @@ Apply_Direction = function(dir, data)
 	
 end function
 
+
+// gets new direction of travel for spots using .shuffle for randomness
+Get_Direction = function(dirs)
+	dirs.shuffle
+	return dirs[0]
+end function
 
 
 // function that controls the direction of movement of the spots,
