@@ -1,0 +1,528 @@
+//using xdraw to render animated graphics
+// by xanadu
+//2024
+
+// color map.  you can add new colors here.
+color = {}
+	color.white = "<color=#FFFFFF>"
+	color.grey = "<color=#A5A5A5>"
+	color.blue = "<color=#003AFF>"
+	color.cyan = "<color=#00FFE7>"
+	color.purple = "<color=#D700FF>"
+	color.red = "<color=#AA0000>"
+	color.yellow = "<color=#FBFF00>"
+	color.orange = "<color=#FF8701>"
+	color.brown = "<color=#964B00>"
+	color.green = "<color=#00ED03>"
+	color.skin = "<color=#ffcd94>"
+	color.cap = "</color>"
+
+// these are the coordinates of the boundries of travel for the spots on the mushroom
+spot_boundary = [[17, -1], [18, -1], [19, -1], [20, -1], [21, -1], [16, 0], [17, 0], [21, 0], [22, 0], [23, 0], [15, 1], [16, 1], [23, 1], [24, 1], [25, 1], [13, 2], [14, 2], [15, 2], [25, 2], [26, 2], [27, 2], [28, 2], [12, 3], [13, 3], [28, 3], [29, 3], [30, 3], [31, 3], [10, 4], [11, 4], [12, 4], [31, 4], [32, 4], [33, 4], [34, 4], [10, 5], [34, 5], [10, 6], [11, 6], [12, 6], [13, 6], [14, 6], [15, 6], [16, 6], [17, 6], [18, 6], [19, 6], [20, 6], [21, 6], [22, 6], [23, 6], [24, 6], [25, 6], [26, 6], [27, 6], [28, 6], [29, 6], [30, 6], [31, 6], [32, 6], [33, 6], [34, 6]]
+
+// this is the data for the original images.  they work like layers.  spot 1 will show up on top of spot 2 and mushroom; and spot 2 will be over musroom.
+// the coordinates in each image must be sorted by y first ascending and then x ascending.
+/// i need to learn how to automaticly sort the the key:value pairs for each image map. 
+/// let me know if you got an idea
+spot1 = {}
+	spot1[1] = [[20, 2], color.white, "%"]
+	spot1[2] = [[21, 2], color.white, "%"]
+	spot1[3] = [[22, 2], color.white, "%"]
+	spot1[4] = [[20, 3], color.white, "%"]
+	spot1[5] = [[21, 3], color.white, "%"]
+	spot1[6] = [[22, 3], color.white, "%"]
+	
+spot2 = {}
+	spot2[1] = [[14, 3], color.white, "%"]
+	spot2[2] = [[15, 3], color.white, "%"]
+	spot2[3] = [[16, 3], color.white, "%"]
+	spot2[4] = [[14, 4], color.white, "%"]
+	spot2[5] = [[15, 4], color.white, "%"]
+	spot2[6] = [[16, 4], color.white, "%"]
+	
+mushroom = {}
+	mushroom[1] = [[18, 0], color.red, "o"]
+	mushroom[2] = [[19, 0], color.red, "o"]
+	mushroom[3] = [[20, 0], color.red, "o"]
+	mushroom[4] = [[17, 1], color.red, "o"]
+	mushroom[5] = [[18, 1], color.red, "o"]
+	mushroom[6] = [[19, 1], color.red, "o"]
+	mushroom[7] = [[20, 1], color.red, "o"]
+	mushroom[8] = [[21, 1], color.red, "o"]
+	mushroom[9] = [[22, 1], color.red, "o"]
+	mushroom[10] = [[33, 1], color.green, "\"]
+	mushroom[11] = [[34, 1], color.green, "\"]
+	mushroom[12] = [[35, 1], color.green, "/"]
+	mushroom[13] = [[36, 1], color.green, "/"]
+	mushroom[14] = [[37, 1], color.green, "\"]
+	mushroom[15] = [[38, 1], color.green, "\"]
+	mushroom[16] = [[39, 1], color.green, "/"]
+	mushroom[17] = [[40, 1], color.green, "/"]
+	mushroom[18] = [[16, 2], color.red, "O"]
+	mushroom[19] = [[17, 2], color.red, "O"]
+	mushroom[20] = [[18, 2], color.red, "O"]
+	mushroom[21] = [[19, 2], color.red, "O"]
+	mushroom[22] = [[20, 2], color.red, "O"]
+	mushroom[23] = [[21, 2], color.red, "O"]
+	mushroom[24] = [[22, 2], color.red, "O"]
+	mushroom[25] = [[23, 2], color.red, "O"]
+	mushroom[26] = [[24, 2], color.red, "O"]
+	mushroom[27] = [[3, 3], color.green, "\"]
+	mushroom[28] = [[4, 3], color.green, "\"]
+	mushroom[29] = [[5, 3], color.green, "/"]
+	mushroom[30] = [[6, 3], color.green, "/"]
+	mushroom[31] = [[14, 3], color.red, "O"]
+	mushroom[32] = [[15, 3], color.red, "O"]
+	mushroom[33] = [[16, 3], color.red, "O"]
+	mushroom[34] = [[17, 3], color.red, "O"]
+	mushroom[35] = [[18, 3], color.red, "O"]
+	mushroom[36] = [[19, 3], color.red, "O"]
+	mushroom[37] = [[20, 3], color.red, "O"]
+	mushroom[38] = [[21, 3], color.red, "O"]
+	mushroom[39] = [[22, 3], color.red, "O"]
+	mushroom[40] = [[23, 3], color.red, "O"]
+	mushroom[41] = [[24, 3], color.red, "O"]
+	mushroom[42] = [[25, 3], color.red, "O"]
+	mushroom[43] = [[26, 3], color.red, "O"]
+	mushroom[44] = [[27, 3], color.red, "O"]
+	mushroom[45] = [[13, 4], color.red, "O"]
+	mushroom[46] = [[14, 4], color.red, "O"]
+	mushroom[47] = [[15, 4], color.red, "O"]
+	mushroom[48] = [[16, 4], color.red, "O"]
+	mushroom[49] = [[17, 4], color.red, "O"]
+	mushroom[50] = [[18, 4], color.red, "O"]
+	mushroom[51] = [[19, 4], color.red, "O"]
+	mushroom[52] = [[20, 4], color.red, "O"]
+	mushroom[53] = [[21, 4], color.red, "O"]
+	mushroom[54] = [[22, 4], color.red, "O"]
+	mushroom[55] = [[23, 4], color.red, "O"]
+	mushroom[56] = [[24, 4], color.red, "O"]
+	mushroom[57] = [[25, 4], color.red, "O"]
+	mushroom[58] = [[26, 4], color.red, "O"]
+	mushroom[59] = [[27, 4], color.red, "O"]
+	mushroom[60] = [[28, 4], color.red, "O"]
+	mushroom[61] = [[29, 4], color.red, "O"]
+	mushroom[62] = [[30, 4], color.red, "O"]
+	mushroom[63] = [[11, 5], color.red, "O"]
+	mushroom[64] = [[12, 5], color.red, "O"]
+	mushroom[65] = [[13, 5], color.red, "O"]
+	mushroom[66] = [[14, 5], color.red, "O"]
+	mushroom[67] = [[15, 5], color.red, "O"]
+	mushroom[68] = [[16, 5], color.red, "O"]
+	mushroom[69] = [[17, 5], color.red, "O"]
+	mushroom[70] = [[18, 5], color.red, "O"]
+	mushroom[71] = [[19, 5], color.red, "O"]
+	mushroom[72] = [[20, 5], color.red, "O"]
+	mushroom[73] = [[21, 5], color.red, "O"]
+	mushroom[74] = [[22, 5], color.red, "O"]
+	mushroom[75] = [[23, 5], color.red, "O"]
+	mushroom[76] = [[24, 5], color.red, "O"]
+	mushroom[77] = [[25, 5], color.red, "O"]
+	mushroom[78] = [[26, 5], color.red, "O"]
+	mushroom[79] = [[27, 5], color.red, "O"]
+	mushroom[80] = [[28, 5], color.red, "O"]
+	mushroom[81] = [[29, 5], color.red, "O"]
+	mushroom[82] = [[30, 5], color.red, "O"]
+	mushroom[83] = [[31, 5], color.red, "O"]
+	mushroom[84] = [[32, 5], color.red, "O"]
+	mushroom[85] = [[33, 5], color.red, "O"]
+	mushroom[86] = [[18, 6], color.white, "|"]
+	mushroom[87] = [[19, 6], color.white, "#"]
+	mushroom[88] = [[20, 6], color.white, "#"]
+	mushroom[89] = [[21, 6], color.white, "#"]
+	mushroom[90] = [[22, 6], color.white, "#"]
+	mushroom[91] = [[23, 6], color.white, "#"]
+	mushroom[92] = [[24, 6], color.white, "|"]
+	mushroom[93] = [[43, 6], color.green, "\"]
+	mushroom[94] = [[44, 6], color.green, "\"]
+	mushroom[95] = [[45, 6], color.green, "/"]
+	mushroom[96] = [[46, 6], color.green, "/"]
+	mushroom[97] = [[47, 6], color.green, "\"]
+	mushroom[98] = [[48, 6], color.green, "\"]
+	mushroom[99] = [[18, 7], color.white, "|"]
+	mushroom[100] = [[19, 7], color.white, "#"]
+	mushroom[101] = [[20, 7], color.white, "#"]
+	mushroom[102] = [[21, 7], color.white, "#"]
+	mushroom[103] = [[22, 7], color.white, "#"]
+	mushroom[104] = [[23, 7], color.white, "#"]
+	mushroom[105] = [[24, 7], color.white, "|"]
+	
+// applies updated and collision checked x,y coordinates for element of the specific image map and ovewrites original data with new updated data.
+Apply_Direction = function(dir, data)
+	i = 1
+	for item in data
+
+		if dir == "up_right" then
+			data[i][0][0] = data[i][0][0] + 1
+			data[i][0][1] = data[i][0][1] - 1
+		end if
+		
+		if dir == "up_left" then
+			data[i][0][0] = data[i][0][0] - 1
+			data[i][0][1] = data[i][0][1] - 1
+		end if
+	
+		if dir == "down_right" then
+			data[i][0][0] = data[i][0][0] + 1
+			data[i][0][1] = data[i][0][1] + 1
+		end if
+	
+		if dir == "down_left" then
+			data[i][0][0] = data[i][0][0] - 1
+			data[i][0][1] = data[i][0][1] + 1
+		end if
+	
+		if dir == "up" then data[i][0][1] = data[i][0][1] - 1
+	
+		if dir == "down" then data[i][0][1] = data[i][0][1] + 1
+	
+		if dir == "left" then data[i][0][0] = data[i][0][0] - 1
+	
+		if dir == "right" then data[i][0][0] = data[i][0][0] + 1
+	
+		i = i + 1
+		
+	end for
+	
+end function
+
+// gets new direction of travel using .shuffle for randomness
+Get_Direction = function(dirs)
+	dirs.shuffle
+	return dirs[0]
+end function
+
+// this is the image renderer being called in main. it receives updated and collision checked data for each image map.
+xDraw = function(data1, data2, data3)
+	
+	// this function receives the color and character data stored on the original then the updated image map.
+		// and adds a colorized character symbol to an array of characters.
+		// since every time print() is used it automaticaly
+		// creates a new line, all of the color/character data for each line of y in image
+		// must be concatenated together and saved in str map to later be printed simultaneously.
+	Process_Image = function(data, color, character)
+		
+		a = 0
+		for item in data
+			if y == a then data[a] = data[a] + color + character 
+			a = a + 1
+		end for
+	
+	end function
+	
+	// you need to have a str map with a key:value pair equal to the max y axis value
+	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:""}
+	
+	// you need a counter variable for each image map.
+	i = 1
+	j = 1
+	k = 1
+	
+	
+	// this is where you set the max y value for display grid
+	for y in range (0,7)
+			
+		wait(.01) // this wait is for flicker prevention and may have to be adjusted.
+		
+		// this is where you set the max x value for display grid
+		for x in range(0,57)
+			
+			// you have to create a case for each of the image maps you are using.  
+				// remember that data1 is the top layer and data3 in this example is the bottom layer.
+				// they have to be in order ascending
+			
+			
+			// in this case if the character symbol saved in image map key:value is not an empty string and,
+				// the current x,y values of for loops are equal to the x,y coordinate in same element
+				// then send elements of that key:value pair to be processed into a character array
+				// and be saved in the str map for later printing. 
+			if data1[i][2] != "" and data1[i][0][0] == x and data1[i][0][1] == y then
+				Process_Image(str, data1[i][1], data1[i][2])
+				
+				// increments the counter for first image map key:value pair so the next key:value pair will be the next character.
+				i = i + 1
+				
+				// this keeps the program from crashing. dont touch it.
+				if i > data1.len then i = 1
+				
+				// if the x,y values of the other image maps are also using these coordinates
+					// then their counter will be incremented by 1 to skip that character
+					// since that space is being used by image1 on the top layer.
+				if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
+				if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
+				
+				// dont touch
+				if j > data2.len then j = 1
+				if k > data3.len then k = 1
+				continue
+			end if
+			
+			if data2[j][2] != "" and data2[j][0][0] == x and data2[j][0][1] == y then
+				Process_Image(str, data2[j][1], data2[j][2])
+				j = j + 1
+				if j > data2.len then j = 1
+				if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
+				if k > data3.len then k = 1
+				continue
+			end if
+			
+			if data3[k][2] != "" and data3[k][0][0] == x and data3[k][0][1] == y then
+				Process_Image(str, data3[k][1], data3[k][2])
+				k = k + 1
+				if k > data3.len then k = 1
+				continue
+			end if
+			
+			// case for if the cooridnate is being used in image map but doesn't have a character saved in image map.
+				// this is useful for example if a large space needs to be filled with a default character.
+				// here "*" is the default character.  you can use whatever you like.
+			if data1[i][2] == "" and data1[i][0][0] == x and data1[i][0][1] == y then
+				Process_Image(str, data1[i][1], "*")
+				i = i + 1				
+				if i > data1.len then i = 1
+				if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
+				if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
+				if j > data2.len then j = 1
+				if k > data3.len then k = 1
+				continue
+			end if
+			
+			if data2[j][2] == "" and data2[j][0][0] == x and data2[j][0][1] == y then
+				Process_Image(str, data2[j][1], "*")
+				j = j + 1
+				if j > data2.len then j = 1
+				if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
+				if k > data3.len then k = 1
+				continue
+			end if
+			
+			if data3[k][2] == "" and data3[k][0][0] == x and data3[k][0][1] == y then
+				Process_Image(str, data3[k][1], "*")
+				k = k + 1
+				if k > data3.len then k = 1
+				continue
+			end if
+			
+			// this is for any unused spaces in the picture.  here a whitespace is being used
+				// to give a black backround.  you can replace it with whatever you like if
+				// if you want to fill the backround with characters.
+			Process_Image(str, color.cap, " ")
+		
+		end for
+	
+	end for
+	
+	// for flickering
+	wait(.01)
+	
+	// clear_screen right before printing image
+	clear_screen
+	
+	// this uses the key:values saved in str map to print all the lines of the
+		// display grid simultaneously rendering the images on the screen.
+	a = 0
+	for item in str
+		print str[a]
+		a = a + 1
+	end for
+
+end function
+
+// a simple method for animating non moving images.
+	// in this example it is grass blowing in the wind
+Animate_Grass = function(data, counter)
+	wait(.01)
+	if not counter % 20 then
+		data[10][2] = "/" 
+		data[11][2] = "/"
+		data[27][2] = "\"
+		data[28][2] = "\"
+		data[93][2] = "\"
+		data[94][2] = "\"
+	end if
+	
+	if not counter % 25 then
+		data[14][2] = "/"
+		data[15][2] = "/"
+		data[95][2] = "/"
+		data[96][2] = "/"
+	end if
+	
+	if not counter % 15 then
+		data[12][2] = "\"
+		data[13][2] = "\"
+		data[29][2] = "/"
+		data[30][2] = "/"
+		data[16][2] = "\"
+		data[17][2] = "\"
+		data[97][2] = "\"
+		data[98][2] = "\"
+	end if
+
+	if counter % 20 then
+		data[10][2] = "\"
+		data[11][2] = "\"
+		data[27][2] = "/"
+		data[28][2] = "/"
+		data[93][2] = "/"
+		data[94][2] = "/"
+	end if
+	
+	if counter % 25 then
+		data[14][2] = "\"
+		data[15][2] = "\"
+		data[95][2] = "\"
+		data[96][2] = "\"
+	end if
+	
+	if counter % 15 then 
+		data[12][2] = "/"
+		data[13][2] = "/"
+		data[16][2] = "/"
+		data[17][2] = "/"
+		data[29][2] = "\"
+		data[30][2] = "\"
+		data[97][2] = "/"
+		data[98][2] = "/"
+	end if
+	
+end function
+
+// this function compares the x,y coordinates of the new position 
+	// with the coordinates of the boundarys set in boundary list.
+	// in this example the boundary is the spaces traced around the mushroom.
+	
+Check_Collisions = function(dir, data, boundary, spot_available_directions)
+
+	i = 1
+	for loc in data
+		
+		for item in boundary 
+				
+			// checks new position of image data if it is equivalent to any of boundary list.
+				// if it is then removes that direction from the available direction list
+				// and returns true that the space is unavailable
+			if dir == "up_right" then
+				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] - 1 then
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "up_left" then
+				if item[0] == data[i][0][0] - 1 and item[1] == data[i][0][1] - 1 then
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "down_right" then
+				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] + 1 then
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "down_left" then
+				if item[0] == data[i][0][0] - 1 and item[1] == data[i][0][1] + 1 then
+					spot_available_directions.pull
+					return true
+				end if
+			end if		
+	
+			if dir == "up" then
+				if item[0] == data[i][0][0] and item[1] == data[i][0][1] - 1 then 
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "down" then
+				if item[0] == data[i][0][0] and item[1] == data[i][0][1] + 1 then
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "left" then
+				if item[0] == data[i][0][0]  - 1 and item[1] == data[i][0][1] then
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "right" then
+				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] then
+					spot_available_directions.pull
+					return true
+				end if
+			end if
+				
+		end for
+		
+	i = i + 1
+		
+	end for
+	
+	return false
+end function
+	
+// function that controls the direction of movement of the spots,
+	// and makes sure there are no collisions.
+Animate_Spots = function(spot1, spot2, frame_count, boundary)
+	
+	directions = ["up", "up_right", "up_left", "down", "down_right", "down_left", "left", "right"]
+	if not frame_count % 2 then
+		spot1_available_directions = directions[0:]
+		spot2_available_directions = directions[0:]
+		current_direction_spot1 = Get_Direction(directions[0:])
+		current_direction_spot2 = Get_Direction(directions[0:])	
+		collision_spot1 = Check_Collisions(current_direction_spot1, spot1, spot_boundary, spot1_available_directions)
+		collision_spot2 = Check_Collisions(current_direction_spot2, spot2, spot_boundary, spot2_available_directions)
+		while collision_spot1 == true
+			current_direction_spot1 = Get_Direction(spot1_available_directions)
+			collision_spot1 = Check_Collisions(current_direction_spot1, spot1, spot_boundary, spot1_available_directions)
+		end while
+		while collision_spot2 == true
+			current_direction_spot2 = Get_Direction(spot2_available_directions)
+			collision_spot2 = Check_Collisions(current_direction_spot2, spot2, spot_boundary, spot2_available_directions)
+		end while
+		Apply_Direction(current_direction_spot1, spot1)
+		Apply_Direction(current_direction_spot2, spot2)
+	end if
+
+end function
+
+
+// function to update the information for the next frame.
+Update = function(state)
+
+	if state == "normal" then
+		Animate_Grass(mushroom, frame_count)
+		Animate_Spots(spot1, spot2, frame_count)
+	end if
+
+end function
+
+// make sure to include all image data sets as function arguments
+
+
+loop_count = 0
+frame_count = 0
+state = "normal"
+
+// main function
+while true
+	
+	loop_count = loop_count + 1
+	
+	// this if statement is for controling the frame rate.
+		// can be adjusted but causes flickering problems.
+		// I've had the best results with value 4000 
+	if not loop_count % 4000 then
+		frame_count = frame_count + 1
+		xDraw(spot1, spot2, mushroom)
+		Update(state)
+	end if
+
+end while
