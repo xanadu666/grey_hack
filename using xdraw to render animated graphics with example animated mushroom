@@ -208,20 +208,20 @@ xDraw = function(data1, data2, data3)   //, data4, data5, data6, data7)
 									//4 recomment unused pairs.
 	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:""}          //, 8:"", 9:'', 10:"", 11:"", 12:"", 13:"", 14:"", 15:"", 16:"", 17:"", 18:"", 19:"", 20:"", 21:"", 22:"", 23:"", 24:""}
 	
-	// you need a counter variable for each image map.  here there are 3.
-	// i is for spot1
-	// j is for spot2
-	// k is for spot3
-	i = 1
-	j = 1
-	k = 1
+	// you need a counter variable for each image map.  here there are 3 images so we use first 3 counters.
+	
+	
+	
+	i = 1 // for data1
+	j = 1 // for data2
+	k = 1 // for data3
 	
 
 	// here are some extra counter variables just uncomment as needed per image
-	//m = 1
-	//n = 1
-	//o = 1
-	//p = 1
+	//m = 1 // for data4
+	//n = 1 // for data5
+	//o = 1 // for data6
+	//p = 1 // for data7
 
 	
 
