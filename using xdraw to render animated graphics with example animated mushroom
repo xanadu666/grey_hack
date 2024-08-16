@@ -247,7 +247,7 @@ xDraw = function(data1, data2, data3)   //, data4, data5, data6, data7)
 			
 			
 
-			// these extra image slots are not being used in example if you use them
+			// these extra image slots are not being used in example
 				// if you want to use them just uncomment them
 			
 			//if data7[p][2] != "" and data7[p][0][0] == x and data7[p][0][1] == y then
