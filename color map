@@ -1,0 +1,49 @@
+// color map
+// i didnt make this i just added a bunch on to it.
+// compile and run binary to see example of each color
+
+color = {}
+	color.white = "<color=#FFFFFF>"
+	color.grey = "<color=#A5A5A5>"
+	color.blue = "<color=#003AFF>"
+	color.cyan = "<color=#00FFE7>"
+	color.purple = "<color=#D700FF>"
+	color.red = "<color=#AA0000>"
+	color.yellow = "<color=#FBFF00>"
+	color.orange = "<color=#FF8701>"
+	color.brown = "<color=#964B00>"
+	color.green = "<color=#00ED03>"
+	color.peach = "<color=#FFE5B4>"
+	color.dandilion = "<color=#F0E130>"
+	color.silver = "<color=#C0C0C0>"
+	color.gold = "<color=#FFD700>"
+	color.hotpink = "<color=#FF69B4>"
+	color.midnightblue = "<color=#191970>"
+	color.rootbeer = "<color=#724A35>"
+	color.mtdew = "<color=#EAEDB9>"
+	color.blood = "<color=#780606>"
+	color.poop = "<color=#593001>"
+	color.champagne = "<color=#F7E7CE>"
+	color.alibaster = "<color=#EEEAE0>"
+	color.money = "<color=#084f09>"
+	color.death = "<color=#451208>"
+	color.sky = "<color=#87CEEB>"
+	color.tangerine = "<color=#F28500>"
+	// uncomment and add new colors here
+	//color. = "<color=>"
+	//color. = "<color=>"
+	//color. = "<color=>"
+	//color.cap = "</color>"
+
+
+
+clear_screen
+print color.white+" white "+color.grey+" grey "+color.blue+" blue"
+print color.cyan+" cyan "+color.purple+" purple "+color.red+" red"
+print color.yellow+" yellow "+color.orange+" orange "+color.brown+" brown"
+print color.green+" green "+color.peach+" peach "+color.dandilion+" dandilion"
+print color.silver+" silver "+color.gold+" gold "+color.hotpink+" hotpink"
+print color.midnightblue+" midnightblue "+color.rootbeer+" rootbeer "+color.mtdew+" mtdew"
+print color.blood+" blood "+color.poop+" poop "+color.champagne+" champagne"
+print color.alibaster+" alibaster "+color.money+" money "+color.death+" death"
+print color.sky+ " sky "+color.tangerine+" tangerine "
