@@ -17,6 +17,7 @@
 
 // now you can import the dat file into source code and input into xDraw 
 // example: if you named output file "family_photo" then you would use xDraw(family_photo) to draw the image
+// remember that the display vertices in xDraw must be set to match the length and width of your image.
 
 
 usage = "usage: image2dat [txt file] [output file name] [image width]"
