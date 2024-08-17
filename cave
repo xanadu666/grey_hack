@@ -12,18 +12,37 @@ equipment = {};
 	equipment.water = ["water", 0, 5, "heals small amount of hp"]
 	equipment.lighter = ["lighter", 0, 0, "bic lighter"]
 
-color = {};
-	color.white = "<color=#FFFFFF>";
-	color.grey = "<color=#A5A5A5>";
-	color.blue = "<color=#003AFF>";
-	color.cyan = "<color=#00FFE7>";
-	color.purple = "<color=#D700FF>";
-	color.red = "<color=#AA0000>";
-	color.yellow = "<color=#FBFF00>";
-	color.orange = "<color=#FF8701>";
-	color.brown = "<color=#964B00>";
-	color.green = "<color=#00ED03>";
-	color.skin = "<color=#ffcd94>";
+color = {}
+	color.white = "<color=#FFFFFF>"
+	color.grey = "<color=#A5A5A5>"
+	color.blue = "<color=#003AFF>"
+	color.cyan = "<color=#00FFE7>"
+	color.purple = "<color=#D700FF>"
+	color.red = "<color=#AA0000>"
+	color.yellow = "<color=#FBFF00>"
+	color.orange = "<color=#FF8701>"
+	color.brown = "<color=#964B00>"
+	color.green = "<color=#00ED03>"
+	color.peach = "<color=#FFE5B4>"
+	color.dandilion = "<color=#F0E130>"
+	color.silver = "<color=#C0C0C0>"
+	color.gold = "<color=#FFD700>"
+	color.hotpink = "<color=#FF69B4>"
+	color.midnightblue = "<color=#191970>"
+	color.rootbeer = "<color=#724A35>"
+	color.mtdew = "<color=#EAEDB9>"
+	color.blood = "<color=#780606>"
+	color.poop = "<color=#593001>"
+	color.champagne = "<color=#F7E7CE>"
+	color.alibaster = "<color=#EEEAE0>"
+	color.money = "<color=#084f09>"
+	color.death = "<color=#451208>"
+	color.sky = "<color=#87CEEB>"
+	color.tangerine = "<color=#F28500>"
+	// uncomment and add new colors here
+	//color. = "<color=>"
+	//color. = "<color=>"
+	//color. = "<color=>"
 	color.cap = "</color>"
 
 
@@ -283,7 +302,7 @@ Display = function(this)
 		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
-		print color.brown+"XXXXXXXXXXXX"+color.skin+"         O"+color.brown+"                      XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.peach+"         O"+color.brown+"                      XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX        /|\                     XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX"+color.blue+"        / \"+color.brown+"                     XXXXXXXXXXXXX"
 		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
@@ -300,7 +319,7 @@ Display = function(this)
 		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
-		print color.brown+"XXXXXXXXXXXX"+color.skin+"          O"+color.brown+"                     XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.peach+"          O"+color.brown+"                     XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX          |                     XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX"+color.blue+"          L"+color.brown+"                     XXXXXXXXXXXXX"
 		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
@@ -314,7 +333,7 @@ Display = function(this)
 		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
-		print color.brown+"XXXXXXXXXXXX"+color.skin+"           O"+color.brown+"                    XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.peach+"           O"+color.brown+"                    XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX          /|\                   XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX"+color.blue+"          / \"+color.brown+"                   XXXXXXXXXXXXX"
 		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
@@ -328,7 +347,7 @@ Display = function(this)
 		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
-		print color.brown+"XXXXXXXXXXXX"+color.skin+"            O"+color.brown+"                   XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.peach+"            O"+color.brown+"                   XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX            |                   XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX"+color.blue+"            L"+color.brown+"                   XXXXXXXXXXXXX"
 		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
@@ -342,7 +361,7 @@ Display = function(this)
 		print color.brown+"XXXXXXXXXXXXXXXXXXXXX                XXXXXXXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXXX                            XXXXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXXX                              XXXXXXXXXXXXXX"
-		print color.brown+"XXXXXXXXXXXX"+color.skin+"             O"+color.brown+"                  XXXXXXXXXXXXX"
+		print color.brown+"XXXXXXXXXXXX"+color.peach+"             O"+color.brown+"                  XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX            /|\                 XXXXXXXXXXXXX"
 		print color.brown+"XXXXXXXXXXXX"+color.blue+"            / \"+color.brown+"                 XXXXXXXXXXXXX"
 		print "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" 
@@ -378,7 +397,7 @@ Display = function(this)
 		print color.brown+"                        "+color.yellow+"\"+color.grey+"XXXXX"+color.yellow+"/                           "
 		print color.brown+"                         "+color.yellow+"\"+color.grey+"XXX"+color.yellow+"/                            " 
 		print color.brown+"                          "+color.yellow+"\"+color.grey+"X"+color.yellow+"/                             " 
-		print color.brown+"                          -"+color.skin+"o"+color.brown+"-"
+		print color.brown+"                          -"+color.peach+"o"+color.brown+"-"
 		Stats()
 		return
 	end if
