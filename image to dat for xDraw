@@ -1,0 +1,49 @@
+// image to dat file tool for xDraw
+// by xanadu
+// 2024
+
+// make a non-colorized image in notepad in a rectangular x by y box.
+//	fill any unused spaces with " "(spacebar).  when you are finished
+// 	if you select the whole image with mouse the selected portion should
+//  be a rectangle.  if its not you need to adjust the spaces in your image.
+	
+// when the image is finished save it and then run "image to dat file tool"
+// 	with the new created image file and an output_file_name and the width x
+// 	of the rectangle image.  if the wrong width is entered the output will be
+// 	incorrect data.
+
+// after file has been outputted.  open it with CodeEditor.exe and add color
+// 	to the desired fields then save and make able to import
+
+// now you can import the dat file into source code and input into xDraw 
+// example: if you named output file "family_photo" then you would use xDraw(family_photo) to draw the image
+
+
+usage = "usage: image2dat [txt file] [output file name] [image width]"
+if params.len < 3 then exit(usage)
+output_file_name = params[1]
+file = get_shell.host_computer.File(params[0])
+image = file.get_content
+print image
+image_data = {}
+width = params[2].to_int
+x = 0
+y = 0
+i = 1
+info = output_file_name + " = {};"
+for item in image
+	x = x + 1
+	if x == width then
+		x = 0
+		y = y + 1
+	end if
+	if item != " " and item.is_match("\n") == 0 then
+		image_data[i] = "[["+x+", "+y+"], color.cap, " + """" + item + """" +"]"
+		info = info + "	" + output_file_name + "["+i+"] = " + image_data[i] + ";"
+		i = i + 1
+	end if
+end for
+get_shell.host_computer.touch(current_path, output_file_name + ".dat")
+file = get_shell.host_computer.File(current_path + "/" + output_file_name + ".dat")
+
+file.set_content(info)
