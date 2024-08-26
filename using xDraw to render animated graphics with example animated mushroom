@@ -8,12 +8,10 @@
 // recieves images in dat format.  see image2dat tool to process dat files.
 // layer0 is the lowest layer for backround.  each layer appears above previous layers in rendered final image.
 
-
-
 xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 	
 	
-
+	// this function takes data from dat file and stores in str map of corresponding y coordinate
 	Process_Image = function(data, color, character)
 		
 		a = 0
@@ -25,7 +23,12 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 	end function
 	
 	final_image = ""
+	
+	// here you must have a key:value pair for each unit of vertical heigt.
+	// in this example height is 8
 	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:""}//, 8:"", 9:"", 10:"", 11:"", 12:"", 13:"", 14:"", 15:"", 16:"", 17:"", 18:"", 19:"", 20:"", 21:"", 22:"", 23:"", 24:"", 25:"", 26:"", 27:""}//, 28:"", 29:"", 30:"", 31:"", 32:"", 33:"", 34:"", 35:"", 36:"", 37:"", 38:""}
+	
+	// these are counters for each layer.  counts index of image data map for each layer
 	i = 0 //for layer0
 	j = 0 // for layer1
 	k = 0 // for layer2
@@ -33,18 +36,32 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 	n = 0 // for layer4
 	o = 0 // for layer5
 	p = 0 // for layer6
-	length = 55
 	
-	for y in range (0,7)
+	// set screen height and width here. you must have a str map key:value pair for each unit of vertial height
+	height = 8
+	width = 56
+	
+	
+
+	
+	for y in range (0,height - 1)
 		
-		wait(.01)
+		wait(.01) // this can be altered or removed to change frame rate
 		
-		for x in range(0,length)
+		
+
+		for x in range(0,width - 1)
 			
+			// this block allows images that are bigger than screen width and height to be displayed.
+			// allows for scrolling backrounds and such.
 			while layer6[p][0][0] > length and layer6[p][0][1] == y
 				p = p + 1
 				if p == layer6.len then p = 0
 			end while
+			
+			// this block checks if a character is saved in this x,y position in image map and if so processes 
+			// the character and color and moves counter for image data.  if any other image data maps use this x,y coordinate
+			// will skip to next index in that map.
 			if layer6[p][2] != "" and layer6[p][0][0] == x and layer6[p][0][1] == y then
 				Process_Image(str, layer6[p][1], layer6[p][2])
 				p = p + 1
@@ -257,6 +274,9 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 	
 	end for
 		
+	
+	// this block takes each string saved in str map and concatenates them into 1 long string seperated by new lines
+	// hence creating a complete rendered image.
 	a = 0
 	for item in str
 		final_image = final_image + str[a] + "\n"
@@ -264,10 +284,13 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 		if a == str.len then final_image = final_image 
 	end for
 	
+	// returns rendered image to be displayed with a simple print command in main function
 	return final_image + "\n"
 
 end function
 
+
+// everything from here down is to animate images
 Get_Direction = function(dirs)
 	dirs.shuffle
 	return dirs[0]
@@ -545,10 +568,9 @@ update = function(g_state, fcount)
 			Animate_Object_Random_Direction(spot1, spot_boundary)
 			Animate_Object_Random_Direction(spot2, spot_boundary)
 		end if
-		//if frame_count % 10 then
 		globals.rendered_image = xDraw(mushroom, spot1, spot2, grass1, grass2, grass3, bug)
 		return
-		//end if
+
 	end if
 	
 	if g_state == "start" then
