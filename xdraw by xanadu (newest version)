@@ -1,0 +1,258 @@
+// xDraw by xanadu
+// copyright 2024
+
+xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
+	
+	Process_Image = function(data, color, character)
+		
+		a = 0
+		for item in data
+			if y == a then data[a] = data[a] + color + character 
+			a = a + 1
+		end for
+	
+	end function
+	
+	final_image = ""
+	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:""}//, 8:"", 9:"", 10:"", 11:"", 12:"", 13:"", 14:"", 15:"", 16:"", 17:"", 18:"", 19:"", 20:"", 21:"", 22:"", 23:"", 24:"", 25:"", 26:"", 27:""}//, 28:"", 29:"", 30:"", 31:"", 32:"", 33:"", 34:"", 35:"", 36:"", 37:"", 38:""}
+	i = 0 //for layer0
+	j = 0 // for layer1
+	k = 0 // for layer2
+	m = 0 // for layer3
+	n = 0 // for layer4
+	o = 0 // for layer5
+	p = 0 // for layer6
+	length = 55
+	
+	for y in range (0,7)
+		
+		wait(.01)
+		
+		for x in range(0,length)
+			
+			while layer6[p][0][0] > length and layer6[p][0][1] == y
+				p = p + 1
+				if p == layer6.len then p = 0
+			end while
+			if layer6[p][2] != "" and layer6[p][0][0] == x and layer6[p][0][1] == y then
+				Process_Image(str, layer6[p][1], layer6[p][2])
+				p = p + 1
+				if p == layer6.len then p = 0
+				if layer5 != null and layer5[o][0][0] == x and layer5[o][0][1] == y then o = o + 1
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer5 != null and o == layer5.len then o = 0
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			while layer5[o][0][0] > length and layer5[o][0][1] == y
+				o = o + 1
+				if o == layer5.len then o = 0
+			end while
+			if layer5[o][2] != "" and layer5[o][0][0] == x and layer5[o][0][1] == y then
+				Process_Image(str, layer5[o][1], layer5[o][2])
+				o = o + 1
+				if o == layer5.len then o = 0
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1				
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1				
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			while layer4[n][0][0] > length and layer4[n][0][1] == y
+				n = n + 1
+				if n == layer4.len then n = 0
+			end while
+			if layer4[n][2] != "" and layer4[n][0][0] == x and layer4[n][0][1] == y then
+				Process_Image(str, layer4[n][1], layer4[n][2])
+				n = n + 1
+				if n == layer4.len then n = 0
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+				
+			while layer3[m][0][0] > length and layer3[m][0][1] == y
+				m = m + 1
+				if m == layer3.len then m = 0
+			end while
+			if layer3[m][2] != "" and layer3[m][0][0] == x and layer3[m][0][1] == y then
+				Process_Image(str, layer3[m][1], layer3[m][2])
+				m = m + 1
+				if m == layer3.len then m = 0	
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			while layer2[k][0][0] > length and layer2[k][0][1] == y
+				k = k + 1
+				if k == layer2.len then k = 0
+			end while
+			if layer2[k][2] != "" and layer2[k][0][0] == x and layer2[k][0][1] == y then
+				Process_Image(str, layer2[k][1], layer2[k][2])
+				k = k + 1
+				if k == layer2.len then k = 0
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1		
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0				
+				continue
+			end if
+			
+			while layer1[j][0][0] > length and layer1[j][0][1] == y
+				j = j + 1
+				if j == layer1.len then j = 0
+			end while
+			if layer1[j][2] != "" and layer1[j][0][0] == x and layer1[j][0][1] == y then
+				Process_Image(str, layer1[j][1], layer1[j][2])
+				j = j + 1
+				if j == layer1.len then j = 0
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			while layer0[i][0][0] > length and layer0[i][0][1] == y
+				i = i + 1
+				if i == layer0.len then i = 0
+			end while
+			if layer0[i][2] != "" and layer0[i][0][0] == x and layer0[i][0][1] == y then
+				Process_Image(str, layer0[i][1], layer0[i][2])
+				i = i + 1
+				if i == layer0.len then i = 0
+				continue
+			end if
+		
+			if layer6[p][2] == "" and layer6[p][0][0] == x and layer6[p][0][1] == y then
+				Process_Image(str, layer6[p][1], "*")
+				p = p + 1
+				if p == layer6.len then p = 0
+				if layer5 != null and layer5[o][0][0] == x and layer5[o][0][1] == y then o = o + 1
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer5 != null and o == layer5.len then o = 0
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			if layer5[o][2] == "" and layer5[o][0][0] == x and layer5[o][0][1] == y then
+				Process_Image(str, layer5[o][1], "*")
+				o = o + 1
+				if o == layer5.len then o = 0
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1				
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1				
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			if layer4[n][2] == "" and layer4[n][0][0] == x and layer4[n][0][1] == y then
+				Process_Image(str, layer4[n][1], "*")
+				n = n + 1
+				if n == layer1.len then n = 0
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			if layer3[m][2] == "" and layer3[m][0][0] == x and layer3[m][0][1] == y then
+				Process_Image(str, layer3[m][1], "*")
+				m = m + 1
+				if m > layer3.len then m = 0
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			if layer2[k][2] == "" and layer2[k][0][0] == x and layer2[k][0][1] == y then
+				Process_Image(str, layer2[k][1], "*")
+				k = k + 1
+				if k == layer2.len then k = 0
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0				
+				continue
+			end if
+			
+			if layer1[j][2] == "" and layer1[j][0][0] == x and layer1[j][0][1] == y then
+				Process_Image(str, layer1[j][1], "*")
+				j = j + 1
+				if j == layer1.len then j = 0
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			if layer0[i][2] == "" and layer0[i][0][0] == x and layer0[i][0][1] == y then
+				Process_Image(str, layer0[i][1], "*")
+				i = i + 1
+				if i == layer0.len then i = 0
+				continue
+			end if
+
+			Process_Image(str, color.cap, " ")
+		
+		end for
+	
+	end for
+		
+	a = 0
+	for item in str
+		final_image = final_image + str[a] + "\n"
+		a = a + 1
+		if a == str.len then final_image = final_image 
+	end for
+	
+	return final_image + "\n"
+
+end function
