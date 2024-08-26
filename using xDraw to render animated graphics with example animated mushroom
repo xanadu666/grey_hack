@@ -1,9 +1,578 @@
-//using xdraw to render animated graphics
-// by xanadu
-//2024
+// xDraw by xanadu
+// copyright 2024
 
-// color map.  you can add new colors here.
+// mushroom and bug animation example using xDraw by xanadu
+// copyright 2024
+
+// function prototype for xDraw
+// recieves images in dat format.  see image2dat tool to process dat files.
+// layer0 is the lowest layer for backround.  each layer appears above previous layers in rendered final image.
+
+
+
+xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
+	
+	
+
+	Process_Image = function(data, color, character)
+		
+		a = 0
+		for item in data
+			if y == a then data[a] = data[a] + color + character 
+			a = a + 1
+		end for
+	
+	end function
+	
+	final_image = ""
+	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:""}//, 8:"", 9:"", 10:"", 11:"", 12:"", 13:"", 14:"", 15:"", 16:"", 17:"", 18:"", 19:"", 20:"", 21:"", 22:"", 23:"", 24:"", 25:"", 26:"", 27:""}//, 28:"", 29:"", 30:"", 31:"", 32:"", 33:"", 34:"", 35:"", 36:"", 37:"", 38:""}
+	i = 0 //for layer0
+	j = 0 // for layer1
+	k = 0 // for layer2
+	m = 0 // for layer3
+	n = 0 // for layer4
+	o = 0 // for layer5
+	p = 0 // for layer6
+	length = 55
+	
+	for y in range (0,7)
+		
+		wait(.01)
+		
+		for x in range(0,length)
+			
+			while layer6[p][0][0] > length and layer6[p][0][1] == y
+				p = p + 1
+				if p == layer6.len then p = 0
+			end while
+			if layer6[p][2] != "" and layer6[p][0][0] == x and layer6[p][0][1] == y then
+				Process_Image(str, layer6[p][1], layer6[p][2])
+				p = p + 1
+				if p == layer6.len then p = 0
+				if layer5 != null and layer5[o][0][0] == x and layer5[o][0][1] == y then o = o + 1
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer5 != null and o == layer5.len then o = 0
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			while layer5[o][0][0] > length and layer5[o][0][1] == y
+				o = o + 1
+				if o == layer5.len then o = 0
+			end while
+			if layer5[o][2] != "" and layer5[o][0][0] == x and layer5[o][0][1] == y then
+				Process_Image(str, layer5[o][1], layer5[o][2])
+				o = o + 1
+				if o == layer5.len then o = 0
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1				
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1				
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			while layer4[n][0][0] > length and layer4[n][0][1] == y
+				n = n + 1
+				if n == layer4.len then n = 0
+			end while
+			if layer4[n][2] != "" and layer4[n][0][0] == x and layer4[n][0][1] == y then
+				Process_Image(str, layer4[n][1], layer4[n][2])
+				n = n + 1
+				if n == layer4.len then n = 0
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+				
+			while layer3[m][0][0] > length and layer3[m][0][1] == y
+				m = m + 1
+				if m == layer3.len then m = 0
+			end while
+			if layer3[m][2] != "" and layer3[m][0][0] == x and layer3[m][0][1] == y then
+				Process_Image(str, layer3[m][1], layer3[m][2])
+				m = m + 1
+				if m == layer3.len then m = 0	
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			while layer2[k][0][0] > length and layer2[k][0][1] == y
+				k = k + 1
+				if k == layer2.len then k = 0
+			end while
+			if layer2[k][2] != "" and layer2[k][0][0] == x and layer2[k][0][1] == y then
+				Process_Image(str, layer2[k][1], layer2[k][2])
+				k = k + 1
+				if k == layer2.len then k = 0
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1		
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0				
+				continue
+			end if
+			
+			while layer1[j][0][0] > length and layer1[j][0][1] == y
+				j = j + 1
+				if j == layer1.len then j = 0
+			end while
+			if layer1[j][2] != "" and layer1[j][0][0] == x and layer1[j][0][1] == y then
+				Process_Image(str, layer1[j][1], layer1[j][2])
+				j = j + 1
+				if j == layer1.len then j = 0
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			while layer0[i][0][0] > length and layer0[i][0][1] == y
+				i = i + 1
+				if i == layer0.len then i = 0
+			end while
+			if layer0[i][2] != "" and layer0[i][0][0] == x and layer0[i][0][1] == y then
+				Process_Image(str, layer0[i][1], layer0[i][2])
+				i = i + 1
+				if i == layer0.len then i = 0
+				continue
+			end if
+		
+			if layer6[p][2] == "" and layer6[p][0][0] == x and layer6[p][0][1] == y then
+				Process_Image(str, layer6[p][1], "*")
+				p = p + 1
+				if p == layer6.len then p = 0
+				if layer5 != null and layer5[o][0][0] == x and layer5[o][0][1] == y then o = o + 1
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer5 != null and o == layer5.len then o = 0
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			if layer5[o][2] == "" and layer5[o][0][0] == x and layer5[o][0][1] == y then
+				Process_Image(str, layer5[o][1], "*")
+				o = o + 1
+				if o == layer5.len then o = 0
+				if layer4 != null and layer4[n][0][0] == x and layer4[n][0][1] == y then n = n + 1
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1				
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1				
+				if layer4 != null and n == layer4.len then n = 0
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			if layer4[n][2] == "" and layer4[n][0][0] == x and layer4[n][0][1] == y then
+				Process_Image(str, layer4[n][1], "*")
+				n = n + 1
+				if n == layer1.len then n = 0
+				if layer3 != null and layer3[m][0][0] == x and layer3[m][0][1] == y then m = m + 1
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer3 != null and m == layer3.len then m = 0
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			if layer3[m][2] == "" and layer3[m][0][0] == x and layer3[m][0][1] == y then
+				Process_Image(str, layer3[m][1], "*")
+				m = m + 1
+				if m > layer3.len then m = 0
+				if layer2 != null and layer2[k][0][0] == x and layer2[k][0][1] == y then k = k + 1
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer2 != null and k == layer2.len then k = 0
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+
+			if layer2[k][2] == "" and layer2[k][0][0] == x and layer2[k][0][1] == y then
+				Process_Image(str, layer2[k][1], "*")
+				k = k + 1
+				if k == layer2.len then k = 0
+				if layer1 != null and layer1[j][0][0] == x and layer1[j][0][1] == y then j = j + 1
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer1 != null and j == layer1.len then j = 0
+				if layer0 != null and i == layer0.len then i = 0				
+				continue
+			end if
+			
+			if layer1[j][2] == "" and layer1[j][0][0] == x and layer1[j][0][1] == y then
+				Process_Image(str, layer1[j][1], "*")
+				j = j + 1
+				if j == layer1.len then j = 0
+				if layer0 != null and layer0[i][0][0] == x and layer0[i][0][1] == y then i = i + 1
+				if layer0 != null and i == layer0.len then i = 0
+				continue
+			end if
+			
+			if layer0[i][2] == "" and layer0[i][0][0] == x and layer0[i][0][1] == y then
+				Process_Image(str, layer0[i][1], "*")
+				i = i + 1
+				if i == layer0.len then i = 0
+				continue
+			end if
+
+			Process_Image(str, color.cap, " ")
+		
+		end for
+	
+	end for
+		
+	a = 0
+	for item in str
+		final_image = final_image + str[a] + "\n"
+		a = a + 1
+		if a == str.len then final_image = final_image 
+	end for
+	
+	return final_image + "\n"
+
+end function
+
+Get_Direction = function(dirs)
+	dirs.shuffle
+	return dirs[0]
+end function
+
+Check_Collisions = function(dir, data, boundary, available_directions)
+
+	i = 0
+	for loc in data
+		
+		
+		
+		for item in boundary 
+
+			if dir == "up_right" then
+
+
+				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] - 1 then
+					available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "up_left" then
+				if item[0] == data[i][0][0] - 1 and item[1] == data[i][0][1] - 1 then
+					available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "down_right" then
+				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] + 1 then
+					available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "down_left" then
+				if item[0] == data[i][0][0] - 1 and item[1] == data[i][0][1] + 1 then
+					available_directions.pull
+					return true
+				end if
+			end if		
+	
+			if dir == "up" then
+				if item[0] == data[i][0][0] and item[1] == data[i][0][1] - 1 then 
+					available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "down" then
+				if item[0] == data[i][0][0] and item[1] == data[i][0][1] + 1 then
+					available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "left" then
+				if item[0] == data[i][0][0]  - 1 and item[1] == data[i][0][1] then
+					available_directions.pull
+					return true
+				end if
+			end if
+		
+			if dir == "right" then
+				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] then
+					available_directions.pull
+					return true
+				end if
+			end if
+				
+		end for
+		
+		i = i + 1
+		
+	end for
+	
+	return false
+
+	
+
+end function
+
+Apply_Direction = function(dir, data)
+		
+	i = 0
+
+	for item in data
+		if dir == "up_right" then
+			data[i][0][0] = data[i][0][0] + 1
+			data[i][0][1] = data[i][0][1] - 1
+		end if
+		
+		if dir == "up_left" then
+			data[i][0][0] = data[i][0][0] - 1
+			data[i][0][1] = data[i][0][1] - 1
+		end if
+	
+		if dir == "down_right" then
+			data[i][0][0] = data[i][0][0] + 1
+			data[i][0][1] = data[i][0][1] + 1
+		end if
+	
+		if dir == "down_left" then
+			data[i][0][0] = data[i][0][0] - 1
+			data[i][0][1] = data[i][0][1] + 1
+		end if
+	
+		if dir == "up" then data[i][0][1] = data[i][0][1] - 1
+
+		if dir == "down" then data[i][0][1] = data[i][0][1] + 1
+	
+		if dir == "left" then data[i][0][0] = data[i][0][0] - 1
+	
+		if dir == "right" then data[i][0][0] = data[i][0][0] + 1
+	
+		i = i + 1
+			
+		end for
+		return
+	end function
+
+Animate_Object_Random_Direction = function(object, boundary) //frame_count
+	
+	
+	
+
+	//if not frame_count % 2 then
+	available_directions = directions[0:]
+		
+	current_direction = Get_Direction(directions[0:])
+
+	collision = Check_Collisions(current_direction, object, boundary, available_directions)
+
+	while collision == true
+		current_direction = Get_Direction(available_directions)
+		collision = Check_Collisions(current_direction, object, boundary, available_directions)
+	end while
+		
+	Apply_Direction(current_direction, object)
+	return
+end function
+
+
+Animate_Object_Random_Lines = function(object, boundary, prev_dir)
+	
+	available_directions = directions[0:]
+	current_direction = prev_dir
+	if object_state == "stopped" then  current_direction = Get_Direction(directions[0:])
+	
+	collision = Check_Collisions(current_direction, object, boundary, available_directions)
+	
+	while collision == true
+		current_direction = Get_Direction(available_directions)
+		collision = Check_Collisions(current_direction, object, boundary, available_directions)
+	end while
+	Apply_Direction(current_direction, object)
+	globals.bug_previous_direction = current_direction
+	globals.object_state = "moving"
+end function
+
+
+Animate_bug = function(object)
+	
+	color_list = color.values
+	color_list.shuffle
+	
+	
+	if frame_count % 3 == 0 then
+		object[0][2] = "-"
+		object[2][2] = "-"
+		object[1][1] = color_list[0]
+		return
+	end if
+	object[0][2] = ">"
+	object[2][2] = "<"
+	
+	return
+end function
+
+
+
+Animate_Grass = function(data)
+
+	number_list = [1, 2, 3,]
+	
+	i = 0
+	for item in data
+		number_list.shuffle
+		//print number_list
+		//print data[i][2]
+		if number_list[0] == 1 then
+			data[i][2] = "\" 
+			i = i + 1
+			continue
+		end if
+		
+		if number_list[0] == 2 then
+			data[i][2] = "|"
+			i = i + 1
+			continue
+		end if
+		
+		if number_list[0] == 3 then
+			data[i][2] = "/"
+			i = i + 1
+			continue
+		end if
+	
+	end for
+	
+end function
+
+Place_Object = function(object, x, y)
+	i = 0
+	for item in object
+		object[i][0] = [object[i][0][0]+x, object[i][0][1]+y]
+	i = i + 1
+	end for
+end function
+
+initialize = function()
+	
+	Place_Object(grass1, 33, 2)
+	Place_Object(grass2, 3, 3)
+	Place_Object(grass3, 43, 6)
+	Place_Object(spot1, 20, 2)
+	Place_Object(spot2, 14, 3)
+	Place_Object(mushroom, 18, 0)
+	Place_Object(bug, 45, 4)
+	
+end function
+
+
+
+input = function(g_state)
+	
+	if g_state == "run" then
+		return
+	end if
+	
+	if g_state == "start" then
+		return
+	end if
+	
+	if g_state == "adjust_screen_size" then
+		user_input(color.cyan+"adjust screen to size of box and press any key to begin: ",false,true)
+		return
+	end if
+	
+	return
+
+end function
+
+
+
+update = function(g_state, fcount)
+	
+	if g_state == "run" then
+		
+		
+		Animate_bug(bug)
+		
+		Animate_Object_Random_Lines(bug, bug_boundary, bug_previous_direction)
+		
+		
+		if frame_count % 10 == 0 then
+			Animate_Grass(grass1)
+			Animate_Grass(grass2)
+			Animate_Grass(grass3)
+		end if
+		
+		if frame_count % 5 == 0  then
+			Animate_Object_Random_Direction(spot1, spot_boundary)
+			Animate_Object_Random_Direction(spot2, spot_boundary)
+		end if
+		//if frame_count % 10 then
+		globals.rendered_image = xDraw(mushroom, spot1, spot2, grass1, grass2, grass3, bug)
+		return
+		//end if
+	end if
+	
+	if g_state == "start" then
+		globals.rendered_image = xDraw(screenbox)
+		globals.game_state = "adjust_screen_size"
+		return
+	end if
+	
+	if g_state == "adjust_screen_size" then
+		globals.rendered_image = xDraw(mushroom, spot1, spot2, grass1, grass2, grass3, bug)
+		globals.game_state = "run"
+		return
+	end if
+
+end function
+
+
+
 color = {}
+	color.darkbrown = "<color=#654321>"
+	color.gravel = "<color=#89785c>"
+	color.darkgrey = "<color=#292627>"
+	color.granite = "<color=#837E7C>"
+	color.moon = "<color=#F6F1D5>"
 	color.white = "<color=#FFFFFF>"
 	color.grey = "<color=#A5A5A5>"
 	color.blue = "<color=#003AFF>"
@@ -30,731 +599,288 @@ color = {}
 	color.death = "<color=#451208>"
 	color.sky = "<color=#87CEEB>"
 	color.tangerine = "<color=#F28500>"
-	// uncomment and add new colors here
-	//color. = "<color=>"
-	//color. = "<color=>"
-	//color. = "<color=>"
 	color.cap = "</color>"
 
 
+// these are the images in dat format. 
+// normally they would be saved in a dat file and imported into main.src using import_code
+screenbox = {}
+	screenbox[0] = [[0, 0], color.cap, "*"]
+	screenbox[1] = [[screenbox[0][0][0]+1, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[2] = [[screenbox[0][0][0]+2, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[3] = [[screenbox[0][0][0]+3, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[4] = [[screenbox[0][0][0]+4, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[5] = [[screenbox[0][0][0]+5, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[6] = [[screenbox[0][0][0]+6, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[7] = [[screenbox[0][0][0]+7, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[8] = [[screenbox[0][0][0]+8, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[9] = [[screenbox[0][0][0]+9, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[10] = [[screenbox[0][0][0]+10, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[11] = [[screenbox[0][0][0]+11, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[12] = [[screenbox[0][0][0]+12, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[13] = [[screenbox[0][0][0]+13, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[14] = [[screenbox[0][0][0]+14, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[15] = [[screenbox[0][0][0]+15, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[16] = [[screenbox[0][0][0]+16, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[17] = [[screenbox[0][0][0]+17, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[18] = [[screenbox[0][0][0]+18, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[19] = [[screenbox[0][0][0]+19, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[20] = [[screenbox[0][0][0]+20, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[21] = [[screenbox[0][0][0]+21, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[22] = [[screenbox[0][0][0]+22, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[23] = [[screenbox[0][0][0]+23, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[24] = [[screenbox[0][0][0]+24, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[25] = [[screenbox[0][0][0]+25, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[26] = [[screenbox[0][0][0]+26, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[27] = [[screenbox[0][0][0]+27, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[28] = [[screenbox[0][0][0]+28, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[29] = [[screenbox[0][0][0]+29, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[30] = [[screenbox[0][0][0]+30, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[31] = [[screenbox[0][0][0]+31, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[32] = [[screenbox[0][0][0]+32, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[33] = [[screenbox[0][0][0]+33, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[34] = [[screenbox[0][0][0]+34, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[35] = [[screenbox[0][0][0]+35, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[36] = [[screenbox[0][0][0]+36, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[37] = [[screenbox[0][0][0]+37, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[38] = [[screenbox[0][0][0]+38, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[39] = [[screenbox[0][0][0]+39, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[40] = [[screenbox[0][0][0]+40, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[41] = [[screenbox[0][0][0]+41, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[42] = [[screenbox[0][0][0]+42, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[43] = [[screenbox[0][0][0]+43, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[44] = [[screenbox[0][0][0]+44, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[45] = [[screenbox[0][0][0]+45, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[46] = [[screenbox[0][0][0]+46, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[47] = [[screenbox[0][0][0]+47, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[48] = [[screenbox[0][0][0]+48, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[49] = [[screenbox[0][0][0]+49, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[50] = [[screenbox[0][0][0]+50, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[51] = [[screenbox[0][0][0]+51, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[52] = [[screenbox[0][0][0]+52, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[53] = [[screenbox[0][0][0]+53, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[54] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+0], color.cap, "*"]
+	screenbox[55] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+1], color.cap, "*"]
+	screenbox[56] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+1], color.cap, "*"]
+	screenbox[57] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+2], color.cap, "*"]
+	screenbox[58] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+2], color.cap, "*"]
+	screenbox[59] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+3], color.cap, "*"]
+	screenbox[60] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+3], color.cap, "*"]
+	screenbox[61] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+4], color.cap, "*"]
+	screenbox[62] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+4], color.cap, "*"]
+	screenbox[63] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+5], color.cap, "*"]
+	screenbox[64] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+5], color.cap, "*"]
+	screenbox[65] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+6], color.cap, "*"]
+	screenbox[66] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+6], color.cap, "*"]
+	screenbox[67] = [[screenbox[0][0][0]+0, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[68] = [[screenbox[0][0][0]+1, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[69] = [[screenbox[0][0][0]+2, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[70] = [[screenbox[0][0][0]+3, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[71] = [[screenbox[0][0][0]+4, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[72] = [[screenbox[0][0][0]+5, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[73] = [[screenbox[0][0][0]+6, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[74] = [[screenbox[0][0][0]+7, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[75] = [[screenbox[0][0][0]+8, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[76] = [[screenbox[0][0][0]+9, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[77] = [[screenbox[0][0][0]+10, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[78] = [[screenbox[0][0][0]+11, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[79] = [[screenbox[0][0][0]+12, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[80] = [[screenbox[0][0][0]+13, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[81] = [[screenbox[0][0][0]+14, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[82] = [[screenbox[0][0][0]+15, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[83] = [[screenbox[0][0][0]+16, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[84] = [[screenbox[0][0][0]+17, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[85] = [[screenbox[0][0][0]+18, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[86] = [[screenbox[0][0][0]+19, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[87] = [[screenbox[0][0][0]+20, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[88] = [[screenbox[0][0][0]+21, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[89] = [[screenbox[0][0][0]+22, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[90] = [[screenbox[0][0][0]+23, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[91] = [[screenbox[0][0][0]+24, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[92] = [[screenbox[0][0][0]+25, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[93] = [[screenbox[0][0][0]+26, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[94] = [[screenbox[0][0][0]+27, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[95] = [[screenbox[0][0][0]+28, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[96] = [[screenbox[0][0][0]+29, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[97] = [[screenbox[0][0][0]+30, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[98] = [[screenbox[0][0][0]+31, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[99] = [[screenbox[0][0][0]+32, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[100] = [[screenbox[0][0][0]+33, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[101] = [[screenbox[0][0][0]+34, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[102] = [[screenbox[0][0][0]+35, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[103] = [[screenbox[0][0][0]+36, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[104] = [[screenbox[0][0][0]+37, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[105] = [[screenbox[0][0][0]+38, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[106] = [[screenbox[0][0][0]+39, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[107] = [[screenbox[0][0][0]+40, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[108] = [[screenbox[0][0][0]+41, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[109] = [[screenbox[0][0][0]+42, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[110] = [[screenbox[0][0][0]+43, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[111] = [[screenbox[0][0][0]+44, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[112] = [[screenbox[0][0][0]+45, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[113] = [[screenbox[0][0][0]+46, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[114] = [[screenbox[0][0][0]+47, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[115] = [[screenbox[0][0][0]+48, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[116] = [[screenbox[0][0][0]+49, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[117] = [[screenbox[0][0][0]+50, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[118] = [[screenbox[0][0][0]+51, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[119] = [[screenbox[0][0][0]+52, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[120] = [[screenbox[0][0][0]+53, screenbox[0][0][1]+7], color.cap, "*"]
+	screenbox[121] = [[screenbox[0][0][0]+54, screenbox[0][0][1]+7], color.cap, "*"]
 
-// this is the data for the original images. 
-// put new image maps here
-// the coordinates in each image must be sorted by y first ascending and then x ascending.
-/// i need to learn how to automaticly sort the the key:value pairs for each image map. 
-/// and an "image to coordinate readout" is in the works.
-/// let me know if you got any ideas
+grass1 = {}
+	grass1[0] = [[0, 0], color.green, "\"]
+	grass1[1] = [[grass1[0][0][0]+1, grass1[0][0][1]+0], color.green, "\"]
+	grass1[2] = [[grass1[0][0][0]+2, grass1[0][0][1]+0], color.green, "|"]
+	grass1[3] = [[grass1[0][0][0]+3, grass1[0][0][1]+0], color.green, "/"]
+	grass1[4] = [[grass1[0][0][0]+4, grass1[0][0][1]+0], color.green, "\"]
+	grass1[5] = [[grass1[0][0][0]+5, grass1[0][0][1]+0], color.green, "\"]
+	grass1[6] = [[grass1[0][0][0]+6, grass1[0][0][1]+0], color.green, "|"]
+	grass1[7] = [[grass1[0][0][0]+7, grass1[0][0][1]+0], color.green, "/"]
+
+grass2 = {}
+	grass2[0] = [[0, 0], color.green, "\"]
+	grass2[1] = [[grass2[0][0][0]+1, grass2[0][0][1]+0], color.green, "\"]
+	grass2[2] = [[grass2[0][0][0]+2, grass2[0][0][1]+0], color.green, "|"]
+	grass2[3] = [[grass2[0][0][0]+3, grass2[0][0][1]+0], color.green, "/"]
+
+grass3 = {}
+	grass3[0] = [[0, 0], color.green, "\"]
+	grass3[1] = [[grass3[0][0][0]+1, grass3[0][0][1]+0], color.green, "\"]
+	grass3[2] = [[grass3[0][0][0]+2, grass3[0][0][1]+0], color.green, "|"]
+	grass3[3] = [[grass3[0][0][0]+3, grass3[0][0][1]+0], color.green, "/"]
+	grass3[4] = [[grass3[0][0][0]+4, grass3[0][0][1]+0], color.green, "|"]
+	grass3[5] = [[grass3[0][0][0]+5, grass3[0][0][1]+0], color.green, "\"]
+
 spot1 = {}
-	spot1[1] = [[20, 2], color.white, "%"]
-	spot1[2] = [[21, 2], color.white, "%"]
-	spot1[3] = [[22, 2], color.white, "%"]
-	spot1[4] = [[20, 3], color.white, "%"]
-	spot1[5] = [[21, 3], color.white, "%"]
-	spot1[6] = [[22, 3], color.white, "%"]
+	spot1[0] = [[0, 0], color.white, "%"]
+	spot1[1] = [[spot1[0][0][0]+1, spot1[0][0][1]+0], color.white, "%"]
+	spot1[2] = [[spot1[0][0][0]+2, spot1[0][0][1]+0], color.white, "%"]
+	spot1[3] = [[spot1[0][0][0]+0, spot1[0][0][1]+1], color.white, "%"]
+	spot1[4] = [[spot1[0][0][0]+1, spot1[0][0][1]+1], color.white, "%"]
+	spot1[5] = [[spot1[0][0][0]+2, spot1[0][0][1]+1], color.white, "%"]
 	
 spot2 = {}
-	spot2[1] = [[14, 3], color.white, "%"]
-	spot2[2] = [[15, 3], color.white, "%"]
-	spot2[3] = [[16, 3], color.white, "%"]
-	spot2[4] = [[14, 4], color.white, "%"]
-	spot2[5] = [[15, 4], color.white, "%"]
-	spot2[6] = [[16, 4], color.white, "%"]
+	spot2[0] = [[0, 0], color.white, "%"]
+	spot2[1] = [[spot2[0][0][0]+1, spot2[0][0][1]+0], color.white, "%"]
+	spot2[2] = [[spot2[0][0][0]+2, spot2[0][0][1]+0], color.white, "%"]
+	spot2[3] = [[spot2[0][0][0]+0, spot2[0][0][1]+1], color.white, "%"]
+	spot2[4] = [[spot2[0][0][0]+1, spot2[0][0][1]+1], color.white, "%"]
+	spot2[5] = [[spot2[0][0][0]+2, spot2[0][0][1]+1], color.white, "%"]
 	
 mushroom = {}
-	mushroom[1] = [[18, 0], color.red, "o"]
-	mushroom[2] = [[19, 0], color.red, "o"]
-	mushroom[3] = [[20, 0], color.red, "o"]
-	mushroom[4] = [[17, 1], color.red, "o"]
-	mushroom[5] = [[18, 1], color.red, "o"]
-	mushroom[6] = [[19, 1], color.red, "o"]
-	mushroom[7] = [[20, 1], color.red, "o"]
-	mushroom[8] = [[21, 1], color.red, "o"]
-	mushroom[9] = [[22, 1], color.red, "o"]
-	mushroom[10] = [[33, 1], color.green, "\"]
-	mushroom[11] = [[34, 1], color.green, "\"]
-	mushroom[12] = [[35, 1], color.green, "/"]
-	mushroom[13] = [[36, 1], color.green, "/"]
-	mushroom[14] = [[37, 1], color.green, "\"]
-	mushroom[15] = [[38, 1], color.green, "\"]
-	mushroom[16] = [[39, 1], color.green, "/"]
-	mushroom[17] = [[40, 1], color.green, "/"]
-	mushroom[18] = [[16, 2], color.red, "O"]
-	mushroom[19] = [[17, 2], color.red, "O"]
-	mushroom[20] = [[18, 2], color.red, "O"]
-	mushroom[21] = [[19, 2], color.red, "O"]
-	mushroom[22] = [[20, 2], color.red, "O"]
-	mushroom[23] = [[21, 2], color.red, "O"]
-	mushroom[24] = [[22, 2], color.red, "O"]
-	mushroom[25] = [[23, 2], color.red, "O"]
-	mushroom[26] = [[24, 2], color.red, "O"]
-	mushroom[27] = [[3, 3], color.green, "\"]
-	mushroom[28] = [[4, 3], color.green, "\"]
-	mushroom[29] = [[5, 3], color.green, "/"]
-	mushroom[30] = [[6, 3], color.green, "/"]
-	mushroom[31] = [[14, 3], color.red, "O"]
-	mushroom[32] = [[15, 3], color.red, "O"]
-	mushroom[33] = [[16, 3], color.red, "O"]
-	mushroom[34] = [[17, 3], color.red, "O"]
-	mushroom[35] = [[18, 3], color.red, "O"]
-	mushroom[36] = [[19, 3], color.red, "O"]
-	mushroom[37] = [[20, 3], color.red, "O"]
-	mushroom[38] = [[21, 3], color.red, "O"]
-	mushroom[39] = [[22, 3], color.red, "O"]
-	mushroom[40] = [[23, 3], color.red, "O"]
-	mushroom[41] = [[24, 3], color.red, "O"]
-	mushroom[42] = [[25, 3], color.red, "O"]
-	mushroom[43] = [[26, 3], color.red, "O"]
-	mushroom[44] = [[27, 3], color.red, "O"]
-	mushroom[45] = [[13, 4], color.red, "O"]
-	mushroom[46] = [[14, 4], color.red, "O"]
-	mushroom[47] = [[15, 4], color.red, "O"]
-	mushroom[48] = [[16, 4], color.red, "O"]
-	mushroom[49] = [[17, 4], color.red, "O"]
-	mushroom[50] = [[18, 4], color.red, "O"]
-	mushroom[51] = [[19, 4], color.red, "O"]
-	mushroom[52] = [[20, 4], color.red, "O"]
-	mushroom[53] = [[21, 4], color.red, "O"]
-	mushroom[54] = [[22, 4], color.red, "O"]
-	mushroom[55] = [[23, 4], color.red, "O"]
-	mushroom[56] = [[24, 4], color.red, "O"]
-	mushroom[57] = [[25, 4], color.red, "O"]
-	mushroom[58] = [[26, 4], color.red, "O"]
-	mushroom[59] = [[27, 4], color.red, "O"]
-	mushroom[60] = [[28, 4], color.red, "O"]
-	mushroom[61] = [[29, 4], color.red, "O"]
-	mushroom[62] = [[30, 4], color.red, "O"]
-	mushroom[63] = [[11, 5], color.red, "O"]
-	mushroom[64] = [[12, 5], color.red, "O"]
-	mushroom[65] = [[13, 5], color.red, "O"]
-	mushroom[66] = [[14, 5], color.red, "O"]
-	mushroom[67] = [[15, 5], color.red, "O"]
-	mushroom[68] = [[16, 5], color.red, "O"]
-	mushroom[69] = [[17, 5], color.red, "O"]
-	mushroom[70] = [[18, 5], color.red, "O"]
-	mushroom[71] = [[19, 5], color.red, "O"]
-	mushroom[72] = [[20, 5], color.red, "O"]
-	mushroom[73] = [[21, 5], color.red, "O"]
-	mushroom[74] = [[22, 5], color.red, "O"]
-	mushroom[75] = [[23, 5], color.red, "O"]
-	mushroom[76] = [[24, 5], color.red, "O"]
-	mushroom[77] = [[25, 5], color.red, "O"]
-	mushroom[78] = [[26, 5], color.red, "O"]
-	mushroom[79] = [[27, 5], color.red, "O"]
-	mushroom[80] = [[28, 5], color.red, "O"]
-	mushroom[81] = [[29, 5], color.red, "O"]
-	mushroom[82] = [[30, 5], color.red, "O"]
-	mushroom[83] = [[31, 5], color.red, "O"]
-	mushroom[84] = [[32, 5], color.red, "O"]
-	mushroom[85] = [[33, 5], color.red, "O"]
-	mushroom[86] = [[18, 6], color.white, "|"]
-	mushroom[87] = [[19, 6], color.white, "#"]
-	mushroom[88] = [[20, 6], color.white, "#"]
-	mushroom[89] = [[21, 6], color.white, "#"]
-	mushroom[90] = [[22, 6], color.white, "#"]
-	mushroom[91] = [[23, 6], color.white, "#"]
-	mushroom[92] = [[24, 6], color.white, "|"]
-	mushroom[93] = [[43, 6], color.green, "\"]
-	mushroom[94] = [[44, 6], color.green, "\"]
-	mushroom[95] = [[45, 6], color.green, "/"]
-	mushroom[96] = [[46, 6], color.green, "/"]
-	mushroom[97] = [[47, 6], color.green, "\"]
-	mushroom[98] = [[48, 6], color.green, "\"]
-	mushroom[99] = [[18, 7], color.white, "|"]
-	mushroom[100] = [[19, 7], color.white, "#"]
-	mushroom[101] = [[20, 7], color.white, "#"]
-	mushroom[102] = [[21, 7], color.white, "#"]
-	mushroom[103] = [[22, 7], color.white, "#"]
-	mushroom[104] = [[23, 7], color.white, "#"]
-	mushroom[105] = [[24, 7], color.white, "|"]
+	mushroom[0] = [[0, 0], color.red, "o"]
+	mushroom[1] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+0], color.red, "o"]
+	mushroom[2] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+0], color.red, "o"]
+	mushroom[3] = [[mushroom[0][0][0]-1, mushroom[0][0][1]+1], color.red, "o"]
+	mushroom[4] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+1], color.red, "o"]
+	mushroom[5] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+1], color.red, "o"]
+	mushroom[6] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+1], color.red, "o"]
+	mushroom[7] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+1], color.red, "o"]
+	mushroom[8] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+1], color.red, "o"]
+	mushroom[9] = [[mushroom[0][0][0]-2, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[10] = [[mushroom[0][0][0]-1, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[11] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[12] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[13] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[14] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[15] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[16] = [[mushroom[0][0][0]+5, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[17] = [[mushroom[0][0][0]+6, mushroom[0][0][1]+2], color.red, "O"]
+	mushroom[18] = [[mushroom[0][0][0]-4, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[19] = [[mushroom[0][0][0]-3, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[20] = [[mushroom[0][0][0]-2, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[21] = [[mushroom[0][0][0]-1, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[22] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[23] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[24] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[25] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[26] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[27] = [[mushroom[0][0][0]+5, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[28] = [[mushroom[0][0][0]+6, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[29] = [[mushroom[0][0][0]+7, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[30] = [[mushroom[0][0][0]+8, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[31] = [[mushroom[0][0][0]+9, mushroom[0][0][1]+3], color.red, "O"]
+	mushroom[32] = [[mushroom[0][0][0]-5, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[33] = [[mushroom[0][0][0]-4, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[34] = [[mushroom[0][0][0]-3, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[35] = [[mushroom[0][0][0]-2, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[36] = [[mushroom[0][0][0]-1, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[37] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[38] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[39] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[40] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[41] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[42] = [[mushroom[0][0][0]+5, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[43] = [[mushroom[0][0][0]+6, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[44] = [[mushroom[0][0][0]+7, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[45] = [[mushroom[0][0][0]+8, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[46] = [[mushroom[0][0][0]+9, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[47] = [[mushroom[0][0][0]+10, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[48] = [[mushroom[0][0][0]+11, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[49] = [[mushroom[0][0][0]+12, mushroom[0][0][1]+4], color.red, "O"]
+	mushroom[50] = [[mushroom[0][0][0]-7, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[51] = [[mushroom[0][0][0]-6, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[52] = [[mushroom[0][0][0]-5, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[53] = [[mushroom[0][0][0]-4, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[54] = [[mushroom[0][0][0]-3, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[55] = [[mushroom[0][0][0]-2, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[56] = [[mushroom[0][0][0]-1, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[57] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[58] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[59] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[60] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[61] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[62] = [[mushroom[0][0][0]+5, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[63] = [[mushroom[0][0][0]+6, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[64] = [[mushroom[0][0][0]+7, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[65] = [[mushroom[0][0][0]+8, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[66] = [[mushroom[0][0][0]+9, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[67] = [[mushroom[0][0][0]+10, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[68] = [[mushroom[0][0][0]+11, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[69] = [[mushroom[0][0][0]+12, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[70] = [[mushroom[0][0][0]+13, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[71] = [[mushroom[0][0][0]+14, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[72] = [[mushroom[0][0][0]+15, mushroom[0][0][1]+5], color.red, "O"]
+	mushroom[73] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+6], color.white, "|"]
+	mushroom[74] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+6], color.white, "#"]
+	mushroom[75] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+6], color.white, "#"]
+	mushroom[76] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+6], color.white, "#"]
+	mushroom[77] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+6], color.white, "#"]
+	mushroom[78] = [[mushroom[0][0][0]+5, mushroom[0][0][1]+6], color.white, "#"]
+	mushroom[79] = [[mushroom[0][0][0]+6, mushroom[0][0][1]+6], color.white, "|"]
+	mushroom[80] = [[mushroom[0][0][0]+0, mushroom[0][0][1]+7], color.white, "|"]
+	mushroom[81] = [[mushroom[0][0][0]+1, mushroom[0][0][1]+7], color.white, "#"]
+	mushroom[82] = [[mushroom[0][0][0]+2, mushroom[0][0][1]+7], color.white, "#"]
+	mushroom[83] = [[mushroom[0][0][0]+3, mushroom[0][0][1]+7], color.white, "#"]
+	mushroom[84] = [[mushroom[0][0][0]+4, mushroom[0][0][1]+7], color.white, "#"]
+	mushroom[85] = [[mushroom[0][0][0]+5, mushroom[0][0][1]+7], color.white, "#"]
+	mushroom[86] = [[mushroom[0][0][0]+6, mushroom[0][0][1]+7], color.white, "|"]
 	
+bug = {}
+	bug[0] = [[0, 0], color.orange, ">"]
+	bug[1] = [[bug[0][0][0]+1, bug[0][0][1]+0], color.poop, "8"]
+	bug[2] = [[bug[0][0][0]+2, bug[0][0][1]+0], color.orange, "<"]
 
 
-
-
-
-
-
-
-
-// this is the image renderer being called in main. it receives updated and collision checked data for each image map.
-// this is the most important part of this comment tutorial so pay attention.
-
-// here is the declaration of the function prototype.
-	// in this example im using 3 images so i have 3 arguments selected.
-	// if you want to add more images you need to uncomment the other arguments as you need them.
-	// you can add more if you like, after you understand how the whole program works
-	// i think of them as image slots. 
-	// remember that the images are layered in decending order.
-	// the data1 slot is your backround that is underneath everything else.
-xDraw = function(data1, data2, data3)   //, data4, data5, data6, data7)
-	
-	
-
-
-
-
-	// this function receives the color and character data stored on the original then the updated image map.
-		// and adds a colorized character symbol to an array of characters.
-		// since every time print() is used it automaticaly
-		// creates a new line, all of the color/character data for each line of y in image
-		// must be concatenated together and saved in str map to later be printed simultaneously.
-	Process_Image = function(data, color, character)
-		
-		a = 0
-		for item in data
-			if y == a then data[a] = data[a] + color + character 
-			a = a + 1
-		end for
-	
-	end function
-	
-	// you need to have a str map with a key:value pair for each unit of verical axis
-									
-									// these are some exra key:value pairs you can add by
-									//1 removing the active closing bracket at the end of the map
-									//2 uncommenting and setting the desired number of pairs. 
-									//3 add closing bracket after the last pair you are using.
-									//4 recomment unused pairs.
-	str = {0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:""}          //, 8:"", 9:'', 10:"", 11:"", 12:"", 13:"", 14:"", 15:"", 16:"", 17:"", 18:"", 19:"", 20:"", 21:"", 22:"", 23:"", 24:""}
-	
-	// you need a counter variable for each image map.  here there are 3 images so we use first 3 counters.
-	
-	
-	
-	i = 1 // for data1
-	j = 1 // for data2
-	k = 1 // for data3
-	
-
-	// here are some extra counter variables just uncomment as needed per image
-	//m = 1 // for data4
-	//n = 1 // for data5
-	//o = 1 // for data6
-	//p = 1 // for data7
 
 	
 
-	// this is where you set the number of units for verical axis of display grid.  remember you have to have a str map key:value pair for each unit of verticle axis.
-	// in example vertical axis is 8 units.
-	for y in range (0,7)
-			
-		wait(.01) // this wait is for flicker prevention and may have to be adjusted.
-		
-		// this is where you set the number of units for horizontal axis of display grid.
-		// in example horizontal axis is 58 units.
-		for x in range(0,57)
-			
-			
-
-		// by the  way 3 horizontal units = 1 vertical unit.  you do the math.
-
-
-				
-				// you have to create a case for each of the image maps you are using.  
-				// remember that data7 is the top layer and data1 is the bottom layer.
-				// they have to be in descending order.
-			
-			
-
-			// these extra image slots are not being used in example
-				// if you want to use them just uncomment them
-			
-			//if data7[p][2] != "" and data7[p][0][0] == x and data7[p][0][1] == y then
-				//Process_Image(str, data7[p][1], data7[p][2])
-				//p = p + 1
-				//if p > data7.len then p = 1
-				//if data6[o][0][0] == x and data6[o][0][1] == y then o = o + 1
-				//if data5[n][0][0] == x and data5[n][0][1] == y then n = n + 1
-				//if data4[m][0][0] == x and data4[m][0][1] == y then m = m + 1
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				//if o > data6.len then o = 1
-				//if n > data5.len then n = 1
-				//if m > data4.len then m = 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-
-
-			//if data6[o][2] != "" and data6[o][0][0] == x and data6[o][0][1] == y then
-				//Process_Image(str, data6[o][1], data6[o][2])
-				//o = o + 1
-				//if o > data6.len then m = 1
-				
-				//if data5[n][0][0] == x and data5[n][0][1] == y then n = n + 1
-				//if data4[m][0][0] == x and data4[m][0][1] == y then m = m + 1				
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1				
-				//if n > data5.len then n = 1
-				//if m > data4.len then m = 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-			
-			//if data5[n][2] != "" and data5[n][0][0] == x and data5[n][0][1] == y then
-				//Process_Image(str, data5[n][1], data5[n][2])
-				//n = n + 1
-				//if m > data2.len then m = 1
-				//if data4[m][0][0] == x and data4[m][0][1] == y then m = m + 1
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				//if m > data4.len then m = 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-
-			//if data4[m][2] != "" and data4[m][0][0] == x and data4[m][0][1] == y then
-				//Process_Image(str, data4[m][1], data4[m][2])
-				//m = m + 1
-				//if m > data4.len then m = 1	
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-
-
-
-
-			// in this case if the character symbol saved in image map key:value is not an empty string and,
-			// the current x,y values of for loops are equal to the x,y coordinate in same element
-			// then send elements of that key:value pair to be processed into a character array
-			// and be saved in the str map for later printing. 
-			
-			if data3[k][2] != "" and data3[k][0][0] == x and data3[k][0][1] == y then
-				Process_Image(str, data3[k][1], data3[k][2])
-				
-				// increments the counter for first image map key:value pair so the next key:value pair will be the next character.
-				k = k + 1
-				
-				// this keeps the program from crashing. dont touch it.
-				if k > data3.len then k = 1
-				
-				// if the x,y values of the other image maps are also using these coordinates
-				// then their counter will be incremented by 1 to skip that character
-				// since that space is being used by image1 on the top layer.
-				if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				// dont touch
-				
-				if j > data2.len then j = 1
-				if i > data1.len then i = 1				
-				continue
-			end if
-			
-			if data2[j][2] != "" and data2[j][0][0] == x and data2[j][0][1] == y then
-				Process_Image(str, data2[j][1], data2[j][2])
-				j = j + 1
-				if j > data2.len then j = 1
-				if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				if i > data1.len then i = 1
-				continue
-			end if
-			
-			if data1[i][2] != "" and data1[i][0][0] == x and data1[i][0][1] == y then
-				Process_Image(str, data1[i][1], data1[i][2])
-				i = i + 1
-				if i > data1.len then i = 1
-				continue
-			end if
-			
-
-
-
-			// case for if the cooridnate is being used in image map but doesn't have a character saved in image map.
-				// this is useful for example if a large space needs to be filled with a default character.
-				// here "*" is the default character.  you can use whatever you like.
-			
-			//if data7[p][2] == "" and data7[p][0][0] == x and data7[p][0][1] == y then
-				//Process_Image(str, data7[p][1], "*")
-				//p = p + 1
-				//if p > data7.len then p = 1
-				//if data6[o][0][0] == x and data6[o][0][1] == y then o = o + 1
-				//if data5[n][0][0] == x and data5[n][0][1] == y then n = n + 1
-				//if data4[m][0][0] == x and data4[m][0][1] == y then m = m + 1
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				//if o > data6.len then o = 1
-				//if n > data5.len then n = 1
-				//if m > data4.len then m = 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-
-			//if data6[o][2] == "" and data6[o][0][0] == x and data6[o][0][1] == y then
-				//Process_Image(str, data6[o][1], "*")
-				//o = o + 1
-				//if o > data6.len then m = 1
-				//if data5[n][0][0] == x and data5[n][0][1] == y then n = n + 1
-				//if data4[m][0][0] == x and data4[m][0][1] == y then m = m + 1				
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1				
-				//if n > data5.len then n = 1
-				//if m > data4.len then m = 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-			
-			//if data5[n][2] == "" and data5[n][0][0] == x and data5[n][0][1] == y then
-				//Process_Image(str, data5[n][1], "*")
-				//n = n + 1
-				//if m > data2.len then m = 1
-				//if data4[m][0][0] == x and data4[m][0][1] == y then m = m + 1
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				//if m > data4.len then m = 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-
-			//if data4[m][2] == "" and data4[m][0][0] == x and data4[m][0][1] == y then
-				//Process_Image(str, data4[m][1], "*")
-				//m = m + 1
-				//if m > data4.len then m = 1	
-				//if data3[k][0][0] == x and data3[k][0][1] == y then k = k + 1
-				//if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				//if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				//if k > data3.len then k = 1
-				//if j > data2.len then j = 1
-				//if i > data1.len then i = 1
-				//continue
-			//end if
-
-			if data3[k][2] == "" and data3[k][0][0] == x and data3[k][0][1] == y then
-				Process_Image(str, data3[k][1], "*")
-				k = k + 1
-				if k > data3.len then k = 1
-				if data2[j][0][0] == x and data2[j][0][1] == y then j = j + 1
-				if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				if j > data2.len then j = 1
-				if i > data1.len then i = 1				
-				continue
-			end if
-			
-			if data2[j][2] == "" and data2[j][0][0] == x and data2[j][0][1] == y then
-				Process_Image(str, data2[j][1], "*")
-				j = j + 1
-				if j > data2.len then j = 1
-				if data1[i][0][0] == x and data1[i][0][1] == y then i = i + 1
-				if i > data1.len then i = 1
-				continue
-			end if
-			
-			if data1[i][2] == "" and data1[i][0][0] == x and data1[i][0][1] == y then
-				Process_Image(str, data1[i][1], "*")
-				i = i + 1
-				if i > data1.len then i = 1
-				continue
-			end if
-
-		// this last Process_Image is for any unused coordinates in the display grid.  here a whitespace is being used
-		// to give a black backround.  you can replace it and the color with whatever you like if
-		// if you want to fill the backround with colored characters.
-		
-		Process_Image(str, color.cap, " ")
-		
-		end for
-	
-	end for
-	
-	// for flickering
-	wait(.01)
-	
-	// clear_screen right before printing image
-	clear_screen
-	
-	// this uses the key:values saved in str map to print all the lines of the
-	// display grid simultaneously rendering the images on the screen.
-	a = 0
-	for item in str
-		print str[a]
-		a = a + 1
-	end for
-
-end function
-
-
-// thats it as far as printing an image using xdraw.
-// the rest of the program is an example of how to implement xDraw in
-// an animation example.
-
-
-
-// a simple method for animating non moving images.
-// in this example it is grass blowing in the wind
-Animate_Grass = function(data, counter)
-	wait(.01)
-	if not counter % 20 then
-		data[10][2] = "/" 
-		data[11][2] = "/"
-		data[27][2] = "\"
-		data[28][2] = "\"
-		data[93][2] = "\"
-		data[94][2] = "\"
-	end if
-	
-	if not counter % 25 then
-		data[14][2] = "/"
-		data[15][2] = "/"
-		data[95][2] = "/"
-		data[96][2] = "/"
-	end if
-	
-	if not counter % 15 then
-		data[12][2] = "\"
-		data[13][2] = "\"
-		data[29][2] = "/"
-		data[30][2] = "/"
-		data[16][2] = "\"
-		data[17][2] = "\"
-		data[97][2] = "\"
-		data[98][2] = "\"
-	end if
-
-	if counter % 20 then
-		data[10][2] = "\"
-		data[11][2] = "\"
-		data[27][2] = "/"
-		data[28][2] = "/"
-		data[93][2] = "/"
-		data[94][2] = "/"
-	end if
-	
-	if counter % 25 then
-		data[14][2] = "\"
-		data[15][2] = "\"
-		data[95][2] = "\"
-		data[96][2] = "\"
-	end if
-	
-	if counter % 15 then 
-		data[12][2] = "/"
-		data[13][2] = "/"
-		data[16][2] = "/"
-		data[17][2] = "/"
-		data[29][2] = "\"
-		data[30][2] = "\"
-		data[97][2] = "/"
-		data[98][2] = "/"
-	end if
-	
-end function
-
-
-
-// this function compares the x,y coordinates of the new position 
-// with the coordinates of the boundarys set in boundary list.
-// in this example the boundary is the spaces traced around the mushroom cap.	
-Check_Collisions = function(dir, data, boundary, spot_available_directions)
-
-	i = 1
-	for loc in data
-		
-		for item in boundary 
-				
-			// checks new position of image data if it is equivalent to any of boundary list.
-			// if it is then removes that direction from the available direction list
-			// and returns true that there is a collision.
-			if dir == "up_right" then
-				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] - 1 then
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-		
-			if dir == "up_left" then
-				if item[0] == data[i][0][0] - 1 and item[1] == data[i][0][1] - 1 then
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-		
-			if dir == "down_right" then
-				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] + 1 then
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-		
-			if dir == "down_left" then
-				if item[0] == data[i][0][0] - 1 and item[1] == data[i][0][1] + 1 then
-					spot_available_directions.pull
-					return true
-				end if
-			end if		
-	
-			if dir == "up" then
-				if item[0] == data[i][0][0] and item[1] == data[i][0][1] - 1 then 
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-		
-			if dir == "down" then
-				if item[0] == data[i][0][0] and item[1] == data[i][0][1] + 1 then
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-		
-			if dir == "left" then
-				if item[0] == data[i][0][0]  - 1 and item[1] == data[i][0][1] then
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-		
-			if dir == "right" then
-				if item[0] == data[i][0][0] + 1 and item[1] == data[i][0][1] then
-					spot_available_directions.pull
-					return true
-				end if
-			end if
-				
-		end for
-		
-	i = i + 1
-		
-	end for
-	
-	// returns false if no collisions are detected
-	return false
-end function
-	
-
-// applies updated and collision checked x,y coordinates for element of the specific image map and ovewrites original data with new updated data.
-Apply_Direction = function(dir, data)
-	i = 1
-	for item in data
-
-		if dir == "up_right" then
-			data[i][0][0] = data[i][0][0] + 1
-			data[i][0][1] = data[i][0][1] - 1
-		end if
-		
-		if dir == "up_left" then
-			data[i][0][0] = data[i][0][0] - 1
-			data[i][0][1] = data[i][0][1] - 1
-		end if
-	
-		if dir == "down_right" then
-			data[i][0][0] = data[i][0][0] + 1
-			data[i][0][1] = data[i][0][1] + 1
-		end if
-	
-		if dir == "down_left" then
-			data[i][0][0] = data[i][0][0] - 1
-			data[i][0][1] = data[i][0][1] + 1
-		end if
-	
-		if dir == "up" then data[i][0][1] = data[i][0][1] - 1
-	
-		if dir == "down" then data[i][0][1] = data[i][0][1] + 1
-	
-		if dir == "left" then data[i][0][0] = data[i][0][0] - 1
-	
-		if dir == "right" then data[i][0][0] = data[i][0][0] + 1
-	
-		i = i + 1
-		
-	end for
-	
-end function
-
-
-// gets new direction of travel for spots using .shuffle for randomness
-Get_Direction = function(dirs)
-	dirs.shuffle
-	return dirs[0]
-end function
-
-
-// function that controls the direction of movement of the spots,
-// and makes sure there are no collisions.
-Animate_Spots = function(spot1, spot2, frame_count, boundary)
-	
-	directions = ["up", "up_right", "up_left", "down", "down_right", "down_left", "left", "right"]
-	if not frame_count % 2 then
-		spot1_available_directions = directions[0:]
-		spot2_available_directions = directions[0:]
-		current_direction_spot1 = Get_Direction(directions[0:])
-		current_direction_spot2 = Get_Direction(directions[0:])	
-		collision_spot1 = Check_Collisions(current_direction_spot1, spot1, spot_boundary, spot1_available_directions)
-		collision_spot2 = Check_Collisions(current_direction_spot2, spot2, spot_boundary, spot2_available_directions)
-		while collision_spot1 == true
-			current_direction_spot1 = Get_Direction(spot1_available_directions)
-			collision_spot1 = Check_Collisions(current_direction_spot1, spot1, spot_boundary, spot1_available_directions)
-		end while
-		while collision_spot2 == true
-			current_direction_spot2 = Get_Direction(spot2_available_directions)
-			collision_spot2 = Check_Collisions(current_direction_spot2, spot2, spot_boundary, spot2_available_directions)
-		end while
-		Apply_Direction(current_direction_spot1, spot1)
-		Apply_Direction(current_direction_spot2, spot2)
-	end if
-
-end function
-
-
-// function to update the information for the next frame. called in main
-Update = function(state)
-
-	if state == "normal" then
-		Animate_Grass(mushroom, frame_count)
-		Animate_Spots(spot1, spot2, frame_count)
-	end if
-
-end function
-
-
-
-
-
-// these are the coordinates of the boundries of travel for the spots on the mushroom
+bug_previous_direction = null
+bug_boundary = [[0,0], [1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0], [8,0], [9,0], [10,0], [11,0], [12,0], [13,0], [14,0], [15,0], [16,0], [17,0], [18,0], [19,0], [20,0], [21,0], [22,0], [23,0], [24,0], [25,0], [26,0], [27,0], [28,0], [29,0], [30,0], [31,0], [32,0], [33,0], [34,0], [35,0], [36,0], [37,0], [38,0], [39,0], [40,0], [41,0], [42,0], [43,0], [44,0], [45,0], [46,0], [47,0], [48,0], [49,0], [50,0], [51,0], [52,0], [53,0], [54,0], [0,1], [54,1], [0,2], [54,2], [0,3], [54,3], [0,4], [54,4], [0,5], [54,5], [0,6], [54,6], [0,7], [1,7], [2,7], [3,7], [4,7], [5,7], [6,7], [7,7], [8,7], [9,7], [10,7], [11,7], [12,7], [13,7], [14,7], [15,7], [16,7], [17,7], [18,7], [19,7], [20,7], [21,7], [22,7], [23,7], [24,7], [25,7], [26,7], [27,7], [28,7], [29,7], [30,7], [31,7], [32,7], [33,7], [34,7], [35,7], [36,7], [37,7], [38,7], [39,7], [40,7], [41,7], [42,7], [43,7], [44,7], [45,7], [46,7], [47,7], [48,7], [49,7], [50,7], [51,7], [52,7], [53,7], [54,7]]
 spot_boundary = [[17, -1], [18, -1], [19, -1], [20, -1], [21, -1], [16, 0], [17, 0], [21, 0], [22, 0], [23, 0], [15, 1], [16, 1], [23, 1], [24, 1], [25, 1], [13, 2], [14, 2], [15, 2], [25, 2], [26, 2], [27, 2], [28, 2], [12, 3], [13, 3], [28, 3], [29, 3], [30, 3], [31, 3], [10, 4], [11, 4], [12, 4], [31, 4], [32, 4], [33, 4], [34, 4], [10, 5], [34, 5], [10, 6], [11, 6], [12, 6], [13, 6], [14, 6], [15, 6], [16, 6], [17, 6], [18, 6], [19, 6], [20, 6], [21, 6], [22, 6], [23, 6], [24, 6], [25, 6], [26, 6], [27, 6], [28, 6], [29, 6], [30, 6], [31, 6], [32, 6], [33, 6], [34, 6]]
-
-// initialize global variables
-loop_count = 0
+directions = ["up", "up_right", "up_left", "down", "down_right", "down_left", "left", "right"]
+rendered_image = ""
+game_state = "start"
 frame_count = 0
-state = "normal"
+object_state = "stopped"
 
-// main (program start)
+// begin main function
+initialize()
 while true
-	
-	loop_count = loop_count + 1
-	
-	// this if statement is for controling the frame rate.
-		// can be adjusted but causes flickering problems.
-		// I've had the best results with value 4000 
-	if not loop_count % 4000 then
-		frame_count = frame_count + 1
-		
-		// make sure to include all image data sets as function arguments.  
-		// remember that the images are layered in descending order with the
-		// highest number being the top layer.
-		xDraw(mushroom, spot2, spot1)
-		Update(state)
-	end if
-
+	input(game_state)
+	update(game_state)
+	print rendered_image
+	frame_count = frame_count + 1
+	//print frame_count
 end while
