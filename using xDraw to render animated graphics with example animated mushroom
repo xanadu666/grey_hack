@@ -54,7 +54,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 			
 			// this block allows images that are bigger than screen width and height to be displayed.
 			// allows for scrolling backrounds and such.
-			while layer6[p][0][0] > length and layer6[p][0][1] == y
+			while layer6[p][0][0] > width - 1 and layer6[p][0][1] == y
 				p = p + 1
 				if p == layer6.len then p = 0
 			end while
@@ -81,7 +81,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 				continue
 			end if
 
-			while layer5[o][0][0] > length and layer5[o][0][1] == y
+			while layer5[o][0][0] > width - 1 and layer5[o][0][1] == y
 				o = o + 1
 				if o == layer5.len then o = 0
 			end while
@@ -102,7 +102,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 				continue
 			end if
 			
-			while layer4[n][0][0] > length and layer4[n][0][1] == y
+			while layer4[n][0][0] > width - 1 and layer4[n][0][1] == y
 				n = n + 1
 				if n == layer4.len then n = 0
 			end while
@@ -121,7 +121,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 				continue
 			end if
 				
-			while layer3[m][0][0] > length and layer3[m][0][1] == y
+			while layer3[m][0][0] > width - 1 and layer3[m][0][1] == y
 				m = m + 1
 				if m == layer3.len then m = 0
 			end while
@@ -138,7 +138,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 				continue
 			end if
 
-			while layer2[k][0][0] > length and layer2[k][0][1] == y
+			while layer2[k][0][0] > width - 1 and layer2[k][0][1] == y
 				k = k + 1
 				if k == layer2.len then k = 0
 			end while
@@ -153,7 +153,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 				continue
 			end if
 			
-			while layer1[j][0][0] > length and layer1[j][0][1] == y
+			while layer1[j][0][0] > width - 1 and layer1[j][0][1] == y
 				j = j + 1
 				if j == layer1.len then j = 0
 			end while
@@ -166,7 +166,7 @@ xDraw = function(layer0, layer1, layer2, layer3, layer4, layer5, layer6)
 				continue
 			end if
 			
-			while layer0[i][0][0] > length and layer0[i][0][1] == y
+			while layer0[i][0][0] > width - 1 and layer0[i][0][1] == y
 				i = i + 1
 				if i == layer0.len then i = 0
 			end while
