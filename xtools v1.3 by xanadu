@@ -1,7 +1,4 @@
-// xtools v1.3 by xanadu
-// the help menu is still being redisigned but you can go ahead and use the source code for an easy command reference in the meantime.
-
-
+// xtools by xanadu
 
 Colors = {}
 	
@@ -1647,7 +1644,7 @@ while pcode == "a0ga09sa09g09as"
 	if input[0] == "kill" and input.len < 2 then print("<b>Usage: kill [PID]")
 	if input[0] == "kill" and input.len >= 2 then Kill(input[0], input[1], myComp)
 	
-//ls
+// ls
 	if input[0] == "ls" then cCheck = 1
 	if input[0] == "ls" then Ls(input,myPath,myComp,true)
 	
@@ -1794,19 +1791,19 @@ while pcode == "a0ga09sa09g09as"
 
 // rmkdir
 	if input[0] == "rmkdir" then cCheck = 1
-	if input[0] == "rmkdir" and input.len != 2 then print("<b>Usage: mkdir [path/new folder]")
+	if input[0] == "rmkdir" and input.len != 2 then print("<b>Usage: rmkdir [path/new folder]")
 	if input[0] == "rmkdir" and input.len == 2 and not object then print(color.yellow+"<b>rmkdir: not holding remote shell or computer object")
 	if input[0] == "rmkdir" and input.len == 2 then Mkdir(input[1],object,remotePath,false)
 
 // rmv
 	if input[0] == "rmv" then cCheck = 1
-	if input[0] == "rmv" and input.len != 3 then print("<b>Usage: mv [path/file] [path/opt:new name]")
+	if input[0] == "rmv" and input.len != 3 then print("<b>Usage: rmv [path/file] [path/opt:new name]")
 	if input[0] == "rmv" and input.len == 3 and not object then print(color.yellow+"<b>rmv: not holding remote shell or computer object")	
 	if input[0] == "rmv" and input.len == 3 then Mv(input[1],input[2],object,false)
 
 // rpasswd
 	if input[0] == "rpasswd" then cCheck = 1
-	if input[0] == "rpasswd" and input.len != 2 then print("<b>Usage: passwd [username]")
+	if input[0] == "rpasswd" and input.len != 2 then print("<b>Usage: rpasswd [username]")
 	if input[0] == "rpasswd" and input.len == 2 and not object then print(color.yellow+"<b>rpasswd: not holding remote shell or computer object")
 	if input[0] == "rpasswd" and input.len == 2 and object then Passwd(input[1],object)
 
@@ -1951,8 +1948,9 @@ while pcode == "a0ga09sa09g09as"
 	if input[0] == "help" and input.len == 2 and (input[1] == "-l" or input[1] == "-a") then
 		
 		print("<color=green><b>-------------------- Local system commands ------------------------------------</b></color>")
-		print("<color=yellow><b>build</b> ------> Usage: build [file source code] [path/program name]")
-		print("<color=yellow><b>cat</b> --------> Usage: cat [file]")
+		print("<color=yellow><b>build</b> ------> Usage: build [file source code] [path/program name]"+char(10)+color.orange+"              compile src file into binary")
+		print("<color=yellow><b>cat</b> --------> Usage: cat [file]"+char(10)+color.orange+"              print contents of txt file into terminal")
+		print("<color=yellow><b>cd</b> ---------> Usage: cd"+char(10)+color.yellow+"              Usage: cd [path]"+char(10)+color.yellow+"              Usage: cd ..")
 		print("<color=yellow><b>chgrp</b> ------> Usage: chgrp [opt:-R] [new group] [path file/folder]")
 		print("<color=yellow><b>chmod</b> ------> Usage: chmod [opt:-R] [u,g,o+wrx] [path file/folder]")
 		print("<color=yellow><b>chown</b> ------> Usage: chown [opt:-R] [owner] [path file/folder]")
@@ -1963,8 +1961,8 @@ while pcode == "a0ga09sa09g09as"
 		print("<color=yellow><b>credits</b> ----> Usage: credits")
 		print("<color=yellow><b>decipher</b> ---> Usage: decipher -h [hash]\n               <color=yellow>Usage: decipher -f [path/file]")
 		print("<color=yellow><b>exit</b> -------> Usage: exit")
-		print("<color=yellow><b>groupdel</b> ---> Usage: groupdel [user] [group]")
 		print("<color=yellow><b>groupadd</b> ---> Usage: groupadd [user] [new group]")
+		print("<color=yellow><b>groupdel</b> ---> Usage: groupdel [user] [group]")
 		print("<color=yellow><b>groups</b> -----> Usage: groups [username]")
 		print("<color=yellow><b>ifconfig</b> ---> Usage: ifconfig \n               <color=yellow>Usage: ifconfig [net interface] [ip address] gateway [ip address]</color>")
 		print("<color=yellow><b>iwconfig</b> ---> Usage: iwconfig [net device] [bssid] [essid] [password]")
@@ -2002,28 +2000,36 @@ while pcode == "a0ga09sa09g09as"
 	end if
 	if input[0] == "help" and input.len == 2 and (input[1] == "-h" or input[1] == "-a") then
 		print("\n<color=green><b>---------------------- Hacking commands -------------------------------------</b></color>")
-		print("<color=yellow><b>bankscrape</b> -> Usage: bankscrape [ip address] [# of accounts] [output file name]\n               <color=orange>will append to already existing output file\n               <color=yellow>Usage: bankscrape -l [output file]\n               <color=orange>use -l to display and then remove bank creds from list.")
 		print("<color=yellow><b>drop</b> -------> Usage: drop [-r:-l]\n              <color=orange> -r drops held remote object!!!\n               <color=orange>-l drops held local object!!!")
 		print("<color=yellow><b>escalate</b> ---> Usage: escalate\n               <color=orange>attempt to escalate privileges on local system")
 		print("<color=yellow><b>froot</b> ------> Usage: froot [-r:-l]")
 		print("<color=yellow><b>grab</b> -------> Usage: grab [ip address] [port number] [memory address] [usecure value] [opt:arg]\n               <color=yellow>Usage: grab -l [libname] [memory address] [usecure value] [opt:arg]\n               <color=orange>grabs object!!!\n               <color=orange>use optional argument for change password or bounce to lan address")
-		print("<color=yellow><b>launchprobe</b>-> Usage: launchprobe [ipaddress] [opt: -r] [opt: search term]\n               "+color.yellow+"if you run into any data dumps that are too \n               "+color.yellow+"big to save use optional search term argument\n               "+color.yellow+"use optional -r to launch at router_kernel")
-		print("<color=yellow><b>mkprobe</b> ----> Usage: mkprobe\n               <color=yellow>creates packet for launchprobe")
 		print("<color=yellow><b>scan</b> -------> Usage: scan [ip address] [port number]\n               <color=orange>scanning a remote system will leave logs on target system!!!\n               <color=yellow>Usage:scan -l [path/libfile]")
 	end if
 	if input[0] == "help" and input.len == 2 and (input[1] == "-r" or input[1] == "-a") then
-		print("\n<color=green><b>-----------------------Remote system commands -------------------------------</b></color>")
-		print("<color=yellow><b>rcat</b> -------> Usage: rcat [file]")
-		print("<color=yellow><b>rchmod</b> ----> Usage: rchmod [opt: -R] [perms] [path]")
-		print("<color=yellow><b>rcorlog</b> ----> Usage: rcorlog\n               <color=orange>corrupt remote machine's system.log")
-		print("<color=yellow><b>rcp</b> --------> Usage: rcp [path/file] [path/opt:new name]")
-		print("<color=yellow><b>rdecipher</b>---> Usage: rdecipher -h [hash]\n               <color=yellow>Usage: decipher -f [path/file]")
-		print("<color=yellow><b>rkill</b> ------> Usage: rkill [PID]")
-		print("<color=yellow><b>rps</b> --------> Usage: rps")
-		print("<color=yellow><b>rrm</b> --------> Usage: rrm [opt:-r] [path/file]")
-		print("<color=yellow><b>rsearch</b> ----> Usage: rsearch [opt:file]")
-		print("<color=yellow><b>rterminal</b> --> Usage: rterminal")
-		print("<color=yellow><b>rtouch</b> -----> Usage: rtouch [path/new File]")
+		print(char(10)+color.green+"<b>-----------------------Remote system commands -------------------------------")
+		print(color.yellow+"<b>rcat</b> -------> Usage: rcat [file]")
+		print(color.yellow+"<b>rcd</b> --------> Usage: rcd"+char(10)+color.yellow+"              Usage: rcd [path]"+char(10)+color.yellow+"              Usage: rcd ..")
+		print(color.yellow+"<b>rchgrp</b> -----> Usage: rchgrp [opt:-R] [new group] [path file/folder]")
+		print(color.yellow+"<b>rchmod</b> -----> Usage: rchmod [opt: -R] [perms] [path]")
+		print(color.yellow+"<b>rchown</b> -----> Usage: rchown [opt:-R] [owner] [path file/folder]")
+		print(color.yellow+"<b>rcorlog</b> ----> Usage: rcorlog"+char(10)+"               "+color.orange+"corrupt remote machine's system.log")
+		print(color.yellow+"<b>rcp</b> --------> Usage: rcp [path/file] [path/opt:new name]")
+		print(color.yellow+"<b>rdecipher</b>---> Usage: rdecipher -h [hash]"+char(10)+"               "+color.yellow+"Usage: decipher -f [path/file]")
+		print(color.yellow+"<b>rgroupadd</b> --> Usage: rgroupadd [user] [new group]")
+		print(color.yellow+"<b>rgroupdel</b> --> Usage: rgroupdel [user] [group]")
+		print(color.yellow+"<b>rkill</b> ------> Usage: rkill [PID]")
+		print(color.yellow+"<b>rls</b> --------> Usage: rls [opt:-la] [path]")
+		print(color.yellow+"<b>rmkdir</b> -----> Usage: rmkdir [path/new folder]")
+		print(color.yellow+"<b>rmv</b> --------> Usage: rmv [path/file] [path/opt:new name]")
+		print(color.yellow+"<b>rpasswd</b> ----> Usage: rpasswd [username]")
+		print(color.yellow+"<b>rps</b> --------> Usage: rps")
+		print(color.yellow+"<b>rrm</b> --------> Usage: rrm [opt:-r] [path/file]")
+		print(color.yellow+"<b>rsearch</b> ----> Usage: rsearch [opt:file]")
+		print(color.yellow+"<b>rterminal</b> --> Usage: rterminal")
+		print(color.yellow+"<b>rtouch</b> -----> Usage: rtouch [path/new File]")
+		print(color.yellow+"<b>ruseradd</b> ---> Usage: ruseradd [new username]")
+		print(color.yellow+"<b>ruserdel</b> ---> Usage: ruserdel [username]")
 	end if
 	if input[0] == "" then cCheck = 1
 	if cCheck == 0 then print("<b>xtools: " + input[0] + ": command not found") 
