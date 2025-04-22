@@ -1,0 +1,2036 @@
+// xtools v1.3 by xanadu
+// the help menu is still being redisigned but you can go ahead and use the source code for an easy command reference in the meantime.
+
+
+
+Colors = {}
+	
+	Colors.Random = function()
+		color_list = []
+		for value in self.values
+			color_list.push(value)
+		end for
+		color_list.pull 
+		color_list.shuffle
+		return color_list.pop
+	end function
+	
+color = new Colors
+	color.black = "<color=#000000>"
+	color.copper = "<color=#B87333>"
+	color.neon_pink = "<color=#FF13F0>"
+	color.emerald = "<color=#50C878>"
+	color.coral = "<color=#FF7F50>"
+	color.ocean = "<color=#4f42b5>"
+	color.darkbrown = "<color=#654321>"
+	color.gravel = "<color=#89785c>"
+	color.darkgrey = "<color=#292627>"
+	color.granite = "<color=#837E7C>"
+	color.moon = "<color=#F6F1D5>"
+	color.white = "<color=#FFFFFF>"
+	color.grey = "<color=#A5A5A5>"
+	color.blue = "<color=#003AFF>"
+	color.cyan = "<color=#00FFE7>"
+	color.purple = "<color=#D700FF>"
+	color.red = "<color=#AA0000>"
+	color.yellow = "<color=#FBFF00>"
+	color.lime = "<color=#89F336>"
+	color.orange = "<color=#FF8701>"
+	color.brown = "<color=#964B00>"
+	color.green = "<color=#00ED03>"
+	color.peach = "<color=#FFE5B4>"
+	color.dandilion = "<color=#F0E130>"
+	color.silver = "<color=#C0C0C0>"
+	color.gold = "<color=#FFD700>"
+	color.hotpink = "<color=#FF69B4>"
+	color.midnightblue = "<color=#191970>"
+	color.rootbeer = "<color=#724A35>"
+	color.mtdew = "<color=#EAEDB9>"
+	color.blood = "<color=#780606>"
+	color.poop = "<color=#593001>"
+	color.champagne = "<color=#F7E7CE>"
+	color.alibaster = "<color=#EEEAE0>"
+	color.money = "<color=#084f09>"
+	color.death = "<color=#451208>"
+	color.sky = "<color=#87CEEB>"
+	color.tangerine = "<color=#F28500>"
+	color.cap = "</color>"
+
+Build = function(input1,input2,object,local)
+	if typeof(object) != "shell" then
+		print(color.yellow+"<b>build: not holding remote shell")
+		return
+	end if 
+	buPathSource = input[1]
+	buProgramPath = input[2]
+	buFileSource = GetFile(input1,object,local)
+	buFolderDest = GetFile(input2,object,local)
+	if not buFileSource then
+		print(color.yellow+"<b>build: can't find "+buPathSource)
+		return
+	end if
+	if not is_folder(buFolderDest) then
+		print(color.yellow+"<b>build: can't find "+buProgramPath)
+		return
+	end if
+	buOutput = object.build(buFileSource.path,buFolderDest.path)
+	if buOutput.len == 0 then
+		print("<b>build: build successful.")
+	else
+		print(buOutput)
+	end if
+end function
+
+Cat = function(input0,obj,input1,local)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	file = GetFile(input1,obj,local)
+	if file == null then
+		print(color.yellow+"<b>"+input0+": file not found: "+input1)
+		return 
+	end if
+	if file.is_binary then
+		print(color.yellow+"<b>"+input0+": can't open."+" "+file.path+" "+" is binary file")
+		return
+	end if
+	if not file.has_permission("r") then
+		print(color.yellow+"<b>"+input0+": permission denied")
+		return
+	end if
+	print(file.get_content)
+end function
+
+ChangeDir = function(input,object,local)
+	if not local and not object then
+		print(color.yellow+"Not holding remote shell or computer")
+		return
+	end if
+	if typeof(object) == "shell" then object = object.host_computer
+	if input == ".." then
+		if local then
+			folder = object.File(globals.myPath).parent
+		else
+			folder = object.File(globals.remotePath).parent
+		end if
+		if not is_folder(folder) then
+			print(color.yellow+"folder not found")
+			return
+		end if
+		if local then
+			globals.myPath = folder.path
+		else
+			globals.remotePath = folder.path
+		end if
+		return
+	end if
+	folder = GetFile(input,object,local)
+	if not is_folder(folder) then
+		print(color.yellow+input+" is not a folder")
+		return
+	end if
+	if local then
+		globals.myPath = folder.path
+	else
+		globals.remotePath = folder.path
+end function
+
+Chgrp = function(input1,input2,input3,length,object,local)
+	chgGroup = input1
+	chgPathFile = input2
+	chgIsRecursive = 0
+	if length == 4 then
+		chgGroup = input2
+		chgPathFile = input3
+		chgIsRecursive = 1
+	end if
+	chgFile = GetFile(chgPathFile,object,local)
+	if typeof(chgFile) != "file" then
+		print(color.yellow+"<b>chgrp: file not found: "+chgPathFile)
+		return
+	end if
+	chgOutput = chgFile.set_group(chgGroup,chgIsRecursive)
+	if chgOutput then print(chgOutput)
+end function
+
+Chmod = function(input1,input2,input3,length,obj,local)
+	chmPermissions = input1
+	chmPathFile = input2
+	chmIsRecursive = 0
+	if length == 4 then
+		chmPermissions = input2
+		chmPathFile = input3
+		chmIsRecursive = 1
+	end if
+	chmFile = GetFile(chmPathFile,obj,local)
+	if chmFile == null then
+		print(color.yellow+"<b>chmod: cant't find "+chmPathFile)
+		return
+	end if
+	chmOutput = chmFile.chmod(chmPermissions,chmIsRecursive)
+	if chmOutput then print(chmOutput)
+end function
+
+Chown = function(input1,input2,input3,length,obj,local)
+	choOwner = input1
+	choPathFile = input2
+	choIsRecursive = 0
+	if length == 4 then
+		choOwner = input2
+		choPathFile = input3
+		choIsRecursive = 1
+	end if
+	choFile = GetFile(choPathFile,obj,local)
+	if typeof(choFile) != "file" then
+		print(color.yellow+"<b>chown: file not found: "+choPathFile)
+		return
+	end if
+	choOutput = choFile.set_owner(choOwner,choIsRecursive)
+	if choOutput then print(choOutput)
+end function
+
+Clean = function()
+	trashFolders = myComp.File("/root/.Trash").get_folders
+	trashFiles = myComp.File("/root/.Trash").get_files
+	trashBag = trashFolders + trashFiles
+	for trash in trashBag
+		trashItem = myComp.File("/root/.Trash"+"/"+trash.name)
+		trashItem.delete
+	end for
+	print(color.cyan+"<b>clean: /root/.Trash emptied")
+end function
+
+Copy = function(input0,input1,input2,obj,local)
+	oFile = input1
+	dFolder = input2
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	file = GetFile(oFile,obj,local)
+	if not file then
+		print(color.yellow+"<b>"+input0+": can't find"+" "+oFile)
+		return
+	end if
+	nName = ""
+	folder = GetFile(dFolder,obj,local)
+	if not folder then
+		pathParent = parent_path(dFolder)
+		if pathParent == dFolder then
+			nName = dFolder
+			dFolder = file.parent.path
+			output = file.copy(dFolder,nName)
+			if output and output != 1 then print(output)
+			return
+		end if
+		folder = obj.File(pathParent)
+		nName = dFolder[dFolder.len - (dFolder.len - pathParent.len):]
+		if nName[0] == "/" then 
+			nName = nName[1:]
+		end if
+		if not folder then
+			print(color.yellow+"<b>"+input0+": can't copy file. "+dFolder+" "+"doesn't exist.")
+			return
+		end if				
+	end if
+	if input2 == "/" then
+		print(color.yellow+"<b>"+ input0+": unable to copy to main directory")
+		return
+	end if
+	if folder then
+		if file.parent.path != folder.parent.path or file.name != folder.name then
+			fDest = folder.path
+			if (nName.len == 0) then
+				nName = file.name
+			end if
+			if not folder.is_folder then
+				fDest = file.parent.path
+				nName = folder.name
+			end if
+			output = file.copy(fDest,nName)
+			if output and output != 1 then print(output)
+		end if
+	end if				
+end function
+
+CorruptLog = function(input0,obj)
+	logSure = null
+	while logSure != "y" and logSure != "yes" and logSure != "n" and logSure != "no" 
+		logSure = user_input("corrupt system.log?(y/n): ")
+	end while
+	if logSure == "n" or logSure == "no" then return 
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	tFile = obj.touch("/home/guest","system.log")
+	if not tFile then
+		print(color.yellow+"<b>"+input0+":</b> unable to create fake log file")
+		return
+	else	
+		file = obj.File("/home/guest/system.log")
+	end if
+	if not file then
+		print(color.yellow+"<b>"+input0+":</b> unable to find fake log file")
+		return
+	end if
+	mFile = file.move("/var","system.log")
+	if mFile == "permission denied" then
+		print(color.yellow+"<b>"+input0+":</b> permission denied")
+		return
+	else
+		lFile = obj.File("/var/system.log")
+	end if
+	if not lFile then
+		print(color.yellow+"<b>"+input0+": unable to find fake log file")
+		return
+	else
+		lFile.set_owner("root")
+		lFile.set_group("root")
+		lFile.chmod("o-w")
+		lFile.chmod("g-w")
+		print("system.log corrupted")
+	end if
+end function
+
+Credits = function()
+	print("xtools developed and coded by:  xanadu"+char(10))
+	print("1st beta tester: aldusbumdlebore"+char(10))
+	print("2nd beta tester: NoData"+char(10))
+	print("3rd beta tester: trialdye"+char(10))
+	print("4th beta tester: NightmareGas"+char(10))
+	print("<b>special thanks to all involved in the development process"+char(10))
+	print("<b>and a very special thanks to my loving wive Missy for not divorcing me for staying up till 3am every night for the past month.")
+end function
+
+Decipher = function(input0,input1,input2,obj)
+	GetPassword = function(userPass)
+		if userPass.len != 2 then
+			if input1 == "-f" then
+				print(color.yellow+"<b>"+input0+": "+file.path+" wrong syntax")
+				return
+			end if
+			if input1 == "-h" then
+				print(color.yellow+"<b>"+input0+": wrong syntax")
+				return
+			end if
+		end if
+		password = crypto.decipher(userPass[1])
+		return password
+	end function
+
+	if input1 == "-f" then
+		origFile = input2
+		if typeof(obj) == "shell" then obj = obj.host_computer
+		file = GetFile(input2,obj,true)
+		if not file then
+			print(color.yellow+"<b>"+input0+": can't find "+origFile)
+			return
+		end if
+		if file.is_binary then
+			print(color.yellow+"<b>"+input0+": can't read "+origFile+". Binary file")
+			return
+		end if
+		if not file.has_permission("r") then
+			print(color.yellow+"<b>"+input0+": can't read file. Permission denied")
+			return
+		end if
+		if file.get_content.len == 0 then
+			print(color.yellow+"<b>"+input0+": no users found")
+			return
+		end if
+		lines = file.get_content.split("\n")
+		password = null
+		if lines.len == 1 then
+			userPass = lines[0].split(":")
+			password = GetPassword(userPass)
+		else
+			print("Multiple users found.")
+			numLine = 1
+			for line in lines
+				if line.len > 0 then
+					print(numLine+": "+line)
+					numLine = numLine + 1
+				end if
+			end for
+			option = ""
+			inputOk = false
+			while( not inputOk )
+				option = user_input("Select user: ").to_int
+				if typeof(option) != "number" or (option < 1 or option > lines.len) then
+					print(color.yellow+"Invalid input. Type a valid number")
+				else 
+					inputOk = true
+				end if
+			end while
+			userPass = lines[option - 1].split(":")
+			print("Selected user: "+userPass[0]+char(10)+"Deciphering...")
+			password = GetPassword(userPass)
+		end if
+	end if
+	if input1 == "-h" then
+		hash = input2.split(":")
+		password = GetPassword(hash)
+		if password == null then return
+	end if
+	if not password then
+		print(color.yellow+"<b>"+input0+": Can't find password")
+		return
+	end if
+	print("<b>"+input0+": password found! => "+color.yellow+password)
+end function
+
+Drop = function(input,obj)
+	dropObject = null
+	if input == "-r" then
+		while dropObject != "y" and dropObject != "yes" and dropObject != "n" and dropObject != "no"
+			dropObject = user_input(color.yellow+"<b>Drop held remote object?(y/n): ")
+		end while
+		if dropObject == "y" or dropObject == "yes" then globals.object = null
+		return
+	end if
+	if input == "-l" then
+		while dropObject != "y" and dropObject != "yes" and dropObject != "n" and dropObject != "no"
+			dropObject = user_input(color.yellow+"<b>Drop held local object?(y/n): ")
+		end while
+		if dropObject == "y" or dropObject == "yes" then
+			globals.lObject = null
+			globals.myShell = get_shell
+			globals.myComp = myShell.host_computer
+		end if
+	end if
+end function
+
+Escalate = function(input0,comp)
+	folder = comp.File("/lib")
+	if not folder then
+		print(color.yellow+"<b>"+input0+": unable to access /lib")
+		return
+	end if
+	libList = folder.get_files
+	if not libList then
+		print(color.yellow+"<b>"+input0+": lib files not found")
+		return	
+	end if	
+	for lib in libList
+		metalib = metaxploit.load("/lib"+"/"+lib.name)
+		if not metalib then continue
+		memList = metaxploit.scan(metalib)
+		if not memList then continue
+		for mem in memList
+			itemList = metaxploit.scan_address(metalib, mem).split("Unsafe check: ")
+			if not itemList then continue
+			for item in itemList
+				if item == itemList[0] then continue
+				value = item[item.indexOf("<b>")+3:item.indexOf("</b>")]
+				result = metalib.overflow(mem, value)
+				if typeof(result) == "shell" or typeof(result) == "computer" then
+					GETPERMS(result)
+					msg = null
+					while msg != "yes" and msg != "y" and msg != "n" and msg != "no" and msg != "q"
+						msg = user_input(color.orange+"<b>escalate privileges with this object?(y/n) or go back to xtools?(q): "+color.cap)
+					end while
+					if msg == "y" or msg == "yes" then
+						globals.lObject = result
+						print(color.orange+"<b>privilages escalated")
+						msg = null
+						while msg != "yes" and msg != "y" and msg != "n" and msg != "no"
+							msg = user_input(color.orange+"<b>go back to xtools with new object?(y/n): ")
+						end while
+						if msg == "yes" or msg == "y" then
+							return
+						end if
+					end if
+					if msg == "q" then return
+				else
+					continue
+				end if
+			end for
+		end for
+	end for
+end function
+
+Froot = function(obj)
+	if typeof(obj) == "shell" then
+		obj = obj.host_computer.File("/")
+		obj.chmod("o+wrx",true)
+		obj.chmod("g+wrx",true)
+		obj.chmod("u+wrx",true)
+		return
+	end if
+	if typeof(obj) == "computer" then
+		obj = obj.File("/")
+		obj.chmod("o+wrx",true)
+		obj.chmod("g+wrx",true)
+		obj.chmod("u+wrx",true)
+		return
+	end if
+	if typeof(obj) == "file" then
+		while obj.name != "/"
+			obj = obj.parent
+		end while
+		obj.chmod("o+wrx",true)
+		obj.chmod("g+wrx",true)
+		obj.chmod("u+wrx",true)
+		return
+	end if
+end function
+
+Ftp = function(input1,input2,input3,length)
+	ftpCredentials = input1.split("@")
+	ftpUser = ftpCredentials1[1]
+	ftpPassword = ftpCredentials[2]
+	ftpPort = 21
+	if length == 4 then ftpPort = input3.to_int
+	if typeof(ftpPort) != "number" then
+		print(color.yellow+"<b>ftp: invalid port: "+ftpPort)
+		return
+	end if
+	print("Connecting...")
+	ftpShell = get_shell.connect_service(input2,ftpPort,ftpUser,ftpPassword,"ftp")
+	if ftpShell then ftpShell.start_terminal
+end function
+
+GetFile = function(input,obj,local)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	if input[0] == "/" then
+		file = obj.File(input)
+	else if local and myPath == "/" then
+		file = obj.File(myPath+input)
+	else if local then
+		file = obj.File(myPath+"/"+input)
+	else if remotePath == "/" then
+		file = obj.File(remotePath+input)
+	else
+		file = obj.File(remotePath+"/"+input)
+	end if
+	return file
+end function
+
+GETPERMS = function(obj)  // i believe this function is called in several different functions. I will wait before i change its name.
+	if typeof(obj) == "shell" then rhost = obj.host_computer
+	if typeof(obj) == "computer" then rhost = obj
+	log = rhost.File("/var/system.log")	
+	var = rhost.File("/var")
+	guest = rhost.File("/home/guest")
+	passwd = rhost.File("/etc/passwd")
+	etc = rhost.File("/etc")
+	fileList = []
+	if log then
+		fileList.push(log)
+	else
+		print(color.yellow+"<b>/var/system.log not found")
+	end if
+	if var then fileList.push(var) 
+	if passwd then fileList.push(passwd)
+	if etc then fileList.push(etc)
+	if guest then fileList.push(guest)
+	writes = ""
+	reads = ""
+	granted = color.green+"<b>granted</b>"+color.cap
+	denied = color.red+"<b>denied</b>"+color.cap
+	for file in fileList
+		if file.has_permission("w") then write = granted
+		if not file.has_permission("w") then write = denied
+		if file.has_permission("r") then read = granted
+		if not file.has_permission("r") then read = denied
+		writes = writes+color.white+"<b>"+file.path+"</b>"+color.cap+" "+write+char(10)
+		reads = reads+color.white+"<b>"+file.path+"</b>"+color.cap+" "+read+char(10)
+	end for
+	print(color.yellow+"<b>write permissions"+char(10)+"--------------------------"+char(10)+format_columns(writes)+char(10) * 2+color.yellow+"<b>read permissions"+char(10)+"--------------------------"+char(10)+format_columns(reads))
+end function
+
+Grab = function(input1,input2,input3,input4,input5,length)
+	memAddress = input3
+	unsVal = input4
+	if input1 == "-l" then
+		if length == 6 then optArg = input5
+		metalib = metaxploit.load(input2)
+		if not metalib then
+			print(color.yellow+"<b>grab: metalib not returned")
+			return
+		end if
+	else
+		grabAddress = input1
+		grabPort = input2.to_int
+		if length == 6 then optArg = input5
+		if not is_valid_ip(grabAddress) then
+			print(color.yellow+"<b>grab: invalid ip address")
+			return
+		end if
+		if typeof(grabPort) == "string" then
+			print(color.yellow+"<b>grab: port not found")
+			return
+		end if
+		grab_net_session = metaxploit.net_use(grabAddress,grabPort)
+		if not grab_net_session then
+			print(color.yellow+"<b>grab: no net session")
+			return
+		end if
+		metalib = grab_net_session.dump_lib
+		if not metalib then
+			print(color.yellow+"<b>grab: metalib not returned")
+			return
+		end if
+	end if
+	if length == 6 then
+		if is_valid_ip(optArg) then
+			globals.object = metalib.overflow(memAddress,unsVal,optArg)
+			globals.remotePath = "/"
+		else
+			metalib.overflow(memAddress,unsVal,optArg)
+		end if
+	else
+		if input[1] == "-l" then
+			globals.lObject = metalib.overflow(memAddress,unsVal)
+		else
+			globals.object = metalib.overflow(memAddress,unsVal)
+			globals.remotePath = "/"
+		end if
+	end if
+end function
+
+Groupadd = function(input1,input2,obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	gaddUser = input1
+	gaddGroup = input2
+	gaddOutput = obj.create_group(gaddUser,gaddGroup)
+	if gaddOutput == true then
+		print("<b>groupadd: group "+gaddGroup+" added to user "+gaddUser)
+		return
+	end if
+	if gaddOutput then
+		print(gaddOutput)
+		return
+	end if
+	print(color.yellow+"<b>groupadd: the group could not be created")
+end function
+
+Groupdel = function(input1,input2,obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	gdelUser = input1
+	gdelGroup = input2
+	gdelOutput = obj.delete_group(gdelUser,gdelGroup)
+	if gdelOutput == true then
+		print("<b>groupdel: group "+gdelGroup+" deleted from user "+gdelUser)
+		return
+	end if
+	if gdelOutput then
+		print(gdelOutput)
+		return
+	end if
+	print(color.yellow+"<b>groupdel: the group could not be deleted")
+end function
+
+Groups = function(input1,obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	gpUser = input1
+	gpOutput = obj.groups(gpUser)
+	if gpOutput == true then 
+		print(gpOutput)
+		return
+	end if
+	if gpOutput then print(gpOutput)
+end function
+
+Ifconfig = function(input1,input2,input3,input4,length,obj)		
+	if length == 1 then
+		myRouter = get_router
+		if obj.is_network_active then 
+			lip = obj.local_ip
+			pip = myRouter.public_ip
+			gw = obj.network_gateway
+			if obj.active_net_card == "WIFI" then
+				ifOutput = char(10)+"Connected to WI-FI:"+char(10)+"Essid: "+myRouter.essid_name+char(10)+"Bssid: "+myRouter.bssid_name 
+			else
+				ifOutput = char(10)+"Ethernet connection:"
+			end if
+		else
+			lip = "0.0.0.0"
+			pip = "0.0.0.0"
+			gw = "0.0.0.0"
+			ifOutput = char(10)+"Not connected to the network."
+		end if
+		print(ifOutput+char(10)+"----------------"+char(10)+"Public IP: "+pip+char(10)+"Local IP: "+lip+char(10)+"Gateway: "+gw+char(10))
+	else
+		if input3 != "gateway" then
+			print("<b>Usage: ifconfig \n<b>Usage: ifconfig [net interface] [ip address] gateway [ip address]")
+			return
+		end if
+		ifDevice = input1
+		ifAddress = input2
+		ifGateway = input4
+		if not is_valid_ip(ifAddress) then
+			print(color.yellow+"<b>ifconfig: invalid ip address")
+			return
+		end if
+		if not is_valid_ip(ifGateway) then
+			print(color.yellow+"<b>ifconfig: invalid gateway")
+			return
+		end if
+		ifOutput = myComp.connect_ethernet(ifDevice,ifAddress,ifGateway)
+		if ifOutput > 0 then
+			print(ifOutput)
+		else
+			print(color.yellow+"<b>ifconfig: unable to connect to "+ifAddress)
+		end if
+	end if
+end function
+
+Iwconfig = function(input1,input2,input3,input4,obj)
+	iwNetDev = input1
+	if obj.network_devices == null or obj.network_devices.indexOf(iwNetDev) == null then
+		print(color.yellew+"<b>iwconfig: Network device not found")
+		return
+	end if
+	iwBssid = input2
+	iwEssid = input3
+	iwPassword = input4
+	iwStatus = obj.connect_wifi(input1,iwBssid,iwEssid,iwPassword)
+	if typeof(iwStatus) == "string" then print(iwStatus)
+end function
+
+Iwlist = function(input1,obj)
+	if obj.active_net_card == "ETHERNET" then
+		print(color.yellow+"<b>iwlist: wifi card is disabled")
+		return
+	end if
+	if obj.network_devices == null or obj.network_devices.indexOf(input1) == null then
+		print(color.yellow+"<b>iwlist: network device not found")
+		return
+	end if
+	if input1.indexOf("eth") != null then
+		print(color.yellow+"<b>iwlist: ethernet cards not supported by this command")
+		return
+	end if
+	iwlNetworks = obj.wifi_networks(input1)
+	if iwlNetworks == null then
+		print(color.yellow+"<b>iwlist: no wifi detected")
+		return
+	end if
+	iwlInfo = "BSSID PWR ESSID"
+	for network in iwlNetworks
+		iwlInfo = iwlInfo+char(10)+network
+	end for
+	print(format_columns(iwlInfo))
+end function
+
+Kill = function(input0,input1,obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	PID = input1.to_int
+	if typeof(PID) != "number" then
+		print(color.yellow+"<b>"+input0+": The PID must be a number")
+		return
+	end if
+	output = obj.close_program(PID)
+	if output == true then 
+		print("Process "+PID+" closed")
+	else
+		print(color.yellow+"Process "+PID+" not found")
+	end if
+end function
+
+Launch = function(input,params,obj,local)
+	if input == "" then
+		print("<b>Usage: ./[binary file]"+char(10)+"<b>Usage: r./[binary file]")
+		return
+	end if
+	if typeof(obj) != "shell" then
+		print(color.yellow+"<b>r./: not holding remote shell")
+		return
+	end if
+	launchFile = GetFile(input,obj,local)
+	if not launchFile then
+		print(color.yellow+"<b>xtools: ./: binary file "+input+" not found")
+		return
+	end if
+	if not launchFile.is_binary then
+		print(color.yellow+"<b>xtools: ./: "+input+" is not a binary file")
+		return
+	end if
+	if params then
+		myShell.launch(launchFile.path,params.join(" "))
+		return
+	end if
+	myShell.launch(launchFile.path)
+end function
+
+Ls = function(input,path,obj,local)
+	if input.len > 4 or (input.len == 2 and input[1].indexOf("-") != null and not ValidateInput(input[1])) or (input.len == 3 and not ValidateInput(input[1])) or (input.len == 4 and (not ValidateInput(input[1]) or not ValidateInput(input[2]))) then
+		print(command_info("ls_usage"))
+		return
+	end if
+	folderPath = path
+	if input.len > 1 and input[input.len - 1].indexOf("-") == null then
+		folderPath = input[input.len - 1]
+	end if
+	folder = GetFile(folderPath,obj,local)
+	if folder == null then
+		print(color.yellow+"ls: No such file or directory")
+		return
+	end if	
+	showHide = 0
+	if input.len > 1 and input[1].indexOf("a") != null then
+		showHide = 1
+	end if
+	showDetails = 0
+	if input.len > 1 and input[1].indexOf("l") != null then
+		showDetails = 1
+	end if
+	subFiles = folder.get_folders + folder.get_files
+	output = ""
+	for subFile in subFiles
+		nameFile = subFile.name
+		permission = subFile.permissions
+		owner = subFile.owner
+		size = subFile.size
+		group = subFile.group
+		if showHide or nameFile.indexOf(".") != 0 then
+			if output.len > 0 then 
+				output = output + char(10)
+			end if
+			if showDetails then
+				output = output + permission + " " + owner + " " + group + " " + size + " 00:00 " + nameFile
+				if subFile.is_symlink then output = output + "-->" + subFile.path(true)
+			else
+				output = output + nameFile
+			end if
+		end if
+	end for
+	print(format_columns(output))
+end function
+
+MemDump = function(fileObject)
+	if typeof(fileObject) != "file" then return null
+	newList = []
+	fileList = fileObject.get_folders + fileObject.get_files
+	while fileList.len > 0
+		file = fileList.pull
+		if file.is_folder then fileList = fileList + file.get_folders + file.get_files
+		newList.push(file)
+	end while
+	return newList
+end function
+
+Mkdir = function(input,obj,path,local)	
+	mdPathFile = input
+	mdPathParent = parent_path(mdPathFile)
+	mdExistFile = GetFile(mdPathFile,obj,local)
+	if mdPathParent == mdPathFile then mdPathParent = myPath
+	mdParent = GetFile(mdPathParent,obj,local)
+	if mdParent == null then
+		print(color.yellow+"<b>mkdir: "+mdPathParent+" not found")
+	else if mdExistFile != null then
+		print(color.yellow+"<b>mkdir: "+mdExistFile.path+" file exists")
+	else if not mdParent.has_permission("w") then
+		print(color.yellow+"<b>mkdir: permission denied")
+	else
+		mdArrayPath = mdPathFile.split("/")
+		mdOutput = obj.create_folder(mdParent.path,mdArrayPath[mdArrayPath.len - 1])
+		if mdOutput != null and mdOutput != 1 then
+			print(mdOutput)
+		end if
+	end if
+end function
+
+Mv = function(input1,input2,obj,local)		
+	mvOrigFile = input1
+	mvDestFolder = input2
+	mvFile = GetFile(mvOrigFile,obj,local)
+	if mvFile == null then
+		print(color.yellow+"<b>mv: can't find "+mvOrigFile)				
+	else
+		mvNewName = ""
+		mvFolder = GetFile(mvDestFolder,obj,local)
+		if mvFolder == null then
+			mvPathParent = parent_path(mvDestFolder)
+			if mvPathParent == mvDestFolder then
+				mvNewName = mvDestFolder
+				mvDestFolder = mvFile.parent.path
+				mvFile.move(mvDestFolder,mvNewName)
+			else
+				mvFolder = GetFile(mvPathParent,obj,local)
+				mvNewName = mvDestFolder[mvDestFolder.len - (mvDestFolder.len - mvPathParent.len):]
+				if mvNewName[0] == "/" then
+					mvNewName = mvNewName[1:]
+				end if
+				if mvFolder == null then
+					print(color.yellow+"<b>mv: can't copy file. "+mvDestFolder+" doesn't exist.")							
+				end if
+			end if
+		end if
+		if mvFolder != null and mvFolder.parent != null then
+			if mvFile.parent.path != mvFolder.parent.path or mvFile.name != mvFolder.name then
+				mvFinalDest = mvFolder.path
+				if (mvNewName.len == 0) then
+					mvNewName = mvFile.name
+				end if
+				if not mvFolder.is_folder then
+					mvFinalDest = mvFile.parent.path
+					mvNewName = mvFolder.name
+				end if
+				if mvFile.parent.path == mvFolder.parent.path and mvNewName != mvFile.name then
+					oldFile = mvFile
+					mvFile.rename(mvNewName)
+				else
+					mvFile.move(mvFinalDest,mvNewName)
+				end if
+			end if		
+		else
+			check = GetFile(mvNewName,obj,local)
+			if not check then print(color.yellow+"<b>"+input[0]+": cant find folder "+input[2])
+		end if
+	end if
+end function
+
+NetInfo = function(net_session)
+	print("number of connected gateways: "+net_session.get_num_conn_gateway)
+	print("number of portforwards: "+net_session.get_num_portforward)
+	print("number of users: "+net_session.get_num_users)
+	print("any active users?: "+net_session.is_any_active_user)
+	print("root active?: "+net_session.is_root_active_user)
+end function
+
+Nmap = function(input1,input2,obj)
+	if not is_valid_ip(input1) then
+		print(color.yellow+"<b>nmap: invalid ip address")
+		return
+	end if
+	if not obj.is_network_active then
+		print(color.yellow+"<b>nmap: No internet access.")
+		return
+	end if
+	nmapIpAddress = input1
+	nmapIsLanIp = is_lan_ip(nmapIpAddress)
+	if nmapIsLanIp then
+		nmapRouter = get_router
+	else
+		nmapRouter = get_router(nmapIpAddress)
+	end if
+	if nmapRouter == null then
+		print(color.yellow+"<b>nmap: ip address not found")
+		return
+	end if
+	nmapPorts = null
+	if not nmapIsLanIp then
+		nmapPorts = nmapRouter.used_ports
+	else
+		nmapPorts = nmapRouter.device_ports(nmapIpAddress)
+	end if
+	if nmapPorts == null then
+		print(color.yellow+"<b>nmap: ip address not found")
+		return
+	end if
+	if typeof(nmapPorts) == "string" then
+		print(nmapPorts)
+		return
+	end if
+	nmapInfo = "PORT STATE SERVICE VERSION LAN"
+	print(char(10)+"Starting nmap at "+current_date)
+	print("Interesting ports on "+input1)
+	print("kernel_router version: "+nmapRouter.kernel_version+char(10))
+	if nmapPorts.len == 0 then
+		print(color.yellow+"<b>nmap: Scan finished.  No open ports.")
+		if input.len == 3 and input2 == "-i" then RouterData(input1)
+		return
+	end if
+	for nPort in nmapPorts
+		service_info = nmapRouter.port_info(nPort)
+		lan_ips = nPort.get_lan_ip
+		port_status = "open"
+		if (nPort.is_closed and not nmapIsLanIp) then
+			port_status = "closed"
+		end if
+		nmapInfo = nmapInfo+char(10)+nPort.port_number+" "+port_status+" "+service_info+" "+lan_ips
+	end for
+	print(format_columns(nmapInfo) + char(10))
+	if input.len == 3 and input2 == "-i" then RouterData(input1)
+end function
+
+Nslookup = function(input)		
+	nsAddress = input
+	print("<b>nslookup: ip address: "+nslookup(nsAddress))
+end function
+
+Passwd = function(input,obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	inputPass = user_input("Changing password for user " + input + "."+char(10)+"New password:",true)
+	passOutput = obj.change_password(input,inputPass)
+	if passOutput == true then
+		print("<b>passwd: password modified OK")
+		return
+	else if output then
+		print(color.yellow+output)
+	end if
+end function
+
+Ping = function(input,obj)
+	pResult = obj.ping(input)
+	if pResult then
+		if typeof(pResult) == "string" then
+			print(pResult)
+		else
+			print("<b>ping: Ping successful")
+		end if
+	else
+		print(color.yellow+"<b>ping: ip unreachable")
+	end if
+end function
+
+Proxy = function(input)
+	if is_valid_ip(input) != 1 then 
+		print(color.yellow+"<b>proxy: invalid ip")
+		return
+	end if
+	net_session = metaxploit.net_use(input,21)
+	if not net_session then
+		print(color.yellow+"<b>proxy: unable to establish net_session")
+		return
+	end if	
+	metalib = net_session.dump_lib
+	if not metalib then
+		print(color.yellow+"<b>proxy: metalib not obtained")
+		return
+	end if
+	obj = metalib.overflow("0xD3C3164","defaultpara")
+	if typeof(obj) != "shell" then 
+		print(color.yellow+"<b>proxy: shell not obtained")
+		return
+	end if
+	file = obj.host_computer.File("/etc/passwd")
+	if not file then
+		print(color.yellow+"<b>proxy: unable to find /etc/passwd")
+		return
+	end if
+	if not file.has_permission("w") or not file.has_permission("r") or not file.has_permission("x") then
+		print(color.yellow+"<b>proxy: not root shell")
+		return
+	end if
+	server_folder = obj.host_computer.File("/server")
+	if server_folder then
+		server_files = server_folder.get_files
+		if server_files then
+			for service in server_files
+				obj.launch("/server/"+service.name,"stop")
+			end for
+		end if
+	end if
+	lib_folder = obj.host_computer.File("/lib")
+	if not lib_folder then
+		print(color.yellow+"<b>proxy: /lib not found")
+		return
+	end if
+	lib_files = lib_folder.get_files
+	if lib_files then
+		for lib in lib_files
+			if lib.name[:3] == "lib" then lib.delete
+		end for
+	end if
+	file = obj.host_computer.File("/")
+	if not file then
+		print(color.yellow+"<b>proxy: main directory not found")
+		return
+	end if
+	file.chmod("o-wrx",true)
+	file.chmod("g-wrx",true)
+	file.chmod("u-wrx",true)
+	myShell.scp("/root/package","/root",obj)
+	obj.start_terminal
+end function
+
+Rchmod = function(input,perms,obj,rec)
+	if not obj then
+		print(color.yellow+"<b>not holding remote object")
+		return
+	end if
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	file = GetFile(input,obj,false)
+	if not file then
+		print(color.yellow+"<b>unable to find "+input)
+		return
+	end if
+	if rec == "1" then
+		file.chmod(perms,true)
+	else
+		file.chmod(perms,false)
+	end if
+end function
+
+//  FIX RRM BY PUTTING ERROR CASES INTO Rm FUNCTION.
+Rm = function(input0,input1,input2,obj,local)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	pathFile = input1
+	isRecursive = 0
+	if input1 == "-r" then
+		isRecursive = 1
+		pathFile = input2
+	end if	
+	file =GetFile(pathFile,obj,local)
+	if file then fileName = file.name
+	if file == null then
+		print(color.yellow+"<b>"+input0+": file not found: "+pathFile)
+		return
+	end if
+	if not file.has_permission("w") then
+		print(color.yellow+"<b>"+input0+": permission denied")
+		return
+	end if
+	if file.is_folder == 1 and isRecursive == 0 then
+		print(color.yellow+"<b>"+input0+": "+file.name+" is a directory")
+	else
+		output = file.delete
+		if output.len > 0 then print(output)
+		check = GetFile(pathFile,obj,local)
+		if not check then print("<b>"+input0+": " + fileName + " deleted successfully")
+	end if
+end function
+
+RouterData = function(ipAddress,port)
+	if not port then port = 0
+	if typeof(port) == "string" then port = port.to_int
+	rdRouter = get_router(ipAddress)
+	net_session = metaxploit.net_use(ipAddress,port)
+	if rdRouter then
+		deviceList = rdRouter.devices_lan_ip
+		deviceInfo = char(10) * 2+"connected devices: "
+		for device in deviceList
+			deviceInfo = deviceInfo+device+char(10)+"                   "
+		end for
+		print(deviceInfo)
+		print("firewall rules: "+rdRouter.firewall_rules)
+		if net_session then NetInfo(net_session)
+	else
+		if net_session then NetInfo(net_session)
+	end if
+end function
+
+RshellClient = function(ip,port,proc)
+	if is_valid_ip(ip) != 1 then
+		print(color.yellow+"<b>rshell_client: invalid ip")
+		return
+	end if
+	port = port.to_int
+	if port < 0 or port > 65535 then
+		print(color.yellow+"<b>rshell_client: invalid port")
+		return
+	end if 
+	metaxploit.rshell_client(ip,port,proc)
+end function
+
+RshellHandler = function()
+	print("Listening for upcoming connections...")
+	shells = metaxploit.rshell_server
+	if(typeof(shells) == "string") then
+		print(shells)
+		return
+	end if
+	if shells.len == 0 then
+		print(color.yellow+"no rshells found")
+		return
+	end if
+	option = 0
+	while typeof(option) != "number" or (option < 1 or option > shells.len)
+		print(shells.len+" shell(s) connected!"+char(10)+"<b>Select a shell to start a terminal:</b>")
+		for i in range(0,shells.len - 1)
+			print(char(10)+"<b>Shell ("+(i + 1)+")</b>"+char(10)+"Public IP: "+shells[i].host_computer.public_ip+char(10)+"Local IP: "+shells[i].host_computer.local_ip)
+		end for
+		print("-----------")
+		option = user_input("Select shell>").to_int
+	end while
+	print("Grabbing shell #"+option)
+	globals.object = shells[option - 1]
+end function
+
+Rterminal = function(input0,obj)
+	if typeof(obj) != "shell" then
+		print(color.yellow+input0+": not holding remote shell")
+		return
+	end if
+	msg = user_input(color.yellow+"Open terminal on remote machine?(y/n): ")
+	if msg == "y" or msg == "yes" then obj.start_terminal
+end function
+
+Scan = function(input0,input1,input2,comp)
+	if input1 == "-l" then
+		file = comp.File(input2)
+		if not file then
+			print(color.yellow+"<b>"+input0+": unable to find "+input2)
+			return
+		else	
+			metalib = metaxploit.load(input2)
+		end if
+	else
+		if not is_valid_ip(input1) then
+			print(color.yellow+"<b>"+input0+": invalid ip address")
+			return
+		end if
+		scanAddress = input1
+		scanPort = input2.to_int
+		targRouter = get_router(scanAddress)
+		if targRouter then 
+			targPort = targRouter.ping_port(scanPort)
+			if scanPort != 0 then
+				if not targPort then
+					print(color.yellow+"<b>"+input0+": target port is closed or does not exist")
+					return
+				end if
+			end if
+		end if
+		if typeof(scanPort) == "string" then
+			print(color.yellow+"<b>"+input0+": invalid port")
+			return
+		end if
+		scan_net_session = metaxploit.net_use(scanAddress,scanPort)
+		if not scan_net_session then
+			print(color.yellow+"<b>"+input0+": net session failed")
+			return
+		end if		
+		metalib = scan_net_session.dump_lib
+		if not metalib then
+			print(color.yellow+"<b>"+input0+": no metalib")
+			return
+		end if
+	end if	
+	memList = metaxploit.scan(metalib)
+	shellFlag = 0
+	fileFlag = 0
+	compFlag = 0
+	i = 1
+	for mem in memList
+		scanResults = metaxploit.scan_address(metalib,mem).split("Unsafe check: ")
+		for result in scanResults
+			if result == scanResults[0] then continue
+			value = result[result.indexOf("<b>")+3:result.indexOf("</b>")]
+			print(char(10) * 3+color.orange+"<b>"+mem+" "+value)
+			obj = metalib.overflow(mem,value)
+			if typeof(obj) == "shell" or typeof(obj) == "computer" then print("<b>object obtainable: "+color.yellow+obj+char(10))
+			if typeof(obj) == "file" then print("<b>object obtainable: "+color.yellow+obj+"--> "+obj.name)
+			if typeof(obj) == "shell" then shellFlag = shellFlag + 1
+			if typeof(obj) == "file" then fileFlag = fileFlag + 1
+			if typeof(obj) == "computer" then compFlag = compFlag + 1
+			if typeof(obj) == "shell" or typeof(obj) == "computer" then GETPERMS(obj)
+			i = i + 1
+		end for
+	end for
+	if input1 == "-l" then
+		print(color.yellow+"<b>lib file: "+color.white+metalib.lib_name+" "+metalib.version)
+		print(color.yellow+"<b>local system: "+color.orange+comp.get_name+color.yellow+"		public ip: "+color.orange+comp.public_ip+color.yellow+"		 lan ip: "+color.orange+comp.local_ip)
+	else
+		RouterData(scanAddress,scanPort)
+		print(color.yellow+"<b>lib file: "+color.white+metalib.lib_name+" "+metalib.version)
+		print(color.yellow+"<b>remote system ip: "+color.orange+scanAddress+color.yellow+" 		port: "+color.orange+scanPort) 
+	end if	
+	print(color.orange+"computers: "+compFlag)
+	print(color.orange+"files: "+fileFlag)
+	print(color.orange+"shells: "+shellFlag)	
+end function
+
+Scp = function(flag,orig,dest)
+	if typeof(object) != "shell" then
+		print(color.yellow+"<b>not holding remote shell")
+		return
+	end if
+	if flag == "-u" then myShell.scp(orig,dest,object)
+	if flag == "-d" then object.scp(orig,dest,myShell)
+end function
+
+Search = function(input1,obj)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	file = obj.File("/")
+	sList = MemDump(file)
+	for item in sList
+		if input.len == 2 then
+			index = indexOf(item.name,input1)
+			index2 = indexOf(item.path,input1)
+			if index or index2 or item.name == input1 then print(item.path)
+		else
+			print(item.path)
+		end if
+	end for
+end function
+
+Ssh = function(input1,input2,input3,length,obj)
+	sshCredentials = input1.split("@")
+	sshUser = sshCredentials[0]
+	sshPassword = sshCredentials[1]
+	sshPort = 22
+	if length == 4 then sshPort = input3.to_int
+	if typeof(sshPort) != "number" then
+		print(color.yellow+"<b>ssh: Invalid port: "+sshPort)
+		return
+	end if
+	print("Connecting...")			
+	sshShell = obj.connect_service(input2,sshPort,sshUser,sshPassword,"ssh")
+	if typeof(sshShell) == "string" then
+		print(sshShell)
+		return
+	end if			
+	if sshShell then 
+		globals.object = sshShell
+	else 
+		print(color.yellow+"<b>ssh: connection failed")
+	end if			
+end function
+
+Sudo = function(inputs)
+	if inputs[1] == "-u" and inputs.len != 3 then exit(command_info("sudo_usage"))
+	inputPass = user_input("Password: ",true)
+	if inputs[1] == "-u" then
+		shell = get_shell(inputs[2],inputPass)
+		if not shell then 
+			print(color.yellow+"sudo: incorrect username or password")
+			return
+		end if
+	else 
+		shell = get_shell("root",inputPass)
+		if not shell then
+			print(color.yellow+"sudo: incorrect password")
+			return
+		end if
+	end if
+	if inputs[1] == "-s" or inputs[1] == "-u" then 
+		globals.lObject = shell
+	else
+		computer = shell.host_computer
+		args = inputs[2:].join(" ")
+		if not inputs[1].indexOf("/") then
+			globalPath = [myPath,"/bin","/usr/bin"]
+			for path in globalPath
+				program = computer.File(path+"/"+inputs[1])
+				if program != null then
+			    	shell.launch(program.path, args) 
+			    	return
+				end if
+			end for
+		else
+			program = computer.File(inputs[1])
+			if not program then 
+				print(inputs[1]+" not found.")
+				return
+			end if
+			shell.launch(program.path, args)
+		end if
+	end if
+end function
+
+Terminal = function()		
+	termSure = null
+	while termSure != "y" and termSure != "yes" and termSure != "n" and termSure != "no"
+		termSure = user_input("open new terminal?(y/n): ")
+	end while
+	if termSure == "y" or termSure == "yes" then myShell.start_terminal
+	termSure = null
+end function
+
+TestLib = function(ip,port)
+	if ip == "-l" then
+		metalib = metaxploit.load(port)
+		if not metalib then
+			print(color.yellow+"<b>TestLib: no metalib")
+			return
+		end if
+		patched = metalib.is_patched
+		if patched then
+			print(color.cyan+"<b>lib is patched")
+			return
+		end if
+		print(color.cyan+"<b>lib is not patched")
+		return
+	end if
+	if not is_valid_ip(ip) then
+		print(color.yellow+"<b>TestLib: invalid ip address")
+		return
+	end if
+	port = port.to_int
+	net_session = metaxploit.net_use(ip,port)
+	if not net_session then 
+		print(color.yellow+"<b>testlib: no net session")
+		return
+	end if
+	metalib = net_session.dump_lib
+	if not metalib then
+		print(color.yellow+"<b>testlib: no metalib")
+		return
+	end if
+	patched = metalib.is_patched
+	if patched then
+		print(color.cyan+"lib is patched")
+		return
+	end if
+	print(color.cyan+"lib is not patched")
+end function
+
+Title = function()
+	color0 = color.Random
+	color1 = color.Random
+	color2 = color.Random
+	color3 = color.Random
+	print(char(10) * 4)
+	print(color0+"<b>       ______  _____   _____         ____  ")
+	print(color0+"<b>\\  //   ||   ||   || ||   || ||   //      ")
+	print(color0+"<b> \\//    ||   ||   || ||   || ||   \\____  ")
+	print(color0+"<b> //\\    ||   ||   || ||   || ||         \\")
+	print(color0+"<b>//  \\   ||   ||___|| ||___|| ||____ ____//"+color1+" v1.3")
+	print(color2+"      								by <b>"+color3+"xanadu\n\n")
+	return
+end function
+
+Touch = function(input0,input1,obj,local)
+	if typeof(obj) == "shell" then obj = obj.host_computer
+	pFile = input1
+	pParent = parent_path(pFile)
+	if pParent == pFile then
+		if local then
+			pParent = myPath
+		else
+			pParent = remotePath 
+		end if
+	end if
+	tParent = obj.File(pParent)
+	if not tParent then
+		print(color.yellow+"<b>"+input0+": "+pParent+" not found")
+		return
+	end if
+	if not tParent.has_permission("w") then
+		print(color.yellow+"<b>"+input0+": permission denied")
+		return
+	end if
+	aPath = pFile.split("/")
+	output = obj.touch(tParent.path,aPath[aPath.len - 1])
+	if output and output != 1 then
+		print(color.yellow+"<b>"+input0+": the file already exists")
+		return
+	end if
+	if output == 1 then print("<b>New file "+input1+" created.")
+	if output == 1 then msg = user_input("Leave message: ")
+	if msg then 
+		mFile = GetFile(input1,obj,local)
+		mFile.set_content(msg)
+	end if
+end function
+
+UserAdd = function(input,obj)
+	inputMsg = "Setting password for user "+input+"."+char(10)+"New password: "
+	inputPass = user_input(inputMsg,true)
+	uaOutput = obj.create_user(input,inputPass)
+	if uaOutput == true then
+		print("<b>useradd: User created OK")
+		return
+	end if
+	if uaOutput then
+		print(uaOutput)
+		return
+	end if
+	print(color.yellow+"<b>useradd: the user could not be created.")
+end function
+
+UserDel = function(inputs,obj)
+	if inputs.len <= 1 or (inputs.len == 2 and inputs[1] == "-r") or inputs[1] == "-h" or inputs[1] == "--help" then exit(command_info("userdel_usage"))
+	delete = 0
+	if inputs[1] == "-r" then
+  		delete = 1
+  		inputs[1:].pull
+	end if
+	output = obj.delete_user(inputs[1],delete)
+	if output == true then 
+		print(color.yellow+"user "+inputs[1]+" deleted.")
+		return
+	end if
+	if output then
+		print(output)
+		return
+	end if
+	print("Error: user not deleted.")
+end function
+
+ValidateInput = function(input)
+	if input == "-la" or input == "-l" or input == "-a" or input == "-al" then return true
+	return false
+end function
+
+// Zero function is still being developed.  i'm gonna skip over it for now.
+ZERO = function(ip,port,user,password,optional)
+	net_session = metaxploit.net_use(ip,port)
+	metalib = net_session.dump_lib
+	debug_library = metalib.debug_tools(user,password)
+	debug_library.scan
+	error_list = user_input("enter error_lines")
+	debug_library.unit_testing(error_list)
+	parameters = user_input("enter memZone: ") 
+	if not optional then
+		zero_list = debug_library.payload(memZone)
+		return zero_list
+	end if
+	zero_list = debug_library.payload(memZone,optional)
+	return zero_list
+end function
+
+//   entry point of xtools
+metaxploit = include_lib("/lib/metaxploit.so")
+if not metaxploit then metaxploit = include_lib(current_path + "/metaxploit.so")
+if not metaxploit then exit("<b>xtools: missing metaxploit.so")
+crypto = include_lib("/lib/crypto.so")
+if not crypto then crypto = include_lib(current_path + "/crypto.so")
+if not crypto then exit("<b>xtools: missing crypto.so")
+
+myShell = get_shell
+myComp = myShell.host_computer
+myPath = current_path
+remotePath = ""
+object = null
+lObject = null
+pObject = null
+cCheck = 0
+
+Title
+if params.len == 1 and params[0] == "xanadu" then 
+	pcode = "a0ga09sa09g09as"
+else
+	pcode = user_input(color.blue+"<b>enter access code: </b>"+color.cap,true)
+end if
+print("<b>type help for commands")
+print(color.yellow+"<b>launch binary files with ./")
+print(color.yellow+"<b>launch remote binary files with r./")
+while pcode == "a0ga09sa09g09as"
+	if lObject and typeof(lObject) == "shell" then
+		myShell = lObject
+		myComp = lObject.host_computer
+		print(char(10) * 2+color.white+"<b>holding local shell object:"+char(10)+color.white+"<b>local system commands may have gained or lost privilages."+char(10)+color.white+"<b>use terminal command to open new terminal"+char(10)+color.white+"<b>as owner of local shell object")
+	end if
+	if lObject and typeof(lObject) == "computer" then
+		myComp = lObject
+		print(char(10) * 2+color.white+"<b>holding local computer object: local commands may have gained or lost privilages")
+	end if
+	if lObject and typeof(lObject) == "file" then
+		print(char(10) * 2+color.white+"<b>holding local file object: "+lObject.name)
+	end if
+	if object and typeof(object) == "shell" then print(char(10) * 2+color.orange+"<b>holding: "+color.yellow+object+color.orange+" belonging to system: "+color.yellow+object.host_computer.get_name+char(10)+"<b>"+color.orange+"public ip: "+color.yellow+object.host_computer.public_ip+color.orange+" lan ip: "+color.yellow+object.host_computer.local_ip+char(10)+color.orange+"<b>remote path: "+color.yellow+remotePath)
+	if object and typeof(object) == "computer" then print(char(10) * 2+color.orange+"<b>holding: "+color.yellow+object+color.orange+" belonging to system: "+color.yellow+object.get_name+char(10)+"<b>"+color.orange+"public ip: "+color.yellow+object.public_ip+color.orange+" lan ip: "+color.yellow+object.local_ip+char(10)+color.orange+"<b>remote path: "+color.yellow+remotePath)
+	if object and typeof(object) == "file" then print(char(10) * 2+color.orange+"<b>holding remote file: "+color.yellow+object.name+char(10)+color.orange+"remote path: "+color.yellow+remotePath)
+	if pObject then print pobject
+	cCheck = 0
+	input = user_input(color.cyan+"<b>"+active_user+color.purple+"@"+color.copper+myPath+"----></b>"+color.green).split(" ")	
+
+// ./	
+	if input[0][:2] == "./" then cCheck = 1
+	if input[0][:2] == "./" and input.len < 1 then print("<b>Usage: ./[binary file path]")
+	if input[0][:2] == "./" and input.len >= 1 then Launch(input[0][2:],input[1:],myShell,true)
+	
+// build
+	if input[0] == "build" then cCheck = 1
+	if input[0] == "build" and input.len != 3 then print("<b>Usage: build [file source code] [path/program name]")   
+	if input[0] == "build" and input.len == 3 then Build(input[1],input[2],myShell,true)
+		
+// cat	
+	if input[0] == "cat" then cCheck = 1
+	if input[0] == "cat" and input.len < 2 then print("<b>Usage: cat [file]")
+	if input[0] == "cat" and input.len >= 2 then Cat(input[0],myComp,input[1],true)
+
+// cd
+	if input[0] == "cd" then cCheck = 1
+	if input[0] == "cd" and input.len == 1 then myPath = current_path
+	if input[0] == "cd" and input.len == 2 then ChangeDir(input[1],myComp,true)
+
+// chgrp
+	if input[0] == "chgrp" then cCheck = 1
+	if (input[0] == "chgrp" and (input.len < 3 or input.len > 4)) or (input[0] == "chgrp" and input.len == 4 and input[1] != "-R") or (input[0] == "chgrp" and (input.len == 3 and input[1] == "-R")) then print("<b>Usage: chgrp [opt:-R] [new group] [path file/folder]")
+	if (input[0] == "chgrp" and input.len == 3 and input[1] != "-R") then Chgrp(input[1],input[2],null,input.len,myComp,true) 
+	if (input[0] == "chgrp" and input.len == 4 and input[1] == "-R") then Chgrp(input[1],input[2],input[3],input.len,myComp,true)
+
+// chmod
+	if input[0] == "chmod" then cCheck = 1
+	if (input[0] == "chmod" and input.len < 3) or (input[0] == "chmod" and input.len == 4 and input[1] != "-R") then print("<b>Usage: chmod [opt:-R] [u,g,o+wrx] [path file/folder]")
+	if (input[0] == "chmod" and input.len == 3 and input[1] != "-R") then Chmod(input[1],input[2],null,input.len,mycomp,true)
+	if (input[0] == "chmod" and input.len == 4 and input[1] == "-R") then Chmod(input[1],input[2],input[3],input.len,myComp,true)
+
+// chown
+	if input[0] == "chown" then cCheck = 1
+	if (input[0] == "chown" and (input.len < 3 or input.len > 4)) or (input[0] == "chown" and input.len == 4 and input[1] != "-R") or (input[0] == "chown" and input.len == 3 and input[1] == "-R") then print("<b>Usage: chown [opt:-R] [owner] [path file/folder]")
+	if (input[0] == "chown" and input.len == 3 and input[1] != "-R") then Chown(input[1],input[2],null,input.len,myComp,true)
+	if (input[0] == "chown" and input.len == 4 and input[1] == "-R") then Chown(input[1],input[2],input[3],input.len,myComp,true)
+	
+// clean
+	if input[0] == "clean" then cCheck = 1
+	if input[0] == "clean" and input.len != 1 then print("<b>Usage: clean")
+	if input[0] == "clean" and input.len == 1 then Clean
+		
+// clear
+	if input[0] == "clear" then cCheck = 1
+	if input[0] == "clear" and input.len != 1 then print("<b>Usage: clear")
+	if input[0] == "clear" and input.len == 1 then clear_screen
+	
+// corlog
+	if input[0] == "corlog" then cCheck = 1
+	if input[0] == "corlog" and input.len < 1 then print("<b>Usage: corlog")
+	if input[0] == "corlog" and input.len >= 1 then CorruptLog(input[0], myComp)
+	
+// cp
+	if input[0] == "cp" then cCheck = 1
+	if input[0] == "cp" and input.len != 3 then print("<b>Usage: cp [path/original file] [path/opt:new name]")
+	if input[0] == "cp" and input.len == 3 then Copy(input[0], input[1], input[2], myComp,true)
+
+// credits
+	if input[0] == "credits" then cCheck = 1
+	if input[0] == "credits" and input.len != 1 then print("<b>Usage: credits")
+	if input[0] == "credits" and input.len == 1 then Credits
+		
+// decipher
+	if input[0] == "decipher" then cCheck = 1
+	if input[0] == "decipher" and input.len != 3 then print("<b>Usage: decipher -h [hash]\n<b>Usage: decipher -f [path/file]")
+	if input[0] == "decipher" and input.len == 3 and (input[1] != "-h" and input[1] != "-f") then print("<b>Usage: decipher -h [hash]\n<b>Usage: decipher -f [path/file]")
+	if input[0] == "decipher" and input.len == 3 and (input[1] == "-h" or input[1] == "-f") then Decipher(input[0], input[1], input[2], myComp)
+		
+// drop
+	if input[0] == "drop" then cCheck = 1
+	if input[0] == "drop" and input.len != 2 then print("<b>Usage: drop [-l:-r]")
+	if input[0] == "drop" and input.len == 2 and input[1] != "-r" and input[1] != "-l" then print("<b>Usage: drop [-l:-r]")
+	if input[0] == "drop" and input.len == 2 and input[1] == "-r" and not object then print("<b>drop: not holding remote object.")
+	if input[0] == "drop" and input.len == 2 and input[1] == "-l" and not lObject then print("<b>drop: not holding local object")
+	if input[0] == "drop" and input.len == 2 and ((input[1] == "-r" and object) or (input[1] == "-l" and lObject)) then Drop(input[1])
+		
+// escalate
+	if input[0] == "escalate" then cCheck = 1
+	if input[0] == "escalate" and input.len < 1 then print("<b>Usage: escalate")
+	if input[0] == "escalate" and input.len >= 1 then Escalate(input[0], myComp)
+
+// exit
+	if input[0] == "exit" then cCheck = 1
+	if input[0] == "exit" and input.len != 1 then print("<b>Usage: exit")
+	if input[0] == "exit" and input.len == 1 then exit
+
+// froot
+	if input[0] == "froot" then cCheck = 1
+	if input[0] == "froot" and input.len < 2 then print("<b>Usage: froot [-r:-l]")
+	if input[0] == "froot" and input.len >= 2 and (input[1] != "-l" and input[1] != "-r") then print("<b>Usage: froot [-r:-l]")
+	if input[0] == "froot" and input.len >= 2 and input[1] == "-r" and not object then print("<b>Not holding remote object")
+	if input[0] == "froot" and input.len >= 2 and input[1] == "-l" and not lObject then print("<b>Not holding local object")
+	if input[0] == "froot" and input.len >= 2 and input[1] == "-r" and object then Froot(object)
+	if input[0] == "froot" and input.len >= 2 and input[1] == "-l" and lObject then Froot(lObject)
+
+// ftp
+	if input[0] == "ftp" then cCheck = 1
+	if input[0] == "ftp" and (input.len < 3 or input.len > 4) then print("<b>Usage: ftp [user@password] [ip address] [opt:port]")
+	if input[0] == "ftp" and input.len == 3 then Ftp(input[1],input[2],null,input.len) 
+	if input[0] == "ftp" and input.len == 4 then Ftp(input[1],input[2],input[3],input.len)
+		
+// grab
+	if input[0] == "grab" then cCheck = 1
+	if input[0] == "grab" and (input.len < 5 or input.len > 6) then print("<b>Usage: grab [ip address] [port] [memory address] [unsecured value] [opt:arg]\n<b>Usage: grab -l [path/libfile] [unsecured value] [opt:arg]")
+	if input[0] == "grab" and input.len == 5 then Grab(input[1],input[2],input[3],input[4],null,input.len)
+	if input[0] == "grab" and input.len == 6 then Grab(input[1],input[2],input[3],input[4],input[5],input.len)
+		
+// groupadd
+	if input[0] == "groupadd" then cCheck = 1
+	if input[0] == "groupadd" and input.len != 3 then print("<b>Usage: groupadd [user] [new group]")
+	if input[0] == "groupadd" and input.len == 3 then Groupadd(input[1],input[2],myComp)
+
+// groupdel
+	if input[0] == "groupdel" then cCheck = 1
+	if input[0] == "groupdel" and input.len != 3 then print("<b>Usage: groupdel [user] [group]")
+	if input[0] == "groupdel" and input.len == 3 then Groupdel(input[1],input[2],myComp)
+
+// groups
+	if input[0] == "groups" then cCheck = 1
+	if input[0] == "groups" and input.len != 2 then print("<b>Usage: groups [username]")
+	if input[0] == "groups" and input.len == 2 then Groups(input[1],myComp)
+		
+// ifconfig
+	if input[0] == "ifconfig" then cCheck = 1
+	if input[0] == "ifconfig" and (input.len != 1 and input.len != 5) then print("<b>Usage: ifconfig \n<b>Usage: ifconfig [net interface] [ip address] gateway [ip address]")
+	if input[0] == "ifconfig" and input.len ==1 then Ifconfig(null,null,null,null,input.len,myComp)
+	if input[0] == "ifconfig" and input.len == 5 then Ifconfig(input[1],input[2],input[3],input[4],input.len,myComp)
+
+// iwconfig
+	if input[0] == "iwconfig" then cCheck = 1
+	if input[0] == "iwconfig" and input.len != 5 then print("<b>Usage: iwconfig [net device] [bssid] [essid name] [pass key]")
+	if input[0] == "iwconfig" and input.len == 5 then Iwconfig(input[1],input[2],input[3],input[4],myComp)
+		
+// iwlist
+	if input[0] == "iwlist" then cCheck = 1
+	if input[0] == "iwlist" and input.len != 2 then print("<b>Usage: iwlist [net device]")
+	if input[0] == "iwlist" and input.len == 2 then Iwlist(input[1],myComp)
+
+// kill
+	if input[0] == "kill" then cCheck = 1
+	if input[0] == "kill" and input.len < 2 then print("<b>Usage: kill [PID]")
+	if input[0] == "kill" and input.len >= 2 then Kill(input[0], input[1], myComp)
+	
+//ls
+	if input[0] == "ls" then cCheck = 1
+	if input[0] == "ls" then Ls(input,myPath,myComp,true)
+	
+// mkdir
+	if input[0] == "mkdir" then cCheck = 1
+	if input[0] == "mkdir" and input.len != 2 then print("<b>Usage: mkdir [path/new folder]")
+	if input[0] == "mkdir" and input.len == 2 then Mkdir(input[1],myComp,myPath,true)
+		
+// mv
+	if input[0] == "mv" then cCheck = 1
+	if input[0] == "mv" and input.len != 3 then print("<b>Usage: mv [path/file] [path/opt:new name]")
+	if input[0] == "mv" and input.len == 3 then Mv(input[1],input[2],myComp,true)
+		
+// nmap
+	if input[0] == "nmap" then cCheck = 1
+	if (input[0] == "nmap" and (input.len < 2 or input.len > 3)) or (input[0] == "nmap" and input.len == 3 and input[2] != "-i") then print("<b>Usage: nmap [ip address] [opt:-i] [opt:port]")
+	if input[0] == "nmap" and input.len == 2 then Nmap(input[1],null,myComp)
+	if input[0] == "nmap" and input.len == 3 and input[2] == "-i" then Nmap(input[1],input[2],myComp)
+		
+// nslookup
+	if input[0] == "nslookup" then cCheck = 1
+	if input[0] == "nslookup" and input.len != 2 then print("<b>Usage: nslookup [web address]")
+	if input[0] == "nslookup" and input.len == 2 then Nslookup(input[1])
+		
+// passwd
+	if input[0] == "passwd" then cCheck = 1
+	if input[0] == "passwd" and input.len != 2 then print("<b>Usage: passwd [username]")
+	if input[0] == "passwd" and input.len == 2 then Passwd(input[1],myComp)
+		
+// ping
+	if input[0] == "ping" then cCheck = 1
+	if input[0] == "ping" and input.len != 2 then print("<b>Usage: ping [ip address]")
+	if input[0] == "ping" and input.len == 2 then Ping(input[1],myShell)
+		
+// proxy
+	if input[0] == "proxy" then cCheck = 1
+	if input[0] == "proxy" and input.len < 2 then print("<b>Usage: proxy [ip_address]")
+	if input[0] == "proxy" and input.len >= 2 then Proxy(input[1])
+
+// ps
+	if input[0] == "ps" then cCheck = 1
+	if input[0] == "ps" and input.len != 1 then print("<b>Usage: ps")
+	if input[0] == "ps" and input.len == 1 then print myComp.show_procs
+
+// pwd
+	if input[0] == "pwd" then cCheck = 1
+	if input[0] == "pwd" and input.len != 1 then print("<b>Usage: pwd")
+	if input[0] == "pwd" and input.len == 1 then print(myPath)
+
+// quit
+	if input[0] == "quit" then cCheck = 1
+	if input[0] == "quit" and input.len != 1 then print("<b>Usage: quit")
+	if input[0] == "quit" then exit
+	
+// r./
+	if input[0][:3] == "r./" then cCheck = 1
+	if input[0][:3] == "r./" and input.len < 1 then print("<b>Usage: r./[remote binary filepath]")
+	if input[0][:3] == "r./" and input.len >= 1 then Launch(input[0][3:],input[1:],object,false)
+
+// rcat	
+	if input[0] == "rcat" then cCheck = 1
+	if input[0] == "rcat" and input.len < 2 then print("<b>Usage: rcat [file]")
+	if input[0] == "rcat" and input.len >= 2 and not object then print(color.yellow+"<b>rcat: not holding remote shell or computer object")
+	if input[0] == "rcat" and input.len >= 2 and object then Cat(input[0],object,input[1],false)
+		
+// rcd
+	if input[0] == "rcd" then cCheck = 1
+	if input[0] == "rcd" and input.len == 1 then remotePath = "/"
+	if input[0] == "rcd" and input.len == 2 then ChangeDir(input[1],object,false)
+
+// rchgrp
+	if input[0] == "rchgrp" then cCheck = 1
+	if (input[0] == "rchgrp" and (input.len < 3 or input.len > 4) or (input[0] == "rchgrp" and input.len == 4 and input[1] != "-R") or ( input[0] == "rchgrp" and input.len == 3 and input[1] == "-R")) then print("<b>Usage: rchgrp [opt:-R] [new group] [path file/folder]")
+	if (input[0] == "rchgrp" and input.len == 3 and input[1] != "-R") then Chgrp(input[1],input[2],null,input.len,object,false)
+	if (input[0] == "rchgrp" and input.len == 4 and input[1] == "-R") then Chgrp(input[1],input[2],input[3],input.len,object,false)
+
+// rchmod
+	if input[0] == "rchmod" then cCheck = 1
+	if input[0] == "rchmod" and (input.len < 3 or input.len > 4) then print "<b>Usage: rchmod [opt: -R] [perms] [dir or file]"
+	if input[0] == "rchmod" and input.len == 4 and input[1] != "-R" then print"<b>Usage: rchmod [opt: -R] [perms] [dir or file]"
+	if input[0] == "rchmod" and input.len == 3 then Rchmod(input[2],input[1],object,false)
+	if input[0] == "rchmod" and input.len == 4 and input[1] == "-R" then Rchmod(input[3],input[2],object,false)
+
+// rchown
+	if input[0] == "rchown" then cCheck = 1
+	if (input[0] == "rchown" and (input.len < 3 or input.len > 4)) or (input[0] == "rchown" and input.len == 4 and input[1] != "-R") or (input[0] == "rchown" and input.len == 3 and input[1] == "-R") then print("<b>Usage: rchown [opt:-R] [owner] [path file/folder]")
+	if (input[0] == "rchown" and input.len == 3 and not object) then print(color.yellow+"<b>chown: not holding remote shell or computer object")
+	if (input[0] == "rchown" and input.len == 3 and input[1] != "-R") then Chown(input[1],input[2],null,input.len,object,false)
+	if (input[0] == "rchown" and input.len == 4 and input[1] == "-R") then Chown(input[1],input[2],input[3],input.len,object,false)
+
+// rcorlog
+	if input[0] == "rcorlog" then cCheck = 1
+	if input[0] == "rcorlog" and input.len != 1 then print("<b>Usage: rcorlog")
+	if input[0] == "rcorlog" and input.len == 1 then
+		if object and (typeof(object) == "shell" or typeof(object) == "computer") then
+			CorruptLog(input[0], object)
+		else
+			print("<b>rcorlog: not holding remote shell or computer object")
+		end if
+	end if
+
+// rcp
+	if input[0] == "rcp" then cCheck = 1
+	if input[0] == "rcp" and input.len != 3 then print("<b>Usage: rcp [path to file] [path to copy]")
+	if input[0] == "rcp" and not object and input.len == 3 then print(color.yellow+"<b>rcp: not holding remote shell or computer object")
+	if input[0] == "rcp" and object and input.len == 3 then Copy(input[0], input[1], input[2], object,false)
+
+// rgroupadd
+	if input[0] == "rgroupadd" then cCheck = 1
+	if input[0] == "rgroupadd" and input.len != 3 then print("<b>Usage: rgroupadd [user] [new group]")
+	if input[0] == "rgroupadd" and input.len == 3 and not object then print(color.yellow+"<b>rgroupadd: not holding remote shell or computer object")
+	if input[0] == "rgroupadd" and input.len == 3 and object then Groupadd(input[1],input[2],object)
+
+// rgroupdel
+	if input[0] == "rgroupdel" then cCheck = 1
+	if input[0] == "rgroupdel" and input.len != 3 then print("<b>Usage: rgroupdel [user] [group]")
+	if input[0] == "rgroupdel" and input.len == 3 and not object then print(color.yellow+"<b>rgroupdel: not holding remote shell or computer object")
+	if input[0] == "rgroupdel" and input.len == 3 then Groupdel(input[1],input[2],object)
+
+// rkill
+	if input[0] == "rkill" then cCheck = 1
+	if input[0] == "rkill" and input.len < 2 then print("<b>Usage: rkill [PID]")
+	if input[0] == "rkill" and input.len >= 2 then	
+		if object and (typeof(object) == "shell" or typeof(object) == "computer") then
+			Kill(input[0], input[1], object)
+		else
+			print("<b>rkill: not holding remote shell or computer object")
+		end if
+	end if
+		
+//rls
+	if input[0] == "rls" then cCheck = 1
+	if input[0] == "rls" and object then
+		Ls(input,remotePath,object,false)
+	else if input[0] == "rls" and not object then
+		print(color.yellow+"<b>rls: not holding remote shell or computer object")
+	end if
+		
+// rm
+	if input[0] == "rm" then cCheck = 1
+	if (input[0] == "rm" and input.len < 2) or (input[0] == "del" and input.len > 3) or (input[0] == "rm" and input.len == 3 and input[1] != "-r") then print("<b>Usage: </b>rm [opt:-r] [path/file]")
+	if (input[0] == "rm" and input.len == 2) then Rm(input[0], input[1], null, myComp,true)
+	if (input[0] == "rm" and input.len == 3 and input[1] == "-r") then Rm(input[0], input[1], input[2], myComp,true)
+
+// rmkdir
+	if input[0] == "rmkdir" then cCheck = 1
+	if input[0] == "rmkdir" and input.len != 2 then print("<b>Usage: mkdir [path/new folder]")
+	if input[0] == "rmkdir" and input.len == 2 and not object then print(color.yellow+"<b>rmkdir: not holding remote shell or computer object")
+	if input[0] == "rmkdir" and input.len == 2 then Mkdir(input[1],object,remotePath,false)
+
+// rmv
+	if input[0] == "rmv" then cCheck = 1
+	if input[0] == "rmv" and input.len != 3 then print("<b>Usage: mv [path/file] [path/opt:new name]")
+	if input[0] == "rmv" and input.len == 3 and not object then print(color.yellow+"<b>rmv: not holding remote shell or computer object")	
+	if input[0] == "rmv" and input.len == 3 then Mv(input[1],input[2],object,false)
+
+// rpasswd
+	if input[0] == "rpasswd" then cCheck = 1
+	if input[0] == "rpasswd" and input.len != 2 then print("<b>Usage: passwd [username]")
+	if input[0] == "rpasswd" and input.len == 2 and not object then print(color.yellow+"<b>rpasswd: not holding remote shell or computer object")
+	if input[0] == "rpasswd" and input.len == 2 and object then Passwd(input[1],object)
+
+// rps
+	if input[0] == "rps" then cCheck = 1
+	if input[0] == "rps" and input.len < 1 then print("<b>Usage: rps")
+	if input[0] == "rps" and input.len >= 1 then
+		if object and (typeof(object) == "shell" or typeof(object) == "computer") then
+			if typeof(object) == "shell" then print object.host_computer.show_procs
+			if typeof(object) == "computer" then print object.show_procs	
+		else
+			print("<b>rps: not holding remote shell or computer object")
+		end if
+	end if
+
+// rrm  THIS NEEDS FIXED.
+	if input[0] == "rrm" then cCheck = 1
+	if input[0] == "rrm" then
+		while true
+			if (input[0] == "rrm" and input.len < 2) or (input[0] == "rrm" and input.len > 3) or (input[0] == "rrm" and input.len == 3 and input[1] != "-r") then
+				print("<b>Usage: rrm [opt:-r] [path/file]")
+				break
+			end if
+			if (input[0] == "rrm" and object and (typeof(object) == "shell" or typeof(object) == "computer")) then
+				if (input[0] == "rrm" and input.len == 2) then Rm(input[0], input[1], null, object,false)
+				if (input[0] == "rrm" and input.len == 3 and input[1] == "-r") then Rm(input[0], input[1], input[2], object,false)
+			else
+				print(color.yellow+"<b>rrm: not holding remote shell or computer object")
+			end if
+			break
+		end while
+	end if
+
+// rsclient
+	if input[0] == "rsclient" then cCheck = 1
+	if input[0] == "rsclient" and input.len < 4 then print "<b>Usage: rhsell_client [ip] [port] [proc_name]"
+	if input[0] == "rsclient" and input.len >= 4 then RshellClient(input[1],input[2],input[3])
+	
+// rsearch
+	if input[0] == "rsearch" then cCheck = 1
+	if input[0] == "rsearch" and input.len > 2 then print("<b>Usage: rsearch [opt:file]")
+	if (input[0] == "rsearch" and not object and input.len < 3) then print("<b>rsearch: not holding remote shell or computer object")
+	if input[0] == "rsearch" and object and input.len == 1 then Search(null, object)
+	if input[0] == "rsearch" and object and input.len == 2 then Search(input[1], object)
+
+// rsint
+	if input[0] == "rsint" then cCheck = 1
+	if input[0] == "rsint" then RshellHandler
+
+// rterminal
+	if input[0] == "rterminal" then cCheck = 1
+	if input[0] == "rterminal" and input.len != 1 then print("<b>Usage: rterminal")
+	if input[0] == "rterminal" and input.len == 1 then Rterminal(input[0], object)
+
+// rtouch
+	if input[0] == "rtouch" then cCheck = 1
+	if input[0] == "rtouch" and input.len < 2 then print("<b>Usage: rtouch [path/new file]")
+	if (input[0] == "rtouch" and input.len >= 2) and (typeof(object) !=  "shell" and typeof(object) != "computer") then print("<b>rtouch: not holding remote shell or computer object")
+	if input[0] == "rtouch" and input.len >= 2 and (typeof(object) == "shell" or typeof(object) == "computer") then Touch(input[0], input[1], object,false)
+
+// ruseradd
+	if input[0] == "ruseradd" then cCheck = 1
+	if input[0] == "ruseradd" and input.len != 2 then print("<b>Usage: ruseradd [new username]")
+	if input[0] == "ruseradd" and input.len == 2 and not object then print("<b>ruseradd: not holding remote shell or computer object")
+	if input[0] == "ruseradd" and input.len == 2 and object then UserAdd(input[1],object)
+
+// ruserdel
+	if input[0] == "ruserdel" then cCheck = 1
+	if input[0] == "ruserdel" and not object then print(color.yellow+"<b>ruserdel: not holding remote shell or computer object")
+	if input[0] == "ruserdel" and object then UserDel(input,object)
+
+// scan
+	if input[0] == "scan" then cCheck = 1
+	if input[0] == "scan" and input.len < 3 then print("<b>Usage: scan [ip address] [port number]\n<b>Usage: scan -l [path to lib]")
+	if input[0] == "scan" and input.len >= 3 then Scan(input[0], input[1], input[2], myComp)
+
+// scp
+	if input[0] == "scp" then cCheck = 1
+	if input[0] == "scp" and input.len < 4 then print("<b>Usage: scp [-u,-d] [origin] [destination]")
+	if input[0] == "scp" and input.len >= 4 and (input[1] == "-u" or input[1] == "-d") then Scp(input[1],input[2],input[3])
+
+// search
+	if input[0] == "search" then cCheck = 1
+	if input[0] == "search" and input.len > 2 then print("<b>Usage: search [opt:file]")
+	if input[0] == "search" and input.len == 2 then Search(input[1], myComp)
+	if input[0] == "search" and input.len == 1 then Search(null, myComp)
+
+// ssh
+	if input[0] == "ssh" then cCheck = 1
+	if input[0] == "ssh" and (input.len < 3 or input.len > 4) then print("<b>Usage: ssh [user@password] [ip address] [opt:port]")
+	if input[0] == "ssh" and input.len == 3 then Ssh(input[1],input[2],null,input.len,myShell)
+	if input[0] == "ssh" and input.len == 4 then Ssh(input[1],input[2],input[3],input.len,myShell)
+		
+// sudo		
+	if input[0] == "sudo" then cCheck = 1
+	if input[0] == "sudo" and input.len > 1 then Sudo(input)
+
+// terminal
+	if input[0] == "terminal" then cCheck = 1
+	if input[0] == "terminal" and input.len != 1 then print("Usage: terminal")
+	if input[0] == "terminal" and input.len == 1 then Terminal
+		
+// testlib
+	if input[0] == "testlib" then cCheck = 1
+	if input[0] == "testlib" and input.len < 3 then print("<b>Usage: testlib [ip] [port]")
+	if input[0] == "testlib" and input.len >= 3 then TestLib(input[1],input[2])
+
+// title
+	if input[0] == "title" then cCheck = 1
+	if input[0] == "title" then Title
+
+// touch
+	if input[0] == "touch" then cCheck = 1
+	if input[0] == "touch" and input.len < 2 then print("<b>Usage: touch [path/new file]")
+	if input[0] == "touch" and input.len >= 2 then Touch(input[0], input[1], myComp,true)
+		
+// useradd
+	if input[0] == "useradd" then cCheck = 1
+	if input[0] == "useradd" and input.len != 2 then print("<b>Usage: useradd [new username]")
+	if input[0] == "useradd" and input.len == 2 then UserAdd(input[1],myComp)
+		
+// userdel
+	if input[0] == "userdel" then cCheck = 1
+	if input[0] == "userdel" then UserDel(input,myComp)
+
+// whoami
+	if input[0] == "whoami" then cCheck = 1
+	if input[0] == "whoami" and input.len != 1 then print("<b>Usage: whoami")
+	if input[0] == "whoami" and input.len == 1 then print(active_user)
+		
+// whois
+	if input[0] == "whois" then cCheck = 1
+	if input[0] == "whois" and input.len != 2 then print("<b>Usage: whois [public IP address]")
+	if input[0] == "whois" and input.len == 2 then
+		whoAddress = input[1]
+		print(whois(whoAddress))
+	end if
+
+// help
+	if input[0] == "help" then cCheck = 1
+	if input[0] == "help" and input.len != 2 then print("<b>Usage: help -a for all commands\n<b>Usage: help -l for local system commands\n<b>Usage: help -n for network commands\n<b>Usage: help -h for hacking commands\n<b>Usage: help -r for remote system commands\n<b>launch binary files with ./[binary file] [parameters]"+char(10)+"<b>Launch remote binaries with r./[binary file] [parameters]")
+	if input[0] == "help" and input.len == 2 and (input[1] == "-l" or input[1] == "-a") then
+		
+		print("<color=green><b>-------------------- Local system commands ------------------------------------</b></color>")
+		print("<color=yellow><b>build</b> ------> Usage: build [file source code] [path/program name]")
+		print("<color=yellow><b>cat</b> --------> Usage: cat [file]")
+		print("<color=yellow><b>chgrp</b> ------> Usage: chgrp [opt:-R] [new group] [path file/folder]")
+		print("<color=yellow><b>chmod</b> ------> Usage: chmod [opt:-R] [u,g,o+wrx] [path file/folder]")
+		print("<color=yellow><b>chown</b> ------> Usage: chown [opt:-R] [owner] [path file/folder]")
+		print("<color=yellow><b>clean</b> ------> Usage: clean\n               <color=orange>empty /root/.Trash")
+		print("<color=yellow><b>clear</b> ------> Usage: clear")
+		print("<color=yellow><b>corlog</b> -----> Usage: corlog\n               <color=orange>corrupt local system.log!!!")
+		print("<color=yellow><b>cp</b> ---------> Usage: cp [path/original file] [path/opt:new name]")
+		print("<color=yellow><b>credits</b> ----> Usage: credits")
+		print("<color=yellow><b>decipher</b> ---> Usage: decipher -h [hash]\n               <color=yellow>Usage: decipher -f [path/file]")
+		print("<color=yellow><b>exit</b> -------> Usage: exit")
+		print("<color=yellow><b>groupdel</b> ---> Usage: groupdel [user] [group]")
+		print("<color=yellow><b>groupadd</b> ---> Usage: groupadd [user] [new group]")
+		print("<color=yellow><b>groups</b> -----> Usage: groups [username]")
+		print("<color=yellow><b>ifconfig</b> ---> Usage: ifconfig \n               <color=yellow>Usage: ifconfig [net interface] [ip address] gateway [ip address]</color>")
+		print("<color=yellow><b>iwconfig</b> ---> Usage: iwconfig [net device] [bssid] [essid] [password]")
+		print("<color=yellow><b>iwlist</b> -----> Usage: iwlist [net device]")
+		print("<color=yellow><b>kill</b> -------> Usage: kill [PID]")
+		print("<color=yellow><b>ls</b> ---------> Usage: ls [opt:-l, -a, -la, -al] [opt:path]")
+		print("<color=yellow><b>mkdir</b> ------> Usage: mkdir [path/new folder]")
+		print("<color=yellow><b>mv</b> ---------> Usage: mv [path/file] [path/opt:new name]")
+		print("<color=yellow><b>passwd</b> -----> Usage: passwd [username]")
+		print("<color=yellow><b>ps</b> ---------> Usage: ps")
+		print("<color=yellow><b>pwd</b> --------> Usage: pwd")
+		print("<color=yellow><b>quit</b> -------> Usage: quit")
+		print("<color=yellow><b>rm</b> ---------> Usage: rm [opt:-r] [path/file]")
+		print("<color=yellow><b>search</b> -----> Usage: search [opt:filename]")
+		print("<color=yellow><b>sudo</b> -------> Usage: sudo [binaryfile]\n               <color=yellow>Usage: sudo [-u] [user]</color>\n               <color=yellow>Usage: sudo [-s]</color>")
+		print("<color=yellow><b>terminal</b> ---> Usage: terminal\n               <color=orange>open new terminal on local system\n               <color=red>warning: will close xtools!")
+		print("<color=yellow><b>title</b> ------> Usage: title")
+		print("<color=yellow><b>touch</b> ------> Usage: touch [path/filename]")
+		print("<color=yellow><b>useradd</b> ----> Usage: useradd [new username]")
+		print("<color=yellow><b>userdel</b> ----> Usage: userdel [opt:-r] [username]\n               <color=orange>Use paremeter -r to delete user files too.")
+		print("<color=yellow><b>whoami</b> -----> Usage: whoami")		
+	end if
+	if input[0] == "help" and input.len == 2 and (input[1] == "-n" or input[1] == "-a") then
+		print("\n<color=green><b>---------------------- Network commands -------------------------------------</b></color>")
+		print("<color=yellow><b>ftp</b> --------> Usage: ftp [user@password] [ip address]")	
+		print("<color=yellow><b>nmap</b> -------> Usage: nmap [ip address] [opt:-i] [opt:port]\n               <color=orange>opt [-i] maps network, leaves logs")
+		print("<color=yellow><b>nslookup</b> ---> Usage: nslookup [web address]")	
+		print("<color=yellow><b>ping</b> -------> Usage: ping [ip address]")
+		print("<color=yellow><b>proxy</b> ------> Usage: proxy [ip address]")
+		print("<color=yellow><b>rsclient</b> ---> Usage: rsclient [server IP] [port] [proc name]")
+		print("<color=yellow><b>rsint</b> ------> Usage: rsint")
+		print("<color=yellow><b>scp</b> --------> Usage: scp [-u:-d] [origin] [destination]")
+		print("<color=yellow><b>ssh</b> --------> Usage: ssh [user@password] [ip address] [opt:port]")
+		print("<color=yellow><b>whois</b> ------> Usage: whois [public IP address]")
+	end if
+	if input[0] == "help" and input.len == 2 and (input[1] == "-h" or input[1] == "-a") then
+		print("\n<color=green><b>---------------------- Hacking commands -------------------------------------</b></color>")
+		print("<color=yellow><b>bankscrape</b> -> Usage: bankscrape [ip address] [# of accounts] [output file name]\n               <color=orange>will append to already existing output file\n               <color=yellow>Usage: bankscrape -l [output file]\n               <color=orange>use -l to display and then remove bank creds from list.")
+		print("<color=yellow><b>drop</b> -------> Usage: drop [-r:-l]\n              <color=orange> -r drops held remote object!!!\n               <color=orange>-l drops held local object!!!")
+		print("<color=yellow><b>escalate</b> ---> Usage: escalate\n               <color=orange>attempt to escalate privileges on local system")
+		print("<color=yellow><b>froot</b> ------> Usage: froot [-r:-l]")
+		print("<color=yellow><b>grab</b> -------> Usage: grab [ip address] [port number] [memory address] [usecure value] [opt:arg]\n               <color=yellow>Usage: grab -l [libname] [memory address] [usecure value] [opt:arg]\n               <color=orange>grabs object!!!\n               <color=orange>use optional argument for change password or bounce to lan address")
+		print("<color=yellow><b>launchprobe</b>-> Usage: launchprobe [ipaddress] [opt: -r] [opt: search term]\n               "+color.yellow+"if you run into any data dumps that are too \n               "+color.yellow+"big to save use optional search term argument\n               "+color.yellow+"use optional -r to launch at router_kernel")
+		print("<color=yellow><b>mkprobe</b> ----> Usage: mkprobe\n               <color=yellow>creates packet for launchprobe")
+		print("<color=yellow><b>scan</b> -------> Usage: scan [ip address] [port number]\n               <color=orange>scanning a remote system will leave logs on target system!!!\n               <color=yellow>Usage:scan -l [path/libfile]")
+	end if
+	if input[0] == "help" and input.len == 2 and (input[1] == "-r" or input[1] == "-a") then
+		print("\n<color=green><b>-----------------------Remote system commands -------------------------------</b></color>")
+		print("<color=yellow><b>rcat</b> -------> Usage: rcat [file]")
+		print("<color=yellow><b>rchmod</b> ----> Usage: rchmod [opt: -R] [perms] [path]")
+		print("<color=yellow><b>rcorlog</b> ----> Usage: rcorlog\n               <color=orange>corrupt remote machine's system.log")
+		print("<color=yellow><b>rcp</b> --------> Usage: rcp [path/file] [path/opt:new name]")
+		print("<color=yellow><b>rdecipher</b>---> Usage: rdecipher -h [hash]\n               <color=yellow>Usage: decipher -f [path/file]")
+		print("<color=yellow><b>rkill</b> ------> Usage: rkill [PID]")
+		print("<color=yellow><b>rps</b> --------> Usage: rps")
+		print("<color=yellow><b>rrm</b> --------> Usage: rrm [opt:-r] [path/file]")
+		print("<color=yellow><b>rsearch</b> ----> Usage: rsearch [opt:file]")
+		print("<color=yellow><b>rterminal</b> --> Usage: rterminal")
+		print("<color=yellow><b>rtouch</b> -----> Usage: rtouch [path/new File]")
+	end if
+	if input[0] == "" then cCheck = 1
+	if cCheck == 0 then print("<b>xtools: " + input[0] + ": command not found") 
+end while
+
+denied = "<b>ah ah ah you didnt say the magic word ah ah ah</b>"
+while true 
+	print color.Random + denied + color.cap
+	wait(.08)
+end while
